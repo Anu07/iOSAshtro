@@ -47,7 +47,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     let propertyArray1 = [
         "Chat with Astrologer",
         "Talk to Astrologer",
-        "Ask Query/Report",
+        "Ask Query/Report/Remedy",
         "Astro Shubh Shop"
         
     ]
@@ -82,7 +82,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
         view1.layer.cornerRadius = 6
         print(Supportmobile)
         tbl_dashboard.register(UINib(nibName: "DashBoardHeaderTableViewCell", bundle: nil), forCellReuseIdentifier: "DashBoardHeaderTableViewCell")
-        
+       
         let timestamp = NSDate().timeIntervalSince1970
         let timeStamp = Int(1000 * Date().timeIntervalSince1970)
         let myTimeInterval = TimeInterval(timeStamp)
@@ -139,11 +139,18 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
         self.tbl_dashboard.register(UINib(nibName: "DashBoardSecCell", bundle: nil), forCellReuseIdentifier: "DashBoardSecCell")
     }
     
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         manager.delegate = self
         manager.requestLocation()
         manager.requestAlwaysAuthorization()
+        self.manager.requestWhenInUseAuthorization()
+
+//        if CLLocationManager.locationServicesEnabled() {
+//            manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+//            manager.startUpdatingLocation()
+//        }
         if CurrentLocation.count != 0 {
             self.func_CallWelcomeAPI()
             if let _ = UserDefaults.standard.value(forKey: "isUserData") as? Data {
@@ -264,6 +271,8 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                                             whatsappmobile = dict_Data["whatsapp_number"] as! String
                                             FormQueryPrice = dict_Data["query_price"] as! Int
                                             FormReportPrice = dict_Data["report_price"] as! Int
+                                            FormRemedyPrice = Int(dict_Data["inr_remedy_price"] as! String)!
+                                            FormRemedydollarPrice = Int(dict_Data["doller_remedy_price"] as! String)!
                                         }
                                         
         }) { (error) in
@@ -314,7 +323,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     @objc func horoscopeApiCallMethods() {
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
-        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad" ,"user_id":user_id,"zodic_id":""]
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad" ,"user_id":user_id.count > 0 ? user_id: "CUSGUS","zodic_id":""]
         print(setparameters)
         ActivityIndicator.shared.startLoading()
         //AutoBcmLoadingView.show("Loading......")
@@ -474,10 +483,8 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
         UserDefaults.standard.removeObject(forKey: "isLogin")
         UserDefaults.standard.removeObject(forKey: "isSignup")
         UserDefaults.standard.removeObject(forKey: "isUserData")
-        
         let LoginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginVC")
         self.navigationController?.pushViewController(LoginVC!, animated: false)
-        
     }
     func openWhatsapp(){
         
@@ -510,14 +517,12 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     
     func numberOfSections(in tableView: UITableView) -> Int
     {
-        
         return 1
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 1 {
-            return 0
+            return 80
         } else if indexPath.row >= 1 && indexPath.row <= 4 {
             return 80
         } else if indexPath.row == 5 {
@@ -582,11 +587,11 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
         } else if indexPath.row >= 1 && indexPath.row <= 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DashBoardMainTVC", for: indexPath) as! DashBoardMainTVC
             cell.imageViewDashBoard.image = UIImage(named: propertyArrayImages1[indexPath.row - 1])
-            //cell.lblHeading.text = propertyArray1[indexPath.row - 1]
-            if let allTitles = self.dashboard?.cellTitle{
-                let currentCellTitle = allTitles.filter{ $0.name == String(indexPath.row)}.first
-                cell.lblHeading.text = currentCellTitle?.desc ?? ""
-            }
+            cell.lblHeading.text = propertyArray1[indexPath.row - 1]
+//            if let allTitles = self.dashboard?.cellTitle{
+//                let currentCellTitle = allTitles.filter{ $0.name == String(indexPath.row)}.first
+//                cell.lblHeading.text = currentCellTitle?.desc ?? ""
+//            }
             
             return cell
         } else if indexPath.row == 5 {

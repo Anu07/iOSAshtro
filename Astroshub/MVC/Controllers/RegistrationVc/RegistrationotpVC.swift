@@ -161,15 +161,10 @@ class RegistrationotpVC: UIViewController ,UITableViewDataSource, UITableViewDel
                                             
                                             
                                             //CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            
                                         }
-                                            
                                         else
                                         {
-                                            
-                                            
-                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            
+                                        CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                         }
                                         
                                         

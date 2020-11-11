@@ -1439,7 +1439,7 @@ class EnterCode_ViewController: UIViewController
             }
             
         }
-       
+        
     }
     
     //    MARK: btn_CrossBack
@@ -1448,36 +1448,36 @@ class EnterCode_ViewController: UIViewController
         //  self.dismiss(animated: true, completion: nil)
         self.navigationController?.popViewController(animated: true)
     }
-     func PhoneVarified()
-     {
-    
-       let defaults = UserDefaults.standard
-       let fcm = defaults.string(forKey: "FcmToken")
-       print(fcm ?? "")
-      
-            let credential = PhoneAuthProvider.provider().credential(withVerificationID: defaults.string(forKey: "authVID")! ,
-                                                                       verificationCode: self.strOTP)
-            Auth.auth().signInAndRetrieveData(with: credential) { authData, error in
-                if ((error) != nil) {
+    func PhoneVarified()
+    {
+        
+        let defaults = UserDefaults.standard
+        let fcm = defaults.string(forKey: "FcmToken")
+        print(fcm ?? "")
+        
+        let credential = PhoneAuthProvider.provider().credential(withVerificationID: defaults.string(forKey: "authVID")! ,
+                                                                 verificationCode: self.strOTP)
+        Auth.auth().signInAndRetrieveData(with: credential) { authData, error in
+            if ((error) != nil) {
                 // Handles error
-                    
+                
                 let alert = UIAlertController(title: "Astroshubh", message: "Please enter Valid Code", preferredStyle: UIAlertController.Style.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 
                 return
-              }
-                _ = authData!.user
-                guard let userID = Auth.auth().currentUser?.uid else { return }
-                fcmUserID = userID
-                print(fcmUserID)
-                AutoBcmLoadingView.show("Loading......")
-                self.loginApiCallMethods()
-               
             }
+            _ = authData!.user
+            guard let userID = Auth.auth().currentUser?.uid else { return }
+            fcmUserID = userID
+            print(fcmUserID)
+            AutoBcmLoadingView.show("Loading......")
+            self.loginApiCallMethods()
+            
+        }
         
         
-     }
+    }
     
     
     //    MARK: btn_Submit
@@ -1490,14 +1490,14 @@ class EnterCode_ViewController: UIViewController
             return
         }
         
-    
+        
         let defaults = UserDefaults.standard
         let fcm = defaults.string(forKey: "FcmToken")
         print(fcm ?? "")
         
         self.PhoneVarified()
         
-
+        
         
     }
     // MARK: funcValidation
@@ -1533,72 +1533,72 @@ class EnterCode_ViewController: UIViewController
     //    MARK:- Api methods
     //    MARK: callOtpVarifyAPI
     func loginApiCallMethods()
-      {
-          
-          let deviceID = UIDevice.current.identifierForVendor!.uuidString
-          print(deviceID)
-          let defaults = UserDefaults.standard
-          
-          let fcm = defaults.string(forKey: "FcmToken")
-          
-          print(fcm ?? "")
-          let setparameters = ["app_type":MethodName.APPTYPE.rawValue,
-                               "app_version":MethodName.APPVERSION.rawValue,
-                               "phone":OTPPhnNumber,
-                               "country_id":countrycodeID,
-                               "user_token":fcm ?? "",
-                               "fcm_userid":fcmUserID]
-          print(setparameters)
-          //ActivityIndicator.shared.startLoading()
-          
-          AppHelperModel.requestPOSTURL(MethodName.CUSTOMERLOGIN.rawValue, params: setparameters as [String : AnyObject],headers: nil,
-                                        success: { (respose) in
-                                          AutoBcmLoadingView.dismiss()
-                                          let tempDict = respose as! NSDictionary
-                                          print(tempDict)
-                                          
-                                          let success=tempDict["response"] as!   Bool
-                                          let message=tempDict["msg"] as!   String
-                                          
-                                          if success == true
-                                          {
-                                              str_ContNo_CounCode = "+91"+OTPPhnNumber
-                                              dictloginnn = [
-                                                  "userName":OTPPhnNumber,
-                                                 // "userPWD":self.Password
-                                              ]
+    {
+        
+        let deviceID = UIDevice.current.identifierForVendor!.uuidString
+        print(deviceID)
+        let defaults = UserDefaults.standard
+        
+        let fcm = defaults.string(forKey: "FcmToken")
+        
+        print(fcm ?? "")
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,
+                             "app_version":MethodName.APPVERSION.rawValue,
+                             "phone":OTPPhnNumber,
+                             "country_id":countrycodeID,
+                             "user_token":fcm ?? "",
+                             "fcm_userid":fcmUserID]
+        print(setparameters)
+        //ActivityIndicator.shared.startLoading()
+        
+        AppHelperModel.requestPOSTURL(MethodName.CUSTOMERLOGIN.rawValue, params: setparameters as [String : AnyObject],headers: nil,
+                                      success: { (respose) in
+                                        AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        
+                                        let success=tempDict["response"] as!   Bool
+                                        let message=tempDict["msg"] as!   String
+                                        
+                                        if success == true
+                                        {
+                                            str_ContNo_CounCode = "+91"+OTPPhnNumber
+                                            dictloginnn = [
+                                                "userName":OTPPhnNumber,
+                                                // "userPWD":self.Password
+                                            ]
                                             
-                                              dictloginData = (tempDict["data"] as! NSDictionary) as! [String : Any]
+                                            dictloginData = (tempDict["data"] as! NSDictionary) as! [String : Any]
                                             User.currentProfile(from: dictloginData)
-                                              let dict_Data = tempDict["data"] as! NSDictionary
-                                              print("dict_Data is:-",dict_Data)
-                                              let keyyyy = dictloginData["user_api_key"] as? String ?? ""
-                                              UserDefaults.standard.setValue(keyyyy, forKey:"userKey")
-                                              
-                                              //user_apikey = dict_Data["user_api_key"] as! String
-                                              
-                                              let data_Dict_IsUserData = NSKeyedArchiver.archivedData(withRootObject: dict_Data)
-                                              UserDefaults.standard.setValue(data_Dict_IsUserData, forKey: "isUserData")
-                                             
-//                                            self.ref = Database.database().reference(fromURL:"https://astroshubh-43977.firebaseio.com/")
+                                            let dict_Data = tempDict["data"] as! NSDictionary
+                                            print("dict_Data is:-",dict_Data)
+                                            let keyyyy = dictloginData["user_api_key"] as? String ?? ""
+                                            UserDefaults.standard.setValue(keyyyy, forKey:"userKey")
                                             
-//                                            let userReference = self.ref!.child("users").child(fcmUserID)
-                            
+                                            //user_apikey = dict_Data["user_api_key"] as! String
+                                            
+                                            let data_Dict_IsUserData = NSKeyedArchiver.archivedData(withRootObject: dict_Data)
+                                            UserDefaults.standard.setValue(data_Dict_IsUserData, forKey: "isUserData")
+                                            
+                                            //                                            self.ref = Database.database().reference(fromURL:"https://astroshubh-43977.firebaseio.com/")
+                                            
+                                            //                                            let userReference = self.ref!.child("users").child(fcmUserID)
+                                            
                                             
                                             let dictMovieRefAvengers: [String: String] = ["device_token": fcm!, "image": dictloginData["customer_image_url"] as! String, "name": dictloginData["username"] as! String, "email": dictloginData["email"] as! String, "thumb_image": "default", "Astro": "User", "ID": dictloginData["user_uni_id"] as! String]
                                             
                                             // self.ref.child("users").child(Auth.auth().currentUser!.uid).setValue(dictMovieRefAvengers)
                                             
-//                                            userReference.updateChildValues(dictMovieRefAvengers) { (error, ref) in
-//                                                if error != nil {
-//                                                    print(error!)
-//                                                    return
-//                                                }
-//
-//                                                //  self.inputContainerView.inputTextField.text = nil
-//
-//
-//                                            }
+                                            //                                            userReference.updateChildValues(dictMovieRefAvengers) { (error, ref) in
+                                            //                                                if error != nil {
+                                            //                                                    print(error!)
+                                            //                                                    return
+                                            //                                                }
+                                            //
+                                            //                                                //  self.inputContainerView.inputTextField.text = nil
+                                            //
+                                            //
+                                            //                                            }
                                             
                                             
                                             let months = DateFormatter().monthSymbols
@@ -1627,34 +1627,34 @@ class EnterCode_ViewController: UIViewController
                                             SJSwiftSideMenuController.leftMenuWidth = 340
                                             
                                             self.navigationController?.pushViewController(mainVC, animated: true)
-                                              
-                                              
-                                           
-                                          }
-                                              
-                                          else
-                                          {
-                                              let refreshAlert = UIAlertController(title: "Astroshubh", message: message, preferredStyle: UIAlertController.Style.alert)
-                                              refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
-                                                  {
-                                                      (action: UIAlertAction!) in
+                                            
+                                            
+                                            
+                                        }
+                                            
+                                        else
+                                        {
+                                            let refreshAlert = UIAlertController(title: "Astroshubh", message: message, preferredStyle: UIAlertController.Style.alert)
+                                            refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                                                {
+                                                    (action: UIAlertAction!) in
                                                     self.navigationController?.popViewController(animated: true)
-                                              }))
+                                            }))
                                             self.present(refreshAlert, animated: true, completion: nil)
-                                              
-                                          }
-                                          
-          }) { (error) in
-              print(error)
-              AutoBcmLoadingView.dismiss()
+                                            
+                                        }
+                                        
+        }) { (error) in
+            print(error)
+            AutoBcmLoadingView.dismiss()
             let refreshAlert = UIAlertController(title: "Astroshubh", message: "Please login again", preferredStyle: UIAlertController.Style.alert)
             refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
                 {
                     (action: UIAlertAction!) in
-                  self.navigationController?.popViewController(animated: true)
+                    self.navigationController?.popViewController(animated: true)
             }))
-          }
-      }
+        }
+    }
     func otpApiCallMethods() {
         
         
@@ -1681,8 +1681,8 @@ class EnterCode_ViewController: UIViewController
                                         if success == true
                                         {
                                             let defaults = UserDefaults.standard
-                                          
-                                           
+                                            
+                                            
                                             self.strOTP = ""
                                             LoginModel.sharedInstance.updateUserLoginDetails(lobjDict: tempDict)
                                             let dict_Data = tempDict["data"] as! NSDictionary
@@ -1712,7 +1712,7 @@ class EnterCode_ViewController: UIViewController
                                             
                                             let data_Dict_IsLogin = NSKeyedArchiver.archivedData(withRootObject: data_Dict_IsUserData)
                                             UserDefaults.standard.setValue(data_Dict_IsLogin, forKey: "isLogin")
-                                           // let Dashboard = self.storyboard?.instantiateViewController(withIdentifier: "DashboardVC")
+                                            // let Dashboard = self.storyboard?.instantiateViewController(withIdentifier: "DashboardVC")
                                             //self.navigationController?.pushViewController(Dashboard!, animated: true)
                                             
                                             
@@ -1721,62 +1721,62 @@ class EnterCode_ViewController: UIViewController
                                                 
                                                 if  error != nil
                                                 {
-                                                   
-                                                         if let user = authResult?.user {
-                                                            print(user)
-                                                            
-                                                            
-                                                            
-//                                                            self.ref = Database.database().reference(fromURL:"https://astroshubh-43977.firebaseio.com/")
-//
-//                                                            let userReference = self.ref!.child("users").child(user.uid)
-                                                            
-                                                            let dictMovieRefAvengers: [String: String] = ["device_token": fcm!, "image": dict_Data["customer_image_url"] as! String, "name": dict_Data["username"] as! String, "email": dict_Data["email"] as! String, "thumb_image": "default", "Astro": "User", "ID": dict_Data["user_uni_id"] as! String]
-                                                            
-                                                            // self.ref.child("users").child(Auth.auth().currentUser!.uid).setValue(dictMovieRefAvengers)
-                                                            
-//                                                            userReference.updateChildValues(dictMovieRefAvengers) { (error, ref) in
-//                                                                if error != nil {
-//                                                                    print(error!)
-//                                                                    return
-//                                                                }
-//
-//                                                                //  self.inputContainerView.inputTextField.text = nil
-//
-//
-//                                                            }
-                                                            
-                                                             let months = DateFormatter().monthSymbols
-                                                            let days = DateFormatter().weekdaySymbols
-                                                            
-                                                            
-                                                            //  self.ref = Database.database().reference()
-                                                            
-                                                            // self.ref.child("users").child(Auth.auth().currentUser!.uid).setValue(["username": dict_Data["id"] as! String])
-                                                            let data_Dict_IsLogin = NSKeyedArchiver.archivedData(withRootObject: dictloginnn)
-                                                            UserDefaults.standard.setValue(data_Dict_IsLogin, forKey: "isLogin")
-                                                            
-                                                            let mainVC = SJSwiftSideMenuController()
-                                                            
-                                                            let sideVC_L : SideMenuController = (self.storyboard!.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
-                                                            sideVC_L.menuItems = months as NSArray? ?? NSArray()
-                                                            
-                                                            let sideVC_R : SideMenuController = (self.storyboard!.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
-                                                            sideVC_R.menuItems = days as NSArray? ?? NSArray()
-                                                            
-                                                            
-                                                            let DashboardVC = self.storyboard?.instantiateViewController(withIdentifier: "DashboardVC")
-                                                            SJSwiftSideMenuController.setUpNavigation(rootController: DashboardVC!, leftMenuController: sideVC_L, rightMenuController: sideVC_R, leftMenuType: .SlideOver, rightMenuType: .SlideView)
-                                                            
-                                                            SJSwiftSideMenuController.enableSwipeGestureWithMenuSide(menuSide: .LEFT)
-                                                            
-                                                            SJSwiftSideMenuController.enableDimbackground = true
-                                                            SJSwiftSideMenuController.leftMenuWidth = 340
-                                                            
-                                                            self.navigationController?.pushViewController(mainVC, animated: true)
-                                                            
-                                                        }
-                                               
+                                                    
+                                                    if let user = authResult?.user {
+                                                        print(user)
+                                                        
+                                                        
+                                                        
+                                                        //                                                            self.ref = Database.database().reference(fromURL:"https://astroshubh-43977.firebaseio.com/")
+                                                        //
+                                                        //                                                            let userReference = self.ref!.child("users").child(user.uid)
+                                                        
+                                                        let dictMovieRefAvengers: [String: String] = ["device_token": fcm!, "image": dict_Data["customer_image_url"] as! String, "name": dict_Data["username"] as! String, "email": dict_Data["email"] as! String, "thumb_image": "default", "Astro": "User", "ID": dict_Data["user_uni_id"] as! String]
+                                                        
+                                                        // self.ref.child("users").child(Auth.auth().currentUser!.uid).setValue(dictMovieRefAvengers)
+                                                        
+                                                        //                                                            userReference.updateChildValues(dictMovieRefAvengers) { (error, ref) in
+                                                        //                                                                if error != nil {
+                                                        //                                                                    print(error!)
+                                                        //                                                                    return
+                                                        //                                                                }
+                                                        //
+                                                        //                                                                //  self.inputContainerView.inputTextField.text = nil
+                                                        //
+                                                        //
+                                                        //                                                            }
+                                                        
+                                                        let months = DateFormatter().monthSymbols
+                                                        let days = DateFormatter().weekdaySymbols
+                                                        
+                                                        
+                                                        //  self.ref = Database.database().reference()
+                                                        
+                                                        // self.ref.child("users").child(Auth.auth().currentUser!.uid).setValue(["username": dict_Data["id"] as! String])
+                                                        let data_Dict_IsLogin = NSKeyedArchiver.archivedData(withRootObject: dictloginnn)
+                                                        UserDefaults.standard.setValue(data_Dict_IsLogin, forKey: "isLogin")
+                                                        
+                                                        let mainVC = SJSwiftSideMenuController()
+                                                        
+                                                        let sideVC_L : SideMenuController = (self.storyboard!.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
+                                                        sideVC_L.menuItems = months as NSArray? ?? NSArray()
+                                                        
+                                                        let sideVC_R : SideMenuController = (self.storyboard!.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
+                                                        sideVC_R.menuItems = days as NSArray? ?? NSArray()
+                                                        
+                                                        
+                                                        let DashboardVC = self.storyboard?.instantiateViewController(withIdentifier: "DashboardVC")
+                                                        SJSwiftSideMenuController.setUpNavigation(rootController: DashboardVC!, leftMenuController: sideVC_L, rightMenuController: sideVC_R, leftMenuType: .SlideOver, rightMenuType: .SlideView)
+                                                        
+                                                        SJSwiftSideMenuController.enableSwipeGestureWithMenuSide(menuSide: .LEFT)
+                                                        
+                                                        SJSwiftSideMenuController.enableDimbackground = true
+                                                        SJSwiftSideMenuController.leftMenuWidth = 340
+                                                        
+                                                        self.navigationController?.pushViewController(mainVC, animated: true)
+                                                        
+                                                    }
+                                                    
                                                     
                                                 }
                                                 else
@@ -1787,24 +1787,24 @@ class EnterCode_ViewController: UIViewController
                                                         
                                                         
                                                         
-//                                                        self.ref = Database.database().reference(fromURL:"https://astroshubh-43977.firebaseio.com/")
-//
-//                                                        let userReference = self.ref!.child("users").child(user.uid)
+                                                        //                                                        self.ref = Database.database().reference(fromURL:"https://astroshubh-43977.firebaseio.com/")
+                                                        //
+                                                        //                                                        let userReference = self.ref!.child("users").child(user.uid)
                                                         
                                                         let dictMovieRefAvengers: [String: String] = ["device_token": fcm!, "image": dict_Data["customer_image_url"] as! String, "name": dict_Data["username"] as! String, "email": dict_Data["email"] as! String, "thumb_image": "default", "Astro": "User", "ID": dict_Data["user_uni_id"] as! String]
                                                         
                                                         // self.ref.child("users").child(Auth.auth().currentUser!.uid).setValue(dictMovieRefAvengers)
                                                         
-//                                                        userReference.updateChildValues(dictMovieRefAvengers) { (error, ref) in
-//                                                            if error != nil {
-//                                                                print(error!)
-//                                                                return
-//                                                            }
-//                                                            
-//                                                            //  self.inputContainerView.inputTextField.text = nil
-//                                                            
-//                                                            
-//                                                        }
+                                                        //                                                        userReference.updateChildValues(dictMovieRefAvengers) { (error, ref) in
+                                                        //                                                            if error != nil {
+                                                        //                                                                print(error!)
+                                                        //                                                                return
+                                                        //                                                            }
+                                                        //                                                            
+                                                        //                                                            //  self.inputContainerView.inputTextField.text = nil
+                                                        //                                                            
+                                                        //                                                            
+                                                        //                                                        }
                                                         
                                                         let months = DateFormatter().monthSymbols
                                                         let days = DateFormatter().weekdaySymbols
@@ -1838,7 +1838,7 @@ class EnterCode_ViewController: UIViewController
                                                 }
                                                 
                                             }
-                                          
+                                            
                                             
                                             
                                             

@@ -14,7 +14,7 @@ import Firebase
 import Razorpay
 
 
-private var KEY_ID = "rzp_test_pDqqc1wovvXUCn" // @"rzp_test_1DP5mmOlF5G5ag";
+private var KEY_ID = "rzp_live_1idxRp4tPV0Llx"    //"rzp_test_pDqqc1wovvXUCn" // @"rzp_test_1DP5mmOlF5G5ag";
 private let SUCCESS_TITLE = "Yay!"
 private let SUCCESS_MESSAGE = "Your payment was successful. The payment ID is %@"
 private let FAILURE_TITLE = "Uh-Oh!"
@@ -29,6 +29,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     
     
     
+    @IBOutlet weak var labelFoQueryNote: UILabel!
     
     
     @IBOutlet var viewblur: UIView!
@@ -51,6 +52,8 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     @IBOutlet weak var view_Report: UIView!
     @IBOutlet weak var lbl1: UILabel!
     @IBOutlet weak var lbl2: UILabel!
+    
+    @IBOutlet weak var label3: UILabel!
     var razorpay: RazorpayCheckout? = nil
     @IBOutlet var tbl_profile: UITableView!
     @IBOutlet var tbl_report: UITableView!
@@ -86,6 +89,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         let _ = self.PerformActionIfLogin()
         lbl1.isHidden = false
         lbl2.isHidden = true
+        label3.isHidden = true
         
         view_Report.isHidden = true
         viewblur.isHidden = true
@@ -212,6 +216,10 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         if QueryReportFormshow == "report"
         {
             self.func_ReportForm()
+        }
+        if QueryReportFormshow == "remedy"
+        {
+            self.func_RemedyForm()
         }
     }
     
@@ -499,6 +507,48 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
             AutoBcmLoadingView.dismiss()
         }
     }
+    
+    func func_RemedyForm() {
+        
+        let setparameters = ["user_api_key":user_apikey,
+                             "user_id":user_id ,
+                             "name": ProfileuserName,
+                             "phone":self.Mobilenumber,
+                             "dob":self.postdob,
+                             "birth_time":self.Timmeee,
+                             "birth_place":self.Placebirth,
+                             "email":self.Email,
+                             "query":Enquiry,
+                             "location":CurrentLocation,
+                             "paymentid":PaymentID,"amount_report":(CurrentLocation == "India" ? FormRemedyPrice : FormRemedydollarPrice)] as [String : Any]
+        
+        print(setparameters)
+        AutoBcmLoadingView.show("Loading......")
+        AppHelperModel.requestPOSTURL("getRemedyAstrologer", params: setparameters as [String : AnyObject],headers: nil,
+                                      success: { (respose) in
+                                        AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        let success=tempDict["response"] as!   Bool
+                                        let message=tempDict["msg"] as!   String
+                                        
+                                        if success == true{
+                                            let refreshAlert = UIAlertController(title: "Astroshubh", message: message, preferredStyle: UIAlertController.Style.alert)
+                                            refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                                                {
+                                                    (action: UIAlertAction!) in
+                                                    self.backFun()
+                                            }))
+                                            self.present(refreshAlert, animated: true, completion: nil)
+                                        }else{
+                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
+                                        }
+        }) { (error) in
+            print(error)
+            AutoBcmLoadingView.dismiss()
+        }
+    }
+    
     func func_ReportForm() {
         let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id ,"name": ProfileuserName1,"phone":self.Mobilenumber1,"email":self.Email1,"query_name":self.ReportID,"query":Message,"location":CurrentLocation,"paymentid":PaymentID] as [String : Any]
         print(setparameters)
@@ -696,8 +746,11 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 cell_Add.txtPlace.delegate = (self as UITextFieldDelegate)
                 cell_Add.textQuery.delegate = (self as UITextViewDelegate)
                 // cell_Add.txtQuery.delegate = (self as UITextFieldDelegate)
-                
-                
+                if QueryReportFormshow == "remedy" {
+                    cell_Add.labelForQuery.text = ""
+                } else {
+                    
+                }
                 return cell_Add
             } else {
                 let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCellTwoButtons", for: indexPath) as! ProfileCellTwoButtons
@@ -835,6 +888,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         view_Report.isHidden = true
         lbl1.isHidden = false
         lbl2.isHidden = true
+        label3.isHidden = true
         
         QueryReportFormshow = "query"
         
@@ -844,11 +898,21 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     {
         lbl1.isHidden = true
         lbl2.isHidden = false
+        label3.isHidden = true
+        
         view_Report.isHidden = false
         
         QueryReportFormshow = "report"
     }
     
+    @IBAction func btnRemedy(_ sender: UIButton) {
+        view_Report.isHidden = true
+        lbl1.isHidden = true
+        lbl2.isHidden = true
+        label3.isHidden = false
+        
+        QueryReportFormshow = "remedy"
+    }
     
     @IBAction func btn_doneAction(_ sender: Any)
     {
@@ -907,7 +971,10 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     @IBAction func btn_paypalAction(_ sender: Any) {
         let allowed = self.checkPaymentGatewayAlert(isStripe:true)
         let currency = (CurrentLocation == "India" ? "INR" : "USD").lowercased()
-        let amt = QueryReportFormshow == "query" ? "6" : "18"
+        var amt = QueryReportFormshow == "query" ? "6" : "18"
+        if QueryReportFormshow == "remedy"{
+            amt = "6"
+        }
         if allowed{
             guard let addNewCardVC = self.storyboard?.instantiateViewController(withIdentifier: "AddNewCardVC") as? AddNewCardVC else { return }
             addNewCardVC.stripePaymentParams = ["amount": amt,
@@ -937,13 +1004,41 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 
                 let rezorp = Double(FormQueryPrice) * 100.0
                 let finalGSTPrice = (rezorp * multiplier).round(to: 2)
-                
-                
-                
                 let options: [String:Any] = [
                     "amount" : finalGSTPrice,
                     "currency" :  mYCURRNECY,
                     "description": "( ₹\(FormQueryPrice) + 18% GST included)",
+                    "image": "http://kriscenttechnohub.com/demo/astroshubh/admin/assets/images/astroshubh_full-log.png",
+                    "name": setCustomername,
+                    "prefill": [
+                        "contact": setCustomerphone,
+                        "email": setCustomeremail
+                    ],
+                    "theme": [
+                        "color": "#FF7B18"
+                    ]
+                ]
+                //                  razorpay?.open(options)
+                razorpay?.open(options, displayController: self)
+            }
+            if QueryReportFormshow == "remedy"
+            {
+                if CurrentLocation == "India"{
+                    mYCURRNECY = "INR"
+                }else {
+                    mYCURRNECY = "USD"
+                }
+                
+                //let abcccc1 = Float(100.00)
+                //let abcccc = Float(FormQueryPrice)
+                //let abcccc2 = abcccc * abcccc1
+                
+                let rezorp = Double((CurrentLocation == "India" ? FormRemedyPrice : FormRemedydollarPrice)) * 100.0
+                let finalGSTPrice = (rezorp * multiplier).round(to: 2)
+                let options: [String:Any] = [
+                    "amount" : finalGSTPrice,
+                    "currency" :  mYCURRNECY,
+                    "description": "( ₹\((CurrentLocation == "India" ? FormRemedyPrice : FormRemedydollarPrice)) + 18% GST included)",
                     "image": "http://kriscenttechnohub.com/demo/astroshubh/admin/assets/images/astroshubh_full-log.png",
                     "name": setCustomername,
                     "prefill": [
@@ -1059,6 +1154,9 @@ extension QueryReportVC : DelegateStripePayment{
             if QueryReportFormshow == "report"{
                 self.func_ReportForm()
             }
+            if QueryReportFormshow == "remedy"{
+                self.func_RemedyForm()
+            }
         }else{
             self.showAlert(withTitle: "ERROR", andMessage: msg )
         }
@@ -1066,3 +1164,15 @@ extension QueryReportVC : DelegateStripePayment{
     }
 }
 
+extension QueryReportVC: RazorpayPaymentCompletionProtocolWithData {
+    
+    func onPaymentError(_ code: Int32, description str: String, andData response: [AnyHashable : Any]?) {
+        print("error: ", code)
+        //        self.presentAlert(withTitle: "Alert", message: str)
+    }
+    
+    func onPaymentSuccess(_ payment_id: String, andData response: [AnyHashable : Any]?) {
+        print("success: ", payment_id)
+        //        self.presentAlert(withTitle: "Success", message: "Payment Succeeded")
+    }
+}

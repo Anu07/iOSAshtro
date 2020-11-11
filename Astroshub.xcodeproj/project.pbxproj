@@ -9,6 +9,15 @@
 /* Begin PBXBuildFile section */
 		71265F8624C5EF7400D9A9E4 /* CFSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71265F8424C5EF3300D9A9E4 /* CFSDK.xcframework */; };
 		71265F8724C5EF7400D9A9E4 /* CFSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71265F8424C5EF3300D9A9E4 /* CFSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		93234D4F252A0C2E00E5BF69 /* PopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93234D4E252A0C2E00E5BF69 /* PopUPVC.swift */; };
+		932748FC25308E260059C902 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 932748FB25308E250059C902 /* GoogleService-Info.plist */; };
+		93C74BEC255C2932004F07B7 /* OffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C74BEB255C2932004F07B7 /* OffersViewController.swift */; };
+		93C74BEF255C29E2004F07B7 /* OffersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C74BED255C29E2004F07B7 /* OffersTableViewCell.swift */; };
+		93C74BF0255C29E2004F07B7 /* OffersTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93C74BEE255C29E2004F07B7 /* OffersTableViewCell.xib */; };
+		93EA8818255B13EA00B731B6 /* MytrasViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA8817255B13EA00B731B6 /* MytrasViewController.swift */; };
+		93EA881B255B140E00B731B6 /* HeaderSectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93EA8819255B140E00B731B6 /* HeaderSectionTableViewCell.swift */; };
+		93EA881C255B140E00B731B6 /* HeaderSectionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93EA881A255B140E00B731B6 /* HeaderSectionTableViewCell.xib */; };
+		93F9A89B251FBB6D007835BB /* PrashnavaliVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F9A89A251FBB6D007835BB /* PrashnavaliVC.swift */; };
 		AAB6ACED23C43D7500957EC2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB6ACEC23C43D7500957EC2 /* ViewController.swift */; };
 		D405F8BB248813A8002C2FB5 /* AstroChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D405F8BA248813A8002C2FB5 /* AstroChatVC.swift */; };
 		D41565FE247BE5080009C5F3 /* InfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = D41565FD247BE5080009C5F3 /* InfoVC.swift */; };
@@ -187,7 +196,6 @@
 		F2E2EED7241B4C4A00A72C92 /* DPPopOverMenuCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F2DF3E2F23C8A8EF00E6443D /* DPPopOverMenuCell.xib */; };
 		F2E322022404F25B00A23B9D /* BabypdfviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E322012404F25B00A23B9D /* BabypdfviewVC.swift */; };
 		F2E3C9742410C2B0001A088A /* OrderHistoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E3C9732410C2B0001A088A /* OrderHistoryVC.swift */; };
-		F2EBB5C724223C4E0053DFA2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F2EBB5C624223C4D0053DFA2 /* GoogleService-Info.plist */; };
 		F2EE732223C6FF3C00FD78F4 /* PopUPChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2EE732123C6FF3C00FD78F4 /* PopUPChatVC.swift */; };
 		FB6186D324FD87D4006C1467 /* Pods_Astroshub.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70617EE616EC735281030BE6 /* Pods_Astroshub.framework */; };
 /* End PBXBuildFile section */
@@ -211,6 +219,15 @@
 		70617EE616EC735281030BE6 /* Pods_Astroshub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Astroshub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71265F8424C5EF3300D9A9E4 /* CFSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CFSDK.xcframework; sourceTree = "<group>"; };
 		8B3FE30B5A0F217709672DB5 /* Pods-Astroshub.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Astroshub.debug.xcconfig"; path = "Target Support Files/Pods-Astroshub/Pods-Astroshub.debug.xcconfig"; sourceTree = "<group>"; };
+		93234D4E252A0C2E00E5BF69 /* PopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUPVC.swift; sourceTree = "<group>"; };
+		932748FB25308E250059C902 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		93C74BEB255C2932004F07B7 /* OffersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffersViewController.swift; sourceTree = "<group>"; };
+		93C74BED255C29E2004F07B7 /* OffersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffersTableViewCell.swift; sourceTree = "<group>"; };
+		93C74BEE255C29E2004F07B7 /* OffersTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OffersTableViewCell.xib; sourceTree = "<group>"; };
+		93EA8817255B13EA00B731B6 /* MytrasViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MytrasViewController.swift; sourceTree = "<group>"; };
+		93EA8819255B140E00B731B6 /* HeaderSectionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderSectionTableViewCell.swift; sourceTree = "<group>"; };
+		93EA881A255B140E00B731B6 /* HeaderSectionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeaderSectionTableViewCell.xib; sourceTree = "<group>"; };
+		93F9A89A251FBB6D007835BB /* PrashnavaliVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrashnavaliVC.swift; sourceTree = "<group>"; };
 		AAB6ACE723C43D7500957EC2 /* Astroshub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Astroshub.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAB6ACEA23C43D7500957EC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AAB6ACEC23C43D7500957EC2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -405,7 +422,6 @@
 		F2E322092405107200A23B9D /* OUR FREE SERVICES ASTROSHUBH DATA.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "OUR FREE SERVICES ASTROSHUBH DATA.pdf"; sourceTree = "<group>"; };
 		F2E3C9732410C2B0001A088A /* OrderHistoryVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderHistoryVC.swift; sourceTree = "<group>"; };
 		F2EAE2AA23F8040700608E01 /* Astroshub.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Astroshub.entitlements; sourceTree = "<group>"; };
-		F2EBB5C624223C4D0053DFA2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F2EE732123C6FF3C00FD78F4 /* PopUPChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUPChatVC.swift; sourceTree = "<group>"; };
 		FB6186D024FD8782006C1467 /* Razorpay.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Razorpay.framework; path = "Pods/razorpay-pod/Pod/Razorpay.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -444,6 +460,100 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		93118D5D2516375A00AD8728 /* BlogVc */ = {
+			isa = PBXGroup;
+			children = (
+				F26360B623C44FFB0088C51F /* BlogCell.swift */,
+				F2BCF00523D321D300CF6D48 /* BlogVC.swift */,
+				F2C24A7A23D96BDA006D72DF /* BlogDetailsVC.swift */,
+			);
+			path = BlogVc;
+			sourceTree = "<group>";
+		};
+		9317D98A2512921000D64EF6 /* DashboardVC */ = {
+			isa = PBXGroup;
+			children = (
+				D4CE47E8244E4B82003AA256 /* DashBoardHeaderTableViewCell.swift */,
+				D4CE47E9244E4B82003AA256 /* DashBoardHeaderTableViewCell.xib */,
+				D4F7A49724501B0000D01A23 /* DashBoardMainTVC.swift */,
+				D4F7A49824501B0000D01A23 /* DashBoardMainTVC.xib */,
+				D4F7A49B24501B5300D01A23 /* DashBoardSecCell.swift */,
+				D4F7A49C24501B5300D01A23 /* DashBoardSecCell.xib */,
+				F263617823C477350088C51F /* DashboardVC.swift */,
+			);
+			path = DashboardVC;
+			sourceTree = "<group>";
+		};
+		9317D98B2512921F00D64EF6 /* LoginVC */ = {
+			isa = PBXGroup;
+			children = (
+				F26360F223C44FFB0088C51F /* LoginVC.swift */,
+			);
+			path = LoginVC;
+			sourceTree = "<group>";
+		};
+		9317D98C2512923E00D64EF6 /* RegistrationVc */ = {
+			isa = PBXGroup;
+			children = (
+				F263617423C460660088C51F /* EnterCode_ViewController.swift */,
+				F263617A23C47B650088C51F /* RegistrationotpVC.swift */,
+				F26360F923C44FFB0088C51F /* SignupVC.swift */,
+			);
+			path = RegistrationVc;
+			sourceTree = "<group>";
+		};
+		9317D98D25129B4600D64EF6 /* ForgetVc */ = {
+			isa = PBXGroup;
+			children = (
+				F263610523C44FFB0088C51F /* ForgotVC.swift */,
+				F2B9E37423D71B4E005AC9A2 /* ForgetVC.swift */,
+			);
+			path = ForgetVc;
+			sourceTree = "<group>";
+		};
+		93234D4D252A075800E5BF69 /* FreeServicesVC */ = {
+			isa = PBXGroup;
+			children = (
+				F24B476723FE5B1B00DA3C2A /* FreeServicesVC.swift */,
+				93F9A89A251FBB6D007835BB /* PrashnavaliVC.swift */,
+				93234D4E252A0C2E00E5BF69 /* PopUPVC.swift */,
+			);
+			path = FreeServicesVC;
+			sourceTree = "<group>";
+		};
+		9347A8EB2536B01000070B96 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				F2C3361A23C5EC07008C3AFF /* PopUpChatcall.swift */,
+				F2EE732123C6FF3C00FD78F4 /* PopUPChatVC.swift */,
+				F2C3361F23C60D9F008C3AFF /* ChatHistoryVC.swift */,
+				F2478C4E23F4220B003E5334 /* Message.swift */,
+				F2A5545723FD08E40035CB45 /* MessageNew.swift */,
+				F2B9E37223D6FA84005AC9A2 /* AstroChatListVC.swift */,
+				F2B9E37623D720C2005AC9A2 /* ChatFormVC.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		93EA8816255B13C800B731B6 /* Mantras */ = {
+			isa = PBXGroup;
+			children = (
+				93EA8817255B13EA00B731B6 /* MytrasViewController.swift */,
+				93EA8819255B140E00B731B6 /* HeaderSectionTableViewCell.swift */,
+				93EA881A255B140E00B731B6 /* HeaderSectionTableViewCell.xib */,
+			);
+			path = Mantras;
+			sourceTree = "<group>";
+		};
+		93F0286B253E249A00F81067 /* QueryReportVC */ = {
+			isa = PBXGroup;
+			children = (
+				F2C9C91C2403E6E600BCC7E4 /* QueryReportListingVC.swift */,
+				F25BE80023F1389C00FD2CC2 /* QueryReportVC.swift */,
+			);
+			path = QueryReportVC;
+			sourceTree = "<group>";
+		};
 		AAB6ACDE23C43D7500957EC2 = {
 			isa = PBXGroup;
 			children = (
@@ -465,6 +575,7 @@
 		AAB6ACE923C43D7500957EC2 /* Astroshub */ = {
 			isa = PBXGroup;
 			children = (
+				932748FB25308E250059C902 /* GoogleService-Info.plist */,
 				F2EAE2AA23F8040700608E01 /* Astroshub.entitlements */,
 				D4156600247C00440009C5F3 /* sample_query.pdf */,
 				D41565FF247C00420009C5F3 /* sample_reports.pdf */,
@@ -473,7 +584,6 @@
 				AAB6ACEA23C43D7500957EC2 /* AppDelegate.swift */,
 				AAB6ACEC23C43D7500957EC2 /* ViewController.swift */,
 				AAB6ACEE23C43D7500957EC2 /* Main.storyboard */,
-				F2EBB5C624223C4D0053DFA2 /* GoogleService-Info.plist */,
 				AAB6ACF123C43D7700957EC2 /* Assets.xcassets */,
 				AAB6ACF323C43D7700957EC2 /* LaunchScreen.storyboard */,
 				AAB6ACF623C43D7700957EC2 /* Info.plist */,
@@ -587,7 +697,6 @@
 				F26360B323C44FFB0088C51F /* DoctorCell.swift */,
 				F26360B423C44FFB0088C51F /* LoginCell.swift */,
 				F26360B523C44FFB0088C51F /* SlideMenuCell.swift */,
-				F26360B623C44FFB0088C51F /* BlogCell.swift */,
 				F26360B723C44FFB0088C51F /* BlogauthorCell.swift */,
 				F26360B823C44FFB0088C51F /* PackageCell2.swift */,
 				F26360B923C44FFB0088C51F /* BlogsubscribeCell.swift */,
@@ -596,12 +705,6 @@
 				F26360BC23C44FFB0088C51F /* WalletCell.swift */,
 				F26360BD23C44FFB0088C51F /* ProfileCell1.swift */,
 				F26360BE23C44FFB0088C51F /* CategoryCollectionCellList.swift */,
-				D4CE47E8244E4B82003AA256 /* DashBoardHeaderTableViewCell.swift */,
-				D4CE47E9244E4B82003AA256 /* DashBoardHeaderTableViewCell.xib */,
-				D4F7A49724501B0000D01A23 /* DashBoardMainTVC.swift */,
-				D4F7A49824501B0000D01A23 /* DashBoardMainTVC.xib */,
-				D4F7A49B24501B5300D01A23 /* DashBoardSecCell.swift */,
-				D4F7A49C24501B5300D01A23 /* DashBoardSecCell.xib */,
 				D4A5DBA6249BE0F3000FB7E1 /* FAQCell.swift */,
 				D4A5DBA7249BE0F3000FB7E1 /* FAQCell.xib */,
 				D4A5DBAA249BE39E000FB7E1 /* FAQCell2.swift */,
@@ -706,29 +809,26 @@
 		F26360E523C44FFB0088C51F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				93EA8816255B13C800B731B6 /* Mantras */,
+				93F0286B253E249A00F81067 /* QueryReportVC */,
+				9347A8EB2536B01000070B96 /* Chat */,
+				93234D4D252A075800E5BF69 /* FreeServicesVC */,
+				93118D5D2516375A00AD8728 /* BlogVc */,
+				9317D98D25129B4600D64EF6 /* ForgetVc */,
+				9317D98C2512923E00D64EF6 /* RegistrationVc */,
+				9317D98B2512921F00D64EF6 /* LoginVC */,
+				9317D98A2512921000D64EF6 /* DashboardVC */,
 				E69E27AE24F276970003DBA9 /* AddNewCardVC.swift */,
 				D4AFCDA3248B5C3200E3DEAB /* OLD */,
 				D42331AC24824662006F10B1 /* ChatVC */,
-				F26360F223C44FFB0088C51F /* LoginVC.swift */,
-				F263617423C460660088C51F /* EnterCode_ViewController.swift */,
-				F263617A23C47B650088C51F /* RegistrationotpVC.swift */,
-				F26360F923C44FFB0088C51F /* SignupVC.swift */,
-				F24CBB1523D1991C008CFC1A /* CountryVC.swift */,
-				F2B9E37423D71B4E005AC9A2 /* ForgetVC.swift */,
-				F263610523C44FFB0088C51F /* ForgotVC.swift */,
-				F263617823C477350088C51F /* DashboardVC.swift */,
 				F2BCF00123D303DA00CF6D48 /* SideMenuController.swift */,
 				F2D758F12425F1170069C77F /* iphone_whatsapp_20161.mp3 */,
 				F2BCF00323D31E9700CF6D48 /* WalletVC.swift */,
+				F24CBB1523D1991C008CFC1A /* CountryVC.swift */,
 				F2C3361623C5BBFB008C3AFF /* ProfileVC.swift */,
 				F2DC8D5823C8463500BE8C76 /* NewProfileVC.swift */,
-				F2C3361A23C5EC07008C3AFF /* PopUpChatcall.swift */,
-				F2EE732123C6FF3C00FD78F4 /* PopUPChatVC.swift */,
 				F2C3361D23C60D7D008C3AFF /* CallHistoryVC.swift */,
 				F2478C4C23F4199D003E5334 /* Userrrr.swift */,
-				F2478C4E23F4220B003E5334 /* Message.swift */,
-				F2A5545723FD08E40035CB45 /* MessageNew.swift */,
-				F2C3361F23C60D9F008C3AFF /* ChatHistoryVC.swift */,
 				F2C3362123C60DBD008C3AFF /* SupportVC.swift */,
 				F2C3362323C60DD9008C3AFF /* EarningVC.swift */,
 				F2C3362523C60DF7008C3AFF /* WaitListVC.swift */,
@@ -737,8 +837,6 @@
 				F2611F3923D05AFD0060817A /* LoadingCell.swift */,
 				F2611F3D23D078D30060817A /* CityVC.swift */,
 				F2611F3E23D078D40060817A /* StateCityVC.swift */,
-				F2BCF00523D321D300CF6D48 /* BlogVC.swift */,
-				F2C24A7A23D96BDA006D72DF /* BlogDetailsVC.swift */,
 				F2E322092405107200A23B9D /* OUR FREE SERVICES ASTROSHUBH DATA.pdf */,
 				F2DFCAA123E0670B00FBBBE0 /* ZoomImageVC.swift */,
 				F2E322052404F61100A23B9D /* Baby name by nakshtra.pdf */,
@@ -747,11 +845,7 @@
 				F2CBCDF123D570520009FAC4 /* FAQVC.swift */,
 				F2CBCDF323D570FF0009FAC4 /* ContactVC.swift */,
 				F2B9E37023D6FA64005AC9A2 /* AstroTalkListVC.swift */,
-				F2B9E37223D6FA84005AC9A2 /* AstroChatListVC.swift */,
-				F2B9E37623D720C2005AC9A2 /* ChatFormVC.swift */,
-				F25BE80023F1389C00FD2CC2 /* QueryReportVC.swift */,
 				F2CE568B2418FDED00743B14 /* QuertRozerPayVC.swift */,
-				F2C9C91C2403E6E600BCC7E4 /* QueryReportListingVC.swift */,
 				F2DFCA9923E0337800FBBBE0 /* RechargeVC.swift */,
 				F2D22C5823E2DD41009FEE1B /* EFImageViewZoom.swift */,
 				F25BE80223F148C700FD2CC2 /* ProductCategoryVC.swift */,
@@ -763,7 +857,6 @@
 				F2D2A3EF23F277F100F7E06A /* HoroscopeMatchingVC.swift */,
 				F2E3220724050F8300A23B9D /* FESTIVALS Services.pdf */,
 				F2D2A3F123F2781300F7E06A /* MangaldoshVC.swift */,
-				F24B476723FE5B1B00DA3C2A /* FreeServicesVC.swift */,
 				F2923DB123FFE02F007CB1FA /* WalletNewVC.swift */,
 				F2923DB323FFF1BB007CB1FA /* PaymentInfoVC.swift */,
 				F2CE56892418B9CF00743B14 /* ApplyCouponVC.swift */,
@@ -782,6 +875,9 @@
 				D47D1EE3248D1F6B00E6EBCB /* CallEstimateVC.swift */,
 				D47D1EE5248D671100E6EBCB /* FirstMinuteVC.swift */,
 				D4A5DBA4249BDE32000FB7E1 /* FrequentlyAskQuestionVC.swift */,
+				93C74BEB255C2932004F07B7 /* OffersViewController.swift */,
+				93C74BED255C29E2004F07B7 /* OffersTableViewCell.swift */,
+				93C74BEE255C29E2004F07B7 /* OffersTableViewCell.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -894,9 +990,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F2E2EED7241B4C4A00A72C92 /* DPPopOverMenuCell.xib in Resources */,
-				F2EBB5C724223C4E0053DFA2 /* GoogleService-Info.plist in Resources */,
 				F2E2EED6241B4C3900A72C92 /* Assets.xcassets in Resources */,
 				F2E2EED5241B4C2A00A72C92 /* NohanaImagePicker.xcassets in Resources */,
+				93EA881C255B140E00B731B6 /* HeaderSectionTableViewCell.xib in Resources */,
 				D4CE47EB244E4B82003AA256 /* DashBoardHeaderTableViewCell.xib in Resources */,
 				F2E2EED4241B4C1700A72C92 /* Main.storyboard in Resources */,
 				F2D758F22425F1170069C77F /* iphone_whatsapp_20161.mp3 in Resources */,
@@ -907,7 +1003,9 @@
 				D4F7A49E24501B5300D01A23 /* DashBoardSecCell.xib in Resources */,
 				F2E2EED2241B4BF900A72C92 /* WWCalendarTimeSelector.storyboard in Resources */,
 				D4F7A49A24501B0000D01A23 /* DashBoardMainTVC.xib in Resources */,
+				932748FC25308E260059C902 /* GoogleService-Info.plist in Resources */,
 				F2E2EED1241B4BE700A72C92 /* LaunchScreen.storyboard in Resources */,
+				93C74BF0255C29E2004F07B7 /* OffersTableViewCell.xib in Resources */,
 				D4156602247C00450009C5F3 /* sample_query.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -984,6 +1082,7 @@
 				F263614423C44FFC0088C51F /* AssetCell.swift in Sources */,
 				F2C3361723C5BBFB008C3AFF /* ProfileVC.swift in Sources */,
 				F2D2A3EC23F2778B00F7E06A /* KundaliMatchingVC.swift in Sources */,
+				93EA881B255B140E00B731B6 /* HeaderSectionTableViewCell.swift in Sources */,
 				F2C9C9192403900200BCC7E4 /* PanchangListVC.swift in Sources */,
 				F263613723C44FFB0088C51F /* AssetDetailListViewController.swift in Sources */,
 				D4F7A496244F5D4D00D01A23 /* HoroScopeVC.swift in Sources */,
@@ -1004,6 +1103,7 @@
 				F2CE568A2418B9D000743B14 /* ApplyCouponVC.swift in Sources */,
 				F2C464AB24234E3D00C727AA /* TermsandconditionVC.swift in Sources */,
 				F263614C23C44FFC0088C51F /* ContractingAnimationController.swift in Sources */,
+				93C74BEF255C29E2004F07B7 /* OffersTableViewCell.swift in Sources */,
 				D41565FE247BE5080009C5F3 /* InfoVC.swift in Sources */,
 				F263611323C44FFB0088C51F /* String+Timepiece.swift in Sources */,
 				F2CE568C2418FDED00743B14 /* QuertRozerPayVC.swift in Sources */,
@@ -1098,6 +1198,7 @@
 				F263613923C44FFB0088C51F /* Size.swift in Sources */,
 				F25BE80723F169DC00FD2CC2 /* EnquiryShopVC.swift in Sources */,
 				F263612923C44FFB0088C51F /* SlideMenuCell.swift in Sources */,
+				93EA8818255B13EA00B731B6 /* MytrasViewController.swift in Sources */,
 				F2B87BE823DAB642005B62C9 /* AMRefresher.swift in Sources */,
 				F2DFCAA223E0670B00FBBBE0 /* ZoomImageVC.swift in Sources */,
 				F2C24A7D23D991CB006D72DF /* Data.swift in Sources */,
@@ -1114,12 +1215,14 @@
 				F263612723C44FFB0088C51F /* DoctorCell.swift in Sources */,
 				F263611E23C44FFB0088C51F /* Common.swift in Sources */,
 				F263612223C44FFB0088C51F /* MaterialButton.swift in Sources */,
+				93F9A89B251FBB6D007835BB /* PrashnavaliVC.swift in Sources */,
 				F2C3361E23C60D7D008C3AFF /* CallHistoryVC.swift in Sources */,
 				F2C24A7B23D96BDA006D72DF /* BlogDetailsVC.swift in Sources */,
 				F263611D23C44FFB0088C51F /* Validate.swift in Sources */,
 				F2B87BE623DAB642005B62C9 /* AMInfiniteScrolling.swift in Sources */,
 				F2CBCDF423D570FF0009FAC4 /* ContactVC.swift in Sources */,
 				F2BCF00823D3234F00CF6D48 /* ChangePassVC.swift in Sources */,
+				93C74BEC255C2932004F07B7 /* OffersViewController.swift in Sources */,
 				F263613823C44FFB0088C51F /* ActivityIndicatable.swift in Sources */,
 				F263612823C44FFB0088C51F /* LoginCell.swift in Sources */,
 				F2478C4F23F4220B003E5334 /* Message.swift in Sources */,
@@ -1140,6 +1243,7 @@
 				F263611C23C44FFB0088C51F /* AppHelperModel.swift in Sources */,
 				F263613C23C44FFB0088C51F /* EmptyIndicatable.swift in Sources */,
 				D4F7A49D24501B5300D01A23 /* DashBoardSecCell.swift in Sources */,
+				93234D4F252A0C2E00E5BF69 /* PopUPVC.swift in Sources */,
 				F2C84219240F70BA0073F92B /* RefertofriendVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1296,10 +1400,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Astroshub/Astroshub.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7RTV9YBVCV;
 				ENABLE_BITCODE = NO;
@@ -1318,9 +1422,9 @@
 				MARKETING_VERSION = 3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kriscent.testinguser.newuser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = DevProfile;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Astroshub/MVC/Bridging_Header.h;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1331,10 +1435,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Astroshub/Astroshub.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 7RTV9YBVCV;
 				ENABLE_BITCODE = NO;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -1352,9 +1456,9 @@
 				MARKETING_VERSION = 3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kriscent.testinguser.newuser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = DistributeP;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Astroshub/MVC/Bridging_Header.h;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

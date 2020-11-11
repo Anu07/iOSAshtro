@@ -33,7 +33,7 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
         
         btntop.setTitle(headername,for: .normal)
         
-        self.horoscopeUserIdApiCallMethods()
+      self.horoscopeUserIdApiCallMethods()
         // Do any additional setup after loading the view.
     }
     
@@ -52,7 +52,7 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
         
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
-        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey,"user_id":user_id,"zodic_id":""]
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad" ,"user_id":user_id.count > 0 ? user_id: "CUSGUS","zodic_id":""]
         print(setparameters)
         //ActivityIndicator.shared.startLoading()
         AutoBcmLoadingView.show("Loading......")
@@ -83,7 +83,6 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
                                                 dict_Products["isSelectedDeselected"] = "0"
                                                 dict_Products["id"] = i+1
                                                 self.index_value = i
-                                                
                                                 self.arrhoroscope.append(dict_Products)
                                             }
                                             self.return_Response = self.arrhoroscope
@@ -113,7 +112,7 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
         
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
-        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey,"user_id":user_id,"zodic_id":ZodiacID]
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad" ,"user_id":user_id.count > 0 ? user_id: "CUSGUS","zodic_id":ZodiacID]
         print(setparameters)
         //ActivityIndicator.shared.startLoading()
         // AutoBcmLoadingView.show("Loading......")
@@ -218,10 +217,6 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
             
             
             let dict_eventpoll = self.arrhoroscopeDiscription[indexPath.row]
-            
-            
-            
-            
             let name=dict_eventpoll["name"] as! String
             let date=dict_eventpoll["discription"] as! String
             

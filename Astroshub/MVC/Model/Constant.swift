@@ -10,7 +10,9 @@ import Foundation
 import UIKit
 
 struct Constants {
-    static let BASE_URL = "https://www.astroshubh.in/api/"
+    static let BASE_URL =
+"https://www.astroshubh.in/staging/api/"
+//    "https://www.astroshubh.in/api/"
     static let Connection = "No Internet Connection"
     static var devicetoken = NSData()
     static var DeviceTokenString = NSString()
@@ -76,7 +78,9 @@ public enum MethodName:String {
     case GET_CITY       = "cityByStateId"
     case GET_CAT        = "categories"
     case GET_PROFILE    = "users/getprofile"
-    
+    case getParnsavli  = "getPrashnavali"
+    case getMytras = "getMantra"
+    case coupon = "getCoupons"
 }
 
 //MARK:- App commons

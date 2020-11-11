@@ -22,20 +22,13 @@ class ChatHistoryVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
     @IBOutlet weak var lbl_time: UILabel!
     //var dict:NSMutableDictionary!
     let arrMsg = NSMutableArray()
-    
     var postData = [String]()
     var ref:DatabaseReference?
     var databaseHandle:DatabaseHandle?
     let arrUserList = NSMutableArray()
-    
     var messages = [Message]()
-    
     var newmessages = [MessageNew]()
-    
     var messageDictionary = [String:Message]()
-    
-    
-    
     var arrSortedchatList = [[String:Any]]()
     var time: NSNumber?
     var CurrentChatTime = Int()
@@ -182,10 +175,6 @@ class ChatHistoryVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
         let childRef = ref.childByAutoId()
         let toId = OnTabfcmUserID
         let fromId = Auth.auth().currentUser!.uid
-        
-        
-        
-        
         let timeStamp = Int(truncating: NSNumber(value: Date().timeIntervalSince1970))
         //let timeStamp = Int(1000 * Date().timeIntervalSince1970)
         let Name =  UsersendFirstData["Name"] as! String

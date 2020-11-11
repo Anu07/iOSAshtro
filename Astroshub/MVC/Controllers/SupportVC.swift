@@ -30,16 +30,9 @@ class SupportVC: UIViewController {
     var cityIdArray = [Int]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
         print(mainDropDown)
-        
-        
         self.func_GetCOUNTRY()
-        
         self.func_GetStates()
-        
         //view_top.layer.cornerRadius = 5.0
         // Do any additional setup after loading the view.
     }
@@ -136,81 +129,78 @@ class SupportVC: UIViewController {
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL("states", params: setparameters as [String : AnyObject],headers: nil,
-                                      success: { (respose) in
-                                        AutoBcmLoadingView.dismiss()
-                                        let tempDict = respose as! NSDictionary
-                                        print(tempDict)
-                                        let success=tempDict["response"] as!   Bool
-                                        let message=tempDict["msg"] as!   String
-                                        
-                                        if success == true
-                                        {
-                                            
-                                            
-                                            
-                                            let dict_data = tempDict["data"] as! [String:Any]
-                                            print("dict_data is:- ",dict_data)
-                                            self.stateArray = NSArray()
-                                            
-                                            
-                                            
-                                            if let arrtimeslot = dict_data["states"] as? NSArray
-                                            {
-                                                self.stateArray = arrtimeslot
-                                            }
-                                            print("arrTimeList is:- ",self.stateArray)
-                                            
-                                            for i in 0..<self.stateArray.count
-                                            {
-                                                let dict_Products = self.stateArray[i] as! NSDictionary
-                                                let name = dict_Products["state_name"] as! String
-                                                let id = dict_Products["state_id"] as! String
-                                                let iddddd = Int(id)
-                                                
-                                                
-                                                
-                                                
-                                                self.stateNameArray.append(name)
-                                                self.stateIdArray.append(iddddd!)
-                                                
-                                                
-                                            }
-                                            
-                                            self.stateDropDown.optionArray = self.stateNameArray
-                                            self.stateDropDown.optionIds = self.stateIdArray
-                                            self.stateDropDown.checkMarkEnabled = false
-                                            
-                                            self.stateDropDown.didSelect{(selectedText , index , id) in
-                                                self.valueLabel.text = "Selected String: \(selectedText) \n index: \(index) \n Id: \(id)"
-                                                
-                                                let txtddddd = selectedText
-                                                let txtIdddddddd = id
-                                                print(txtddddd)
-                                                print(txtIdddddddd)
-                                                
-                                                self.cityDropDown.text = ""
-                                                self.cityNameArray = [String]()
-                                                self.cityIdArray = [Int]()
-                                                userStateId = String(txtIdddddddd)
-                                                //  self.cityArray = NSArray()
-                                                self.func_GetCity()
-                                                
-                                            }
-                                            
-                                            self.stateDropDown.arrowSize = 20
-                                            
-                                            
-                                            
-                                            
-                                        }
-                                            
-                                        else
-                                        {
-                                            
-                                            
-                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            
-                                        }
+              success: { (respose) in
+                AutoBcmLoadingView.dismiss()
+                let tempDict = respose as! NSDictionary
+                print(tempDict)
+                let success=tempDict["response"] as!   Bool
+                let message=tempDict["msg"] as!   String
+                
+                if success == true
+                {
+                let dict_data = tempDict["data"] as! [String:Any]
+                print("dict_data is:- ",dict_data)
+                self.stateArray = NSArray()
+                
+                
+                
+                if let arrtimeslot = dict_data["states"] as? NSArray
+                {
+                    self.stateArray = arrtimeslot
+                }
+                print("arrTimeList is:- ",self.stateArray)
+                
+                for i in 0..<self.stateArray.count
+                {
+                    let dict_Products = self.stateArray[i] as! NSDictionary
+                    let name = dict_Products["state_name"] as! String
+                    let id = dict_Products["state_id"] as! String
+                    let iddddd = Int(id)
+                    
+                    
+                    
+                    
+                    self.stateNameArray.append(name)
+                    self.stateIdArray.append(iddddd!)
+                    
+                    
+                }
+                
+                self.stateDropDown.optionArray = self.stateNameArray
+                self.stateDropDown.optionIds = self.stateIdArray
+                self.stateDropDown.checkMarkEnabled = false
+                
+                self.stateDropDown.didSelect{(selectedText , index , id) in
+                    self.valueLabel.text = "Selected String: \(selectedText) \n index: \(index) \n Id: \(id)"
+                    
+                    let txtddddd = selectedText
+                    let txtIdddddddd = id
+                    print(txtddddd)
+                    print(txtIdddddddd)
+                    
+                    self.cityDropDown.text = ""
+                    self.cityNameArray = [String]()
+                    self.cityIdArray = [Int]()
+                    userStateId = String(txtIdddddddd)
+                    //  self.cityArray = NSArray()
+                    self.func_GetCity()
+                    
+                }
+                
+                self.stateDropDown.arrowSize = 20
+                
+                
+                
+                
+              }
+                
+            else
+            {
+                
+                
+                CommenModel.showDefaltAlret(strMessage:message, controller: self)
+                
+            }
                                         
                                         
         }) { (error) in

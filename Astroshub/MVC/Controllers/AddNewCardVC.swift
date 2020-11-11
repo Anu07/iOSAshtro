@@ -14,7 +14,7 @@ protocol DelegateStripePayment : class{
 }
 
 class AddNewCardVC: UIViewController {
-
+    
     //MARK:- Outlets
     
     @IBOutlet weak var txtCardNo: UITextField!
@@ -29,11 +29,11 @@ class AddNewCardVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         txtCardNo.becomeFirstResponder()
@@ -93,7 +93,7 @@ class AddNewCardVC: UIViewController {
                 }
             }
         }
-
+        
         return "Valid Card"
     }
     
@@ -115,13 +115,13 @@ class AddNewCardVC: UIViewController {
                                         AutoBcmLoadingView.dismiss()
                                         if success == true{
                                             guard let data=tempDict["data"] as? [String : Any],
-                                            let paymentID = data["stripe_charge_id"] as? String else { return }
+                                                let paymentID = data["stripe_charge_id"] as? String else { return }
                                             self.navigationController?.popViewController(animated: true)
                                             self.delegateStripePay?.paymentDone(isSuccess: true, paymentId: paymentID, msg : "")
                                             
                                         }else{
                                             guard let data=tempDict["data"] as? [String : Any],
-                                            let err = data["value"] as? String else { return }
+                                                let err = data["value"] as? String else { return }
                                             self.navigationController?.popViewController(animated: true)
                                             self.delegateStripePay?.paymentDone(isSuccess: false, paymentId: "", msg : err)
                                             
@@ -197,11 +197,6 @@ extension AddNewCardVC:UITextFieldDelegate {
             if string == "" && textField.text!.hasSuffix(" ") {
                 textField.text!.removeLast()
             }
-           
-//            if textField.text!.count > 19 {
-//                return false
-//            }
-              
             return (txtCardNo.text!.count < 20) || string == ""
         } else if textField == txtExpiryDate {
             if textField.text!.count == 2 && string != "" {

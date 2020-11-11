@@ -12,7 +12,7 @@ import Razorpay
 
 
 //MARK:- CLASS VARIBALES
-private var KEY_ID = "rzp_test_pDqqc1wovvXUCn" // @"rzp_test_1DP5mmOlF5G5ag";
+private var KEY_ID = "rzp_live_1idxRp4tPV0Llx" // @"rzp_test_1DP5mmOlF5G5ag";
 private let SUCCESS_TITLE = "Yay!"
 private let SUCCESS_MESSAGE = "Your payment was successful. The payment ID is %@"
 private let FAILURE_TITLE = "Uh-Oh!"

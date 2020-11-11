@@ -28,7 +28,7 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
     let propertyArray = [
         "Home",
         "Transaction History",
-        "My Query/Report",
+        "My Query/Report/Remedy",
         "Blog",
         "History",
         "Free Services",
@@ -40,6 +40,7 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
         "Privacy Policy",
         "FAQ",
         "Contact",
+        "Offers",
         //"Tutorial",
         "Logout"
     ]
@@ -58,6 +59,7 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
         "term-and-condition",
         "PrivacyPolicy",
         "faq",
+        "contact us",
         "contact us",
         //"tutorial",
         "logout-1"
@@ -299,6 +301,16 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
             } else if indexPath.row == 12 {
                 let Contact = self.storyboard?.instantiateViewController(withIdentifier: "ContactVC")
                 self.navigationController?.pushViewController(Contact!, animated: true)
+//            } else if indexPath.row == 14 {
+//                let youtubeId = "jANE8lpoj2c"
+//                var url = URL(string:"youtube://\(youtubeId)")!
+//                if !UIApplication.shared.canOpenURL(url)  {
+//                    url = URL(string:"http://www.youtube.com/watch?v=\(youtubeId)")!
+//                }
+//                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            }  else if indexPath.row == 13 {
+                let Contact = self.storyboard?.instantiateViewController(withIdentifier: "OffersViewController") as! OffersViewController
+                self.navigationController?.pushViewController(Contact, animated: true)
 //            } else if indexPath.row == 14 {
 //                let youtubeId = "jANE8lpoj2c"
 //                var url = URL(string:"youtube://\(youtubeId)")!

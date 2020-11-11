@@ -90,6 +90,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
             handler(fetchedItems)
         }
     }
+        
     //****************************************************
     // MARK: - Custom Method
     //****************************************************
@@ -364,17 +365,27 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
             let image1 = UIImage(named: "like")
             cell_Add.btn_like.setImage(image1, for: .normal)
         }
-        
+        cell_Add.shareButton.tag = indexPath.row
+        cell_Add.shareButton.addTarget(self, action: #selector(shareButton), for: .touchUpInside)
         
         return cell_Add
         
+    }
+   @objc func shareButton(_ sender :UIButton){
+    let dict_eventpoll = self.arrBlogs[sender.tag]
+
+    let text = "" 
+                                                          let myWebsite = URL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
+                                                          let shareAll = [text , myWebsite as Any] as [Any]
+                                                          let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+                                                          activityViewController.popoverPresentationController?.sourceView = self.view
+                                                          self.present(activityViewController, animated: true, completion: nil)
     }
     @objc func btn_LikeAction(_ sender: UIButton)
     {
         let dict = self.arrBlogs[sender.tag]
         blod_id = dict["blog_id"] as! String
         blod_like = dict["like"] as! Int
-        
         if blod_like == 0
         {
             self.BloglikeApiCallMethods()

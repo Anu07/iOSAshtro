@@ -329,16 +329,21 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         cell_Add.btnRateUs.layer.borderWidth = 2
         cell_Add.btnRateUs.setTitleColor(.green, for: .normal)
         cell_Add.btnRateUs.layer.borderColor = UIColor.green.cgColor
-        if chatBusyStatus == "1" {
-            cell_Add.btnChat.setTitleColor(.red, for: .normal)
-            cell_Add.btnChat.layer.borderColor = UIColor.red.cgColor
-            cell_Add.btnChat.setTitle("Busy",for: .normal)
-        } else {
+//        if chatBusyStatus == "1" {
+//            cell_Add.btnChat.setTitleColor(.red, for: .normal)
+//            cell_Add.btnChat.layer.borderColor = UIColor.red.cgColor
+//            cell_Add.btnChat.setTitle("Busy",for: .normal)
+//        } else {
             if chatStatus == "1"
             {
                 cell_Add.btnChat.setTitleColor(.green, for: .normal)
                 cell_Add.btnChat.layer.borderColor = UIColor.green.cgColor
                 cell_Add.btnChat.setTitle("Chat",for: .normal)
+            } else  if chatStatus == "2"
+            {
+                cell_Add.btnChat.setTitleColor(.red, for: .normal)
+                            cell_Add.btnChat.layer.borderColor = UIColor.red.cgColor
+                            cell_Add.btnChat.setTitle("Busy",for: .normal)
             }
             else
             {
@@ -346,6 +351,11 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 cell_Add.btnChat.layer.borderColor = UIColor.darkGray.cgColor
                 cell_Add.btnChat.setTitle("Offline",for: .normal)
             }
+//        }
+        if  dict_eventpoll["astrologers_id"] as? String == "94"{
+            cell_Add.btnChat.setTitleColor(.green, for: .normal)
+            cell_Add.btnChat.layer.borderColor = UIColor.green.cgColor
+            cell_Add.btnChat.setTitle("Chat",for: .normal)
         }
         if CurrentLocation == "India"
         {
@@ -433,7 +443,7 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         let dict_eventpoll = self.arrTalk[sender.tag]
         let chatStatus = dict_eventpoll["astro_chat_status"] as? String ?? ""
         let chatBusyStatus = dict_eventpoll["chat_busy_status"] as? String ?? ""
-        if chatBusyStatus == "1" {
+        if chatStatus == "2" {
             return
         } else {
             if chatStatus == "0" {

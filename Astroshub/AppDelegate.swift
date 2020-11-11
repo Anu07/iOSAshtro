@@ -26,6 +26,7 @@ import Stripe
 class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     
     var window: UIWindow?
+    var navigationC: UINavigationController?
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -83,9 +84,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-//        if url.scheme?.localizedCaseInsensitiveCompare("com.kriscent.testinguser.newuser-app.payments") == .orderedSame {
-//            return BTAppSwitch.handleOpen(url, options: options)
-//        }
+        //        if url.scheme?.localizedCaseInsensitiveCompare("com.kriscent.testinguser.newuser-app.payments") == .orderedSame {
+        //            return BTAppSwitch.handleOpen(url, options: options)
+        //        }
         return false
     }
     
@@ -227,6 +228,11 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             print("Message ID: \(messageID)")
         }
         print(userInfo)
+        let datw = userInfo["user_data"] as! String
+        let dict = datw.convertJsonStringToDictionary()
+        print("string > \(datw)")
+        // string > {"name":"zgpeace"}
+        print("dicionary > \(String(describing: dict))")
         if UIApplication.shared.applicationState == .active { // In iOS 10 if app is in foreground do nothing.
             completionHandler([.alert, .badge, .sound])
         } else { // If app is not active you can show banner, sound and badge.
@@ -239,9 +245,42 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
-        let userInfo = response.notification.request.content.userInfo
+        let userInfo = response.notification.request.content.userInfo as!  [String : Any]
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
+        }
+        
+        let title = userInfo["title"] as! String
+        let datw = userInfo["user_data"] as! String
+
+        let dict = datw.convertJsonStringToDictionary()
+        print("string > \(datw)")
+        // string > {"name":"zgpeace"}
+        print("dicionary > \(String(describing: dict))")
+        
+        if  title == "Astrologer Chat End"{
+            
+        } else if title == "Astrologer Accepted Chat Request"{
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginvc = storyboard.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
+            //            self.navigationC = UINavigationController(rootViewController: loginvc)
+//            loginvc.anotherUserId = userInfo["body"] as? String
+            chatStartorEnd = title
+            loginvc.data = dict
+            self.window?.clipsToBounds = true
+            self.window?.rootViewController = loginvc
+            self.window?.makeKeyAndVisible()
+            
+        }  else if title == "Astrologer Rejected Chat Request"{
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginvc = storyboard.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
+            //            self.navigationC = UINavigationController(rootViewController: loginvc)
+            chatStartorEnd = title
+            self.window?.clipsToBounds = true
+            self.window?.rootViewController = loginvc
+            self.window?.makeKeyAndVisible()
         }
         completionHandler()
     }
@@ -333,5 +372,16 @@ class FileDownloader {
             })
             task.resume()
         }
+    }
+}
+extension String {
+
+    /// convert JsonString to Dictionary
+    func convertJsonStringToDictionary() -> [String: Any]? {
+        if let data = data(using: .utf8) {
+            return (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
+        }
+
+        return nil
     }
 }

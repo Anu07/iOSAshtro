@@ -281,16 +281,21 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         cell_Add.btnRateUs.addTarget(self, action: #selector(buttonRateAction), for: .touchUpInside)
         cell_Add.btnRateUs.layer.borderColor = UIColor.green.cgColor
         
-        if chatBusyStatus == "1" {
-            cell_Add.btnCall.setTitleColor(.red, for: .normal)
-            cell_Add.btnCall.layer.borderColor = UIColor.red.cgColor
-            cell_Add.btnCall.setTitle("Busy",for: .normal)
-        } else {
+//        if chatBusyStatus == "1" {
+//            cell_Add.btnCall.setTitleColor(.red, for: .normal)
+//            cell_Add.btnCall.layer.borderColor = UIColor.red.cgColor
+//            cell_Add.btnCall.setTitle("Busy",for: .normal)
+//        } else {
             if talkstatus == "1"
             {
                 cell_Add.btnCall.setTitleColor(.green, for: .normal)
                 cell_Add.btnCall.layer.borderColor = UIColor.green.cgColor
                 cell_Add.btnCall.setTitle("Call",for: .normal)
+            } else  if talkstatus == "2"
+            {
+                cell_Add.btnCall.setTitleColor(.red, for: .normal)
+                           cell_Add.btnCall.layer.borderColor = UIColor.red.cgColor
+                           cell_Add.btnCall.setTitle("Busy",for: .normal)
             }
             else
             {
@@ -298,9 +303,25 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 cell_Add.btnCall.layer.borderColor = UIColor.darkGray.cgColor
                 cell_Add.btnCall.setTitle("Offline",for: .normal)
             }
-        }
-        
-        
+//        }
+//        if chatStatus == "1"
+//        {
+//            cell_Add.btnChat.setTitleColor(.green, for: .normal)
+//            cell_Add.btnChat.layer.borderColor = UIColor.green.cgColor
+//            cell_Add.btnChat.setTitle("Chat",for: .normal)
+//        } else  if chatStatus == "2"
+//        {
+//            cell_Add.btnChat.setTitleColor(.red, for: .normal)
+//                        cell_Add.btnChat.layer.borderColor = UIColor.red.cgColor
+//                        cell_Add.btnChat.setTitle("Busy",for: .normal)
+//        }
+//        else
+//        {
+//            cell_Add.btnChat.setTitleColor(.darkGray, for: .normal)
+//            cell_Add.btnChat.layer.borderColor = UIColor.darkGray.cgColor
+//            cell_Add.btnChat.setTitle("Offline",for: .normal)
+//        }
+//
         if CurrentLocation == "India"
         {
             cell_Add.lbl_price.text = rupee + String(price1) + "/minute"
@@ -388,7 +409,7 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         let dict_eventpoll = self.arrTalk[sender.tag]
         let chatStatus = dict_eventpoll["astro_call_status"] as? String ?? ""
         let chatBusyStatus = dict_eventpoll["call_busy_status"] as? String ?? ""
-        if chatBusyStatus == "1" {
+        if chatStatus == "2" {
             return
         } else {
             if chatStatus == "0" {

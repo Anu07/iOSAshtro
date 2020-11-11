@@ -1418,6 +1418,7 @@ class ProfileCell4: UITableViewCell {
     
     @IBOutlet weak var textQuery: UITextView!
     
+    @IBOutlet weak var labelForQuery: UILabel!
 }
 
 class ProfileCellTwoButtons: UITableViewCell {

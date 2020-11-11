@@ -26,8 +26,6 @@ class HoroScopeVC: UIViewController,UICollectionViewDelegateFlowLayout,UICollect
         self.horoscopeCollectionView.dataSource = self
         self.horoscopeCollectionView.allowsSelection = true
     }
-    
-    
     @IBAction func buttonBackAction(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }

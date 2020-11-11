@@ -84,7 +84,7 @@ class AppHelperModel: NSObject {
         
         print(url)
         
-        Alamofire.request(url, method: .post, parameters: params, encoding: URLEncoding.httpBody, headers: headers).responseJSON { (responseObject) -> Void in
+        Alamofire.request(url, method: .post, parameters: params, encoding: URLEncoding.default, headers: headers).responseJSON { (responseObject) -> Void in
             
             print(responseObject)
             if responseObject.result.isSuccess {

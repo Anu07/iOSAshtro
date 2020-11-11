@@ -99,6 +99,10 @@ var CouponID = ""
 var RemainingDiscountAmount = ""
 var FormQueryPrice = Int()
 var FormReportPrice = Int()
+var FormRemedyPrice = Int()
+var FormRemedydollarPrice = Int()
+var chatStartorEnd :String?
+
 var QueryReportFormshow = ""
 var PaymentID = ""
 var AMTNY = ""

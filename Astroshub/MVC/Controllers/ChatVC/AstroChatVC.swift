@@ -31,7 +31,10 @@ class AstroChatVC: UIViewController {
     var astroFirstMessage = true
     var startTime = ""
     var convesationStarted = false
-    
+    var dict:NSDictionary!
+    var data :[String:Any]?
+    var anotherUserId :String?
+    var messageArray : [messageModel] = []
     
     private var datasource = [(String, [AstroMessage])]() {
         didSet {
@@ -63,18 +66,41 @@ class AstroChatVC: UIViewController {
         self.lblTitle.text = AstrologerNameee
         self.tblView.delegate = self
         self.tblView.dataSource = self
-        self.sendFirstMessage()
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "SingleThreadUpdation"), object: nil, queue: .main) { (notification) in
-            guard let node = notification.userInfo?["id"] as? String,
-                node == self.thread?.node else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.tblView.reloadData()
-            }
+        if data == nil{
+//            if anotherUserId == "" {
+                anotherUserId = OnTabfcmUserID
+//            }
+        } else {
+            anotherUserId = data!["astroFcmId"] as? String
+
         }
+//        print(data!)
+        if anotherUserId == "" {
+            anotherUserId = OnTabfcmUserIDD
+        }
+     observeMessage()
+        //        self.sendFirstMessage()
+        //        observeMessage()
+        //        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "SingleThreadUpdation"), object: nil, queue: .main) { (notification) in
+        //            guard let node = notification.userInfo?["id"] as? String,
+        //                node == self.thread?.node else { return }
+        //            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        //                self.tblView.reloadData()
+        //            }
+        //        }
         Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(callFirstMessage), userInfo: nil, repeats: false)
         Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(callMessageAfter5Min), userInfo: nil, repeats: false)
-        self.setStartTime()
+       self.setStartTime()
+        if chatStartorEnd == "Astrologer Accepted Chat Request" {
+            txtView.isUserInteractionEnabled  = true
+            btnChat.isUserInteractionEnabled = true
+             self.sendFirstMessage()
+        } else {
+            txtView.isUserInteractionEnabled  = false
+             btnChat.isUserInteractionEnabled = false
+        }
     }
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         IQKeyboardManager.shared.enable = true
@@ -105,6 +131,40 @@ class AstroChatVC: UIViewController {
         CommenModel.showDefaltAlret(strMessage: "Our expert is ready to guide you, please wait for two minutes, meanwhile, our astrologer is preparing your chart.As we value our customer's money. We will start deducting money from the wallet after two minutes only", controller: self)
     }
     
+    func observeMessage()
+    {
+        self.messageArray.removeAll()
+        
+        let userMessageRef = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(anotherUserId ?? "")
+        let userMessageRef1 = Database.database().reference().child("messages").child(anotherUserId ?? "").child(Auth.auth().currentUser!.uid)
+        userMessageRef.observe(.childAdded, with: { (snapshot) in
+            let messageId = snapshot.key
+            let messagesRef = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(self.anotherUserId ?? "").child(messageId)
+            //  messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let dict = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                self.messageArray.append(messageModel(dict: dict))
+                self.tblView.reloadData()
+            }, withCancel: nil)
+        }, withCancel: nil)
+        
+        userMessageRef1.observe(.childAdded, with: { (snapshot) in
+            let UserId = snapshot.key
+            let messagesRef = Database.database().reference().child("messages").child(self.anotherUserId ?? "").child(Auth.auth().currentUser!.uid).child(UserId)
+            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                guard let dict = snapshot.value as? [String: AnyObject] else {
+                    return
+                }
+                self.messageArray.append(messageModel(dict: dict))
+                self.tblView.reloadData()
+            }, withCancel: nil)
+        }, withCancel: nil)
+        
+        
+    }
     
     
     //MARK: Manage timer
@@ -262,14 +322,14 @@ class AstroChatVC: UIViewController {
                                             controller.completionHandler = {
                                                 print("hell")
                                                 let refreshAlert = UIAlertController(title: "AstroShubh", message: "Your Review is Added Successfully", preferredStyle: UIAlertController.Style.alert)
-                                                    refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
-                                                        {
-                                                            (action: UIAlertAction!) in
-                                                            self.navigationController?.popToRootViewController(animated: true)
-                                                    }))
-                                                    self.present(refreshAlert, animated: true, completion: nil)
-                                                    }
-                                                self.present(controller, animated: true, completion: nil)
+                                                refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
+                                                    {
+                                                        (action: UIAlertAction!) in
+                                                        self.navigationController?.popToRootViewController(animated: true)
+                                                }))
+                                                self.present(refreshAlert, animated: true, completion: nil)
+                                            }
+                                            self.present(controller, animated: true, completion: nil)
                                             
                                         }
                                             
@@ -307,7 +367,6 @@ class AstroChatVC: UIViewController {
     // MARK: IBActions
     
     @IBAction func actionBack(_ sender: UIButton) {
-        
         let refreshAlert = UIAlertController(title: "Astroshubh", message: "Are You Sure to end the chat? ", preferredStyle: UIAlertController.Style.alert)
         refreshAlert.addAction(UIAlertAction(title: "Confirm", style: .default, handler:
             {
@@ -323,11 +382,44 @@ class AstroChatVC: UIViewController {
     }
     
     func sendFirstMessage() {
-        let firstmessage =  "Name : " + self.firstMessageData.name + "\n" + "Gender : " + self.firstMessageData.gender + "\n" + "Date of Birth : " + self.firstMessageData.dob + "\n" + "Date of Time : " +  self.firstMessageData.dot + "\n" + "Pob : " +  self.firstMessageData.pob + "\n" + "Problem : " +  self.firstMessageData.problem + "\n" + "Location : " +  self.firstMessageData.location
-        
-        guard let threadUnwrapped = thread else { return }
+        let firstmessage =  "Name : " + (self.data?["user_name"] as! String) + "\n" + "Gender : " + (self.data?["user_gender"] as! String) + "\n" + "Date of Birth : " + (self.data?["user_dob"] as! String) + "\n" + "Date of Time : " +  (self.data?["user_dob"] as! String) + "\n" + "Pob : " +  (self.data?["user_pob"] as! String) + "\n" + "Problem : " +  (self.data?["problem_area"] as! String) + "\n" + "Location : " +  (self.data?["user_pob"] as! String)
         self.sendOnce = false
-        helper.add(message: firstmessage, to: threadUnwrapped)
+        
+        let ref = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(anotherUserId ?? "")
+            let childRef = ref.childByAutoId()
+            let toId = anotherUserId
+            //                let fromId = Auth.auth().currentUser!.uid
+            
+            // let timeStamp = NSNumber(value: Date().timeIntervalSince1970)
+            // let timeStamp = Date().toMillis()
+            let timeStamp = Int(truncating: NSNumber(value: Date().timeIntervalSince1970))
+            //let timeStamp = Int(1000 * Date().timeIntervalSince1970)
+            //let timeStamp = Int(truncating: NSNumber(value: Date().timeIntervalSince1970))
+            let values: [String : Any] = ["from":Auth.auth().currentUser!.uid as AnyObject,"message": firstmessage,"seen":"false", "time":timeStamp as Any,"type":"text"]
+            
+            childRef.updateChildValues(values)
+            
+            childRef.updateChildValues(values) { (error, ref) in
+                if error != nil {
+                    print(error!)
+                    return
+                }
+                self.txtView.text = ""
+                let userMessageRef = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).child(toId ?? "")
+                let messageId = childRef.key
+                userMessageRef.updateChildValues([messageId: 1])
+                
+                let recipentUserMessageRef = Database.database().reference().child("user-messages").child(toId ?? "").child(Auth.auth().currentUser!.uid)
+                recipentUserMessageRef.updateChildValues([messageId: 1])
+            }
+            childRef.observe(.childAdded) { (snapshot) in
+                
+                print(snapshot)
+                //                            self.moveToLastComment()
+                
+            }
+        
+        
     }
     
     @IBAction func action(_ sender: Any) {
@@ -335,36 +427,71 @@ class AstroChatVC: UIViewController {
             self.sendFirstMessage()
             self.sendOnce = false
         }
-        guard let threadUnwrapped = thread else { return }
-        let content = txtView.text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard content != "" else { return }
-        txtView.text = nil
-        textViewDidChange(txtView)
-        _ = textView(txtView, shouldChangeTextIn: NSRange(), replacementText: "")
-        helper.add(message: content, to: threadUnwrapped)
+
+        let ref = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(anotherUserId ?? "")
+        let childRef = ref.childByAutoId()
+        let toId = anotherUserId
+        //                let fromId = Auth.auth().currentUser!.uid
+        
+        // let timeStamp = NSNumber(value: Date().timeIntervalSince1970)
+        // let timeStamp = Date().toMillis()
+        let timeStamp = Int(truncating: NSNumber(value: Date().timeIntervalSince1970))
+        //let timeStamp = Int(1000 * Date().timeIntervalSince1970)
+        //let timeStamp = Int(truncating: NSNumber(value: Date().timeIntervalSince1970))
+        let values: [String : Any] = ["from":Auth.auth().currentUser!.uid as AnyObject,"message": txtView.text!,"seen":"false", "time":timeStamp as Any,"type":"text"]
+        
+        childRef.updateChildValues(values)
+        
+        childRef.updateChildValues(values) { (error, ref) in
+            if error != nil {
+                print(error!)
+                return
+            }
+            self.txtView.text = ""
+            let userMessageRef = Database.database().reference().child("user-messages").child(Auth.auth().currentUser!.uid).child(toId ?? "")
+            let messageId = childRef.key
+            userMessageRef.updateChildValues([messageId: 1])
+            
+            let recipentUserMessageRef = Database.database().reference().child("user-messages").child(toId ?? "").child(Auth.auth().currentUser!.uid)
+            recipentUserMessageRef.updateChildValues([messageId: 1])
+        }
+        childRef.observe(.childAdded) { (snapshot) in
+            
+            print(snapshot)
+            //                            self.moveToLastComment()
+            
+        }
+        
+        
+        
+        
+        
+        
+        
     }
 }
 
 // MARK: - Tableview datasource
 extension AstroChatVC: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return datasource.count
+        return 1
     }
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        return datasource[section].1.count
+        return self.messageArray.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let message = datasource[indexPath.section].1[indexPath.row]
-        if message.wasSent {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "SentTVC", for: indexPath) as! SentTVC
-            cell.shouldHideImage = false
-            cell.thread = thread
-            cell.message = message
-            return cell
-        } else {
+        let message =  messageArray[indexPath.row].from
+        let timestamp = messageArray[indexPath.row].time
+        let date = NSDate(timeIntervalSince1970:TimeInterval(Float(timestamp)!))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm:a"
+        dateFormatter.timeZone = NSTimeZone(name: "en_US") as TimeZone?
+        let dateString = dateFormatter.string(from: date as Date)
+        print("formatted date is =  \(dateString)")
+        if message == anotherUserId{
             if astroFirstMessage {
                 astroFirstMessage = false
                 self.initializeTimer()
@@ -372,9 +499,13 @@ extension AstroChatVC: UITableViewDataSource {
                 Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(callMessageForkundliInProgress), userInfo: nil, repeats: false)
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecievedTVC", for: indexPath) as! RecievedTVC
-            cell.shouldHideImage = false
-            cell.thread = thread
-            cell.message = message
+            cell.lblTime.text =  dateString
+            cell.labelForReceiver.text = messageArray[indexPath.row].message
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "SentTVC", for: indexPath) as! SentTVC
+            cell.labelForMsg.text = messageArray[indexPath.row].message
+            cell.lblTime.text =  dateString
             return cell
         }
     }
@@ -472,57 +603,59 @@ extension UIDataSourceTranslating {
 
 class SentTVC: UITableViewCell {
     
-    @IBOutlet private weak var viewImage: UIView!
-    @IBOutlet private weak var imgViewUser: UIImageView!
-    @IBOutlet  weak var txtViewMessage: UITextView!
-    @IBOutlet private weak var lblTime: UILabel!
-    @IBOutlet private weak var imgViewReadStatus: UIImageView!
+    //    @IBOutlet private weak var viewImage: UIView!
+    //    @IBOutlet private weak var imgViewUser: UIImageView!
+    //    @IBOutlet  weak var txtViewMessage: UITextView!
+    @IBOutlet  weak var lblTime: UILabel!
+    //    @IBOutlet private weak var imgViewReadStatus: UIImageView!
     
+    @IBOutlet weak var labelForMsg: UILabel!
     
     var thread: ChatThread?
     var shouldHideImage: Bool = false {
         willSet {
-            viewImage.isHidden = newValue
+            //            viewImage.isHidden = newValue
         }
     }
     
-    var message: AstroMessage? {
-        didSet {
-            txtViewMessage.text = self.message?.content
-            imgViewUser.sd_setImage(with: URL(string: UserImageurl), placeholderImage: UIImage(named: "user2"))
-            lblTime.text = Date.formatted(time: self.message?.time ?? 0)
-            setBuleTick(newTime: Int(self.message?.time ?? 0.0))
-        }
-    }
+    //    var message: AstroMessage? {
+    //        didSet {
+    //            txtViewMessage.text = self.message?.content
+    //            imgViewUser.sd_setImage(with: URL(string: UserImageurl), placeholderImage: UIImage(named: "user2"))
+    //            lblTime.text = Date.formatted(time: self.message?.time ?? 0)
+    //            setBuleTick(newTime: Int(self.message?.time ?? 0.0))
+    //        }
+    //    }
     
-    func setBuleTick(newTime: Int){
-        var readcount = 0
-        guard let lastSeenDict = thread?.threadLastSeen else { return }
-        if thread?.members.count != lastSeenDict.count{
-            self.imgViewReadStatus.tintColor = .gray
-            return
-        }else{
-            for (_ , lastSeenTime) in lastSeenDict {
-                if lastSeenTime < newTime {
-                    break
-                } else {
-                    readcount += 1
-                }
-            }
-            self.imgViewReadStatus.tintColor = lastSeenDict.count == readcount ? .blue : .gray
-        }
-        
-    }
+    //    func setBuleTick(newTime: Int){
+    //        var readcount = 0
+    //        guard let lastSeenDict = thread?.threadLastSeen else { return }
+    //        if thread?.members.count != lastSeenDict.count{
+    //            self.imgViewReadStatus.tintColor = .gray
+    //            return
+    //        }else{
+    //            for (_ , lastSeenTime) in lastSeenDict {
+    //                if lastSeenTime < newTime {
+    //                    break
+    //                } else {
+    //                    readcount += 1
+    //                }
+    //            }
+    //            self.imgViewReadStatus.tintColor = lastSeenDict.count == readcount ? .blue : .gray
+    //        }
+    //
+    //    }
     
 }
 
-final class RecievedTVC: UITableViewCell {
+class RecievedTVC: UITableViewCell {
     
     @IBOutlet private weak var viewImage: UIView!
     @IBOutlet private weak var imgViewUser: UIImageView!
-    @IBOutlet private weak var txtViewMessage: UITextView!
-    @IBOutlet private weak var lblTime: UILabel!
+    @IBOutlet  weak var txtViewMessage: UITextView!
+    @IBOutlet  weak var lblTime: UILabel!
     
+    @IBOutlet weak var labelForReceiver: UILabel!
     var thread: ChatThread?
     var shouldHideImage: Bool = false {
         willSet {
@@ -530,13 +663,13 @@ final class RecievedTVC: UITableViewCell {
         }
     }
     
-    var message: AstroMessage? {
-        willSet {
-            txtViewMessage.text = newValue?.content
-            imgViewUser.sd_setImage(with: URL(string: (thread?.members.first?.image ?? "")), placeholderImage: UIImage(named: "user2"))
-            lblTime.text = Date.formatted(time: newValue?.time ?? 0)
-        }
-    }
+    //    var message: AstroMessage? {
+    //        willSet {
+    //            txtViewMessage.text = newValue?.content
+    //            imgViewUser.sd_setImage(with: URL(string: (thread?.members.first?.image ?? "")), placeholderImage: UIImage(named: "user2"))
+    //            lblTime.text = Date.formatted(time: newValue?.time ?? 0)
+    //        }
+    //    }
     
 }
 
@@ -549,4 +682,24 @@ extension Date {
         formatter.dateFormat = "hh:mm a"
         return formatter.string(from: date).uppercased()
     }
+}
+class messageModel:NSObject{
+    
+    var from = ""
+    var message = ""
+    var seen = ""
+    var time = ""
+    var type = ""
+    
+    init(dict: [String: AnyObject]) {
+        
+        self.from    = "\(dict["from"]!)"
+        self.message = "\(dict["message"]!)"
+        self.seen    = "\(dict["seen"]!)"
+        self.time    = "\(dict["time"]!)"
+        self.type    = "\(dict["type"]!)"
+        
+        
+    }
+    
 }

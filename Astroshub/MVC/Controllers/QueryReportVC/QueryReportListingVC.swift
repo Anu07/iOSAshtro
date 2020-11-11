@@ -9,13 +9,14 @@
 import UIKit
 
 class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDataSource,UITextFieldDelegate {
-
+    
     @IBOutlet var tbl_querylist: UITableView!
     @IBOutlet weak var view_Report: UIView!
     @IBOutlet var tbl_reportlist: UITableView!
     @IBOutlet weak var lbl1: UILabel!
     @IBOutlet weak var lbl2: UILabel!
     
+    @IBOutlet weak var lbl3: UILabel!
     var pdfString = ""
     
     var arrQuery = [[String:Any]]()
@@ -25,6 +26,8 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
         super.viewDidLoad()
         lbl1.isHidden = false
         lbl2.isHidden = true
+        lbl3.isHidden = true
+
         view_Report.isHidden = true
         
         
@@ -40,11 +43,59 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
     
     
     
-
+    
     //****************************************************
     // MARK: - API Methods
     //****************************************************
     func func_QuerytFormListing() {
+        
+        
+        let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id]
+        print(setparameters)
+        AutoBcmLoadingView.show("Loading......")
+        AppHelperModel.requestPOSTURL("viewQueryUser", params: setparameters as [String : AnyObject],headers: nil,
+                                      success: { (respose) in
+                                        AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        let success=tempDict["response"] as!   Bool
+                                        let message=tempDict["msg"] as!   String
+                                        
+                                        if success == true
+                                        {
+                                            
+                                            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
+                                            let dict_Data = tempDict["data"] as! [String:Any]
+                                            print("dict_Data is:- ",dict_Data)
+                                            if let arrqry = dict_Data["user_id"] as? [[String:Any]]
+                                            {
+                                                self.arrQuery = arrqry
+                                            }
+                                            print("arrBlogs is:- ",self.arrQuery)
+                                            self.view_Report.isHidden = true
+                                            self.lbl1.isHidden = false
+                                            self.lbl2.isHidden = true
+                                            self.tbl_querylist.reloadData()
+                                            
+                                            
+                                        }
+                                            
+                                        else
+                                        {
+                                            
+                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
+                                            
+                                        }
+                                        
+                                        
+        }) { (error) in
+            print(error)
+            AutoBcmLoadingView.dismiss()
+        }
+    }
+    
+    
+    func func_RemedyFormListing() {
         
         
         let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id]
@@ -137,7 +188,7 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
         }
     }
     
-
+    
     //****************************************************
     // MARK: - Action Method
     //****************************************************
@@ -153,6 +204,10 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
     {
         self.func_ReportFormListing()
     }
+    
+    @IBAction func btnRemedyAction(_ sender: UIButton) {
+    }
+    
     //****************************************************
     // MARK: - Table Method
     //****************************************************
@@ -234,11 +289,11 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
             
             cell_Add.btnDownload.tag = indexPath.row
             cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction1(_:)), for: .touchUpInside)
-          //  cell_Add.btnDownload.isHidden = false
+            //  cell_Add.btnDownload.isHidden = false
             let dict_eventpoll = self.arrReport[indexPath.row]
             
             
-           
+            
             let name = dict_eventpoll["asked_report_customer_name"] as! String
             let contact = dict_eventpoll["asked_report_customer_phone_no"] as! String
             let email = dict_eventpoll["asked_report_customer_email"] as! String
@@ -253,8 +308,8 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
             else
             {
                 cell_Add.lbl6.textColor = UIColor.green
-               cell_Add.btnDownload.isHidden = false
-               // cell_Add.btnDownload.isHidden = true
+                cell_Add.btnDownload.isHidden = false
+                // cell_Add.btnDownload.isHidden = true
             }
             cell_Add.lbl1.text = name
             cell_Add.lbl2.text = contact
@@ -264,7 +319,7 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
             cell_Add.lbl6.text = status
             return cell_Add
         }
-
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
@@ -277,42 +332,42 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
     @objc func btn_downloadAction(_ sender: UIButton)
     {
         CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
-
+        
         return
-//        AutoBcmLoadingView.show("Loading......")
-//        let dict_eventpoll = self.arrQuery[sender.tag]
-//        
-//        let querydownload = dict_eventpoll["asked_query_download"] as! String
-//      //  pdfString = querydownload
-//        DispatchQueue.main.async {
-//            self.downloadpdf(pdfURL: querydownload)
-//        }
-//        
-//       // self.downloa
-//        
-////        let url = URL(string: querydownload)
-////        FileDownloader.loadFileAsync(url: url!) { (path, error) in
-////            print("PDF File downloaded to : \(path!)")
-////        }
-       
+        //        AutoBcmLoadingView.show("Loading......")
+        //        let dict_eventpoll = self.arrQuery[sender.tag]
+        //
+        //        let querydownload = dict_eventpoll["asked_query_download"] as! String
+        //      //  pdfString = querydownload
+        //        DispatchQueue.main.async {
+        //            self.downloadpdf(pdfURL: querydownload)
+        //        }
+        //
+        //       // self.downloa
+        //
+        ////        let url = URL(string: querydownload)
+        ////        FileDownloader.loadFileAsync(url: url!) { (path, error) in
+        ////            print("PDF File downloaded to : \(path!)")
+        ////        }
+        
         
     }
     
     @objc func btn_downloadAction1(_ sender: UIButton)
     {
         CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
-
-              return
-//        AutoBcmLoadingView.show("Loading......")
-//        let dict_eventpoll = self.arrReport[sender.tag]
-//        
-//        let querydownload = dict_eventpoll["asked_report_customer_download"] as! String
-//        
-//        let url = URL(string: querydownload)
-////        FileDownloader.loadFileAsync(url: url!) { (path, error) in
-////            print("PDF File downloaded to : \(path!)")
-////        }
-//        self.downloadpdf(pdfURL: querydownload)
+        
+        return
+        //        AutoBcmLoadingView.show("Loading......")
+        //        let dict_eventpoll = self.arrReport[sender.tag]
+        //
+        //        let querydownload = dict_eventpoll["asked_report_customer_download"] as! String
+        //
+        //        let url = URL(string: querydownload)
+        ////        FileDownloader.loadFileAsync(url: url!) { (path, error) in
+        ////            print("PDF File downloaded to : \(path!)")
+        ////        }
+        //        self.downloadpdf(pdfURL: querydownload)
     }
     
     func formattedDateFromString(dateString: String, withFormat format: String) -> String? {
@@ -332,7 +387,7 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
     }
     func downloadpdf(pdfURL : String){
         CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
-
+        
         return
         let urlString = pdfURL
         let url = URL(string: urlString)
@@ -350,16 +405,16 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
                 // Success
                 if let statusCode = (response as? HTTPURLResponse)?.statusCode {
                     print("Successfully downloaded. Status code: \(statusCode)")
-
+                    
                     DispatchQueue.main.async { [weak self] in
-
+                        
                         AutoBcmLoadingView.dismiss()
-                      // 3
+                        // 3
                         CommenModel.showDefaltAlret(strMessage:"Successfully downloaded.", controller: self!)
                     }
-
-                   //
-
+                    
+                    //
+                    
                 }
                 do {
                     try FileManager.default.copyItem(at: tempLocalUrl, to: destinationFileUrl)
@@ -386,13 +441,13 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
         task.resume()
         
         
-//       let url = URL(string: pdfURL)
-//       FileDownloader.loadFileAsync(url: url!) { (path, error) in
-//           print("PDF File downloaded to : \(path!)")
-//          AutoBcmLoadingView.dismiss()
-//       }
+        //       let url = URL(string: pdfURL)
+        //       FileDownloader.loadFileAsync(url: url!) { (path, error) in
+        //           print("PDF File downloaded to : \(path!)")
+        //          AutoBcmLoadingView.dismiss()
+        //       }
         
-       
+        
     }
     
     //****************************************************
@@ -402,8 +457,6 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
     
 }
 class QueryListingCellN: UITableViewCell {
-    
-    
     @IBOutlet weak var view1: UIView!
     @IBOutlet weak var lbl1: UILabel!
     @IBOutlet weak var lbl2: UILabel!
@@ -412,16 +465,9 @@ class QueryListingCellN: UITableViewCell {
     @IBOutlet weak var lbl5: UILabel!
     @IBOutlet weak var lbl6: UILabel!
     @IBOutlet weak var lbl7: UILabel!
-    
     @IBOutlet weak var btnDownload: UIButton!
-    
-    
-    
-    // Initialization code
 }
 class ReportListingCellN: UITableViewCell {
-    
-    
     @IBOutlet weak var view1: UIView!
     @IBOutlet weak var lbl1: UILabel!
     @IBOutlet weak var lbl2: UILabel!
@@ -429,10 +475,6 @@ class ReportListingCellN: UITableViewCell {
     @IBOutlet weak var lbl4: UILabel!
     @IBOutlet weak var lbl5: UILabel!
     @IBOutlet weak var lbl6: UILabel!
-    
     @IBOutlet weak var btnDownload: UIButton!
-    
-    
-    
     // Initialization code
 }

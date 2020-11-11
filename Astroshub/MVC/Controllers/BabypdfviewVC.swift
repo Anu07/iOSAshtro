@@ -17,13 +17,11 @@ class BabypdfviewVC: UIViewController , WKNavigationDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //        https://astroshubh.in/babyname.php
-        //        https://astroshubh.in/fastivel.php
-        //        https://astroshubh.in/kundali_matching.php
-        //        https://astroshubh.in/panchang.php
-        //        https://astroshubh.in/tearms.php
-        //        https://astroshubh.in/numerology.php
+        //        https://www.astroshubh.in/festivals.php
+        //        https://www.astroshubh.in/babyname.php
+        //        https://www.astroshubh.in/daily_horoscope.php
+        //        https://www.astroshubh.in/kundali_matching.php
+        //        https://www.astroshubh.in/panchang.php
         self.wkWebView.navigationDelegate = self
         AutoBcmLoadingView.show("Loading......")
         switch value {
@@ -32,71 +30,34 @@ class BabypdfviewVC: UIViewController , WKNavigationDelegate {
             let url = URL (string: "https://www.astroshubh.in/panchang.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
-//        case 1:
-//            self.btntop.setTitle("  Kundali Matching", for: .normal)
-//            let url = URL (string: "https://www.astroshubh.in/kundali_matching.php")
-//            let requestObj = URLRequest(url: url!)
-//            self.wkWebView.load(requestObj)
         case 1:
+            self.btntop.setTitle("  Kundali Matching", for: .normal)
+            let url = URL (string: "https://www.astroshubh.in/kundali_matching.php")
+            let requestObj = URLRequest(url: url!)
+            self.wkWebView.load(requestObj)
+        case 2:
             self.btntop.setTitle("  Numerology", for: .normal)
             let url = URL (string: "https://www.astroshubh.in/numerology.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
-        case 2:
+        case 3:
             self.btntop.setTitle("  Baby Name", for: .normal)
             let url = URL (string: "https://www.astroshubh.in/babyname.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
-        case 3:
+        case 4:
             self.btntop.setTitle("  Festival", for: .normal)
-            let url = URL (string: "https://www.astroshubh.in/fastivel.php")
+            let url = URL (string: "https://www.astroshubh.in/festivals.php")
+            let requestObj = URLRequest(url: url!)
+            self.wkWebView.load(requestObj)
+        case 5:
+            self.btntop.setTitle("  Daily Horoscope", for: .normal)
+            let url = URL (string: "https://www.astroshubh.in/daily_horoscope.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
         default:
             print("hello")
         }
-//
-//        if FreeservicesPdf == "numerology"
-//        {
-//            let headername = "  Numerology"
-//            btntop.setTitle(headername,for: .normal)
-//            //            let pdfLoc = NSURL(fileURLWithPath:Bundle.main.path(forResource: "OUR FREE SERVICES ASTROSHUBH DATA", ofType:"pdf")!)
-//            //            let request = NSURLRequest(url: pdfLoc as URL);
-//            //            self.webView.loadRequest(request as URLRequest);
-//
-//            let url = URL (string: "http://kriscenttechnohub.com/demo/astroshubh/admin/numerology.php")
-//            let requestObj = URLRequest(url: url!)
-//            self.wkWebView.load(requestObj)
-//        }
-//        if FreeservicesPdf == "baby"
-//        {
-//            let headername = "  Baby Name Analysis"
-//            btntop.setTitle(headername,for: .normal)
-//            //            let pdfLoc = NSURL(fileURLWithPath:Bundle.main.path(forResource: "Baby name by nakshtra", ofType:"pdf")!)
-//            //            let request = NSURLRequest(url: pdfLoc as URL);
-//            //            self.webView.loadRequest(request as URLRequest);
-//
-//            let url = URL (string: "http://kriscenttechnohub.com/demo/astroshubh/admin/babyname.php")
-//            let requestObj = URLRequest(url: url!)
-//            self.wkWebView.load(requestObj)
-//
-//
-//
-//        }
-//        if FreeservicesPdf == "festival"
-//        {
-//            let headername = "  Festival 2020"
-//            btntop.setTitle(headername,for: .normal)
-//            //            let pdfLoc = NSURL(fileURLWithPath:Bundle.main.path(forResource: "FESTIVALS Services", ofType:"pdf")!)
-//            //            let request = NSURLRequest(url: pdfLoc as URL);
-//            //            self.webView.loadRequest(request as URLRequest);
-//
-//            let url = URL (string: "http://kriscenttechnohub.com/demo/astroshubh/admin/fastivel.php")
-//            let requestObj = URLRequest(url: url!)
-//            self.wkWebView.load(requestObj)
-//        }
-        
-        // Do any additional setup after loading the view.
     }
     
     //****************************************************
@@ -113,14 +74,7 @@ class BabypdfviewVC: UIViewController , WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         AutoBcmLoadingView.dismiss()
     }
-    //****************************************************
-    // MARK: - API Methods
-    //****************************************************
-    
-    
-    
-    
-    
+
     //****************************************************
     // MARK: - Action Method
     //****************************************************
@@ -128,14 +82,5 @@ class BabypdfviewVC: UIViewController , WKNavigationDelegate {
     {
         self.navigationController?.popViewController(animated: true)
     }
-    
-    
-    
-    
-    //****************************************************
-    // MARK: - Memory CleanUP
-    //****************************************************
-    
-    
     
 }

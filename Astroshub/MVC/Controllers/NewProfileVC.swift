@@ -149,6 +149,14 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
     // MARK: - Custom Method
     //****************************************************
     
+    @IBAction func buttonForShare(_ sender: UIButton) {
+        let text = AstrologerFullData["astrologers_name"] as! String
+                                               let myWebsite = URL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
+                                               let shareAll = [text , myWebsite as Any] as [Any]
+                                               let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+                                               activityViewController.popoverPresentationController?.sourceView = self.view
+                                               self.present(activityViewController, animated: true, completion: nil)
+    }
     //****************************************************
     // MARK: - API Methods
     //****************************************************

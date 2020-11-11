@@ -148,17 +148,14 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         }
         else if (textField.tag==3)
         {
-            
             MobileNumber=textField.text!
         }
         else if (textField.tag==4)
         {
-            
             Password=textField.text!
         }
         else if (textField.tag==5)
         {
-            
             referalcode=textField.text!
         }
         
@@ -166,56 +163,39 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool
     {
-        
         if (textField.tag==1)
         {
             Name=textField.text!
-            
         }
         else if (textField.tag==2)
         {
-            
             Email=textField.text!
         }
         else if (textField.tag==3)
         {
-            
             MobileNumber=textField.text!
         }
         else if (textField.tag==4)
         {
-            
             Password=textField.text!
         }
         else if (textField.tag==5)
         {
-            
             referalcode=textField.text!
         }
-        
-        
-        
         // return YES;
         return true
     }
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {   //delegate method
         textField.resignFirstResponder()
-        
         return true
     }
-    
-    
     func scrollToBottom(){
         DispatchQueue.main.async {
             let indexPath = IndexPath(row: 0, section: 0)
             self.tbl_signup.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
     }
-    
-    //****************************************************
-    // MARK: - API Methods
-    //****************************************************
     //****************************************************
     // MARK: - API Methods
     //****************************************************
@@ -223,7 +203,6 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         let defaults = UserDefaults.standard
       
         let fcm = defaults.string(forKey: "FcmToken")
-       
         print(fcm ?? "")
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
@@ -237,13 +216,10 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
                                         print(tempDict)
                                         let success=tempDict["response"] as!   Bool
                                         let message=tempDict["msg"] as!   String
-                                        
                                         if success == true
                                         {
-                                            
                                             let dict_Data = tempDict["data"] as! NSDictionary
                                             print("dict_Data is:-",dict_Data)
-
                                             let refreshAlert = UIAlertController(title: "Astroshubh", message: message, preferredStyle: UIAlertController.Style.alert)
                                             refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
                                                 {
@@ -258,9 +234,7 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
                                         {
                                             CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                         }
-                                        
-                                        
-        }) { (error) in
+            }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
             let refreshAlert = UIAlertController(title: "Astroshubh", message: "Account created successfully!", preferredStyle: UIAlertController.Style.alert)
@@ -286,25 +260,17 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
                                         print(tempDict)
                                         let success=tempDict["response"] as!   Bool
                                         let message=tempDict["msg"] as!   String
-                                        
                                         if success == true
                                         {
-                                            
-                                            
-                                            
                                             if let arrtimeslot = tempDict["data"] as? [[String:Any]]
                                             {
                                                 self.arrstatecity = arrtimeslot
                                             }
                                             print("arrTimeList is:- ",self.arrstatecity)
-                                            
                                             for j in 0..<self.arrstatecity.count
                                             {
-                                            
-                                                let dict2 = self.arrstatecity[j] as NSDictionary
-                                                
+                                                 let dict2 = self.arrstatecity[j] as NSDictionary
                                                  let phonecode1 = dict2["phonecode"] as! String
-        
                                                  if phonecode1 == LocationCountrycode
                                                  {
                                                     userCountrycode = phonecode1
@@ -314,23 +280,11 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
                                                     return
                                                  }
                                              }
-                                            
-                                            
-
-                                            
-                                            
-                                            
                                         }
-                                            
                                         else
                                         {
-                                            
-                                            
-                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            
+                                        CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                         }
-                                        
-                                        
         }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
@@ -341,7 +295,6 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
     {
         for controller in self.navigationController!.viewControllers as Array
         {
-            
             if controller.isKind(of: LoginVC.self)
             {
                 _ =  self.navigationController!.popToViewController(controller, animated: true)
@@ -374,15 +327,13 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
             print(self.referalcode)
             let defaults = UserDefaults.standard
              ActivityIndicator.shared.startLoading()
-            let credential = PhoneAuthProvider.provider().credential(withVerificationID: defaults.string(forKey: "authVID")! ,
-                                                                     verificationCode: self.referalcode)
+            let credential = PhoneAuthProvider.provider().credential(withVerificationID: defaults.string(forKey: "authVID")! ,verificationCode: self.referalcode)
             Auth.auth().signIn(with: credential) { authData, error in
                 ActivityIndicator.shared.stopLoader()
                 if ((error) != nil) {
                     let alert = UIAlertController(title: "Astroshubh", message: "Please enter Valid Code", preferredStyle: UIAlertController.Style.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
-                    
                     return
                 }
                 _ = authData!.user
@@ -411,7 +362,6 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
             isChecked1 = true
             visibilityonoff1 = "shiptick"
             tbl_signup.reloadData()
-            
         }
     }
     
@@ -421,9 +371,7 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         {
             isChecked2 = false
             visibilityonoff2 = ""
-            tbl_signup.reloadData()
-            
-            
+            tbl_signup.reloadData()            
         } else
         {
             isChecked2 = true
