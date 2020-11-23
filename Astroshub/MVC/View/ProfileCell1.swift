@@ -10,7 +10,10 @@ import UIKit
 
 class ProfileCell1: UITableViewCell {
     
+    @IBOutlet weak var textFieldForcategory: UITextField!
     
+    @IBOutlet weak var labelForcal: UILabel!
+    @IBOutlet weak var textFieldWeight: UITextField!
     @IBOutlet weak var view_adhaar: UIView!
     @IBOutlet weak var txt_Usename: UITextField!
     @IBOutlet weak var txt_Lastname: UITextField!

@@ -205,7 +205,7 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
         self.func_ReportFormListing()
     }
     
-    @IBAction func btnRemedyAction(_ sender: UIButton) {
+    @IBAction func btnVoiceQueryAction(_ sender: UIButton) {
     }
     
     //****************************************************

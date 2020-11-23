@@ -584,7 +584,15 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
             }
             
             return sliderImageCell
-        } else if indexPath.row >= 1 && indexPath.row <= 4 {
+        }
+//        else if indexPath.row == 1
+//        {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "VisitedCell", for: indexPath) as! VisitedCell
+//
+//            return cell
+//        }
+        
+        else if indexPath.row >= 1 && indexPath.row <= 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DashBoardMainTVC", for: indexPath) as! DashBoardMainTVC
             cell.imageViewDashBoard.image = UIImage(named: propertyArrayImages1[indexPath.row - 1])
             cell.lblHeading.text = propertyArray1[indexPath.row - 1]

@@ -13,22 +13,18 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
     
     @IBOutlet var tbl_dashboard: UITableView!
     let propertyArray = [
-        
         "Panchang",
         "Kundali Matching",
         "Numerology",
         "Baby Name Analysis",
-        "Festival 2020","Daily Horoscope","Prashnavali","Mytras"
-        
+        "Festival 2020","Daily Horoscope","Prashnavali","Mytras","Chart Making"
     ]
     let propertyArrayImages = [
-        
         "panchang",
         "kundali matching",
         "numerology",
         "baby name analysis",
-        "festival","festival","festival","festival"
-        
+        "festival","festival","festival","Mantras","Mantras"
     ]
     override func viewDidLoad() {
         super.viewDidLoad()

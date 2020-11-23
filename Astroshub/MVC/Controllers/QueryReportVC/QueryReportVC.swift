@@ -53,6 +53,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     @IBOutlet weak var lbl1: UILabel!
     @IBOutlet weak var lbl2: UILabel!
     
+    @IBOutlet weak var kabel4: UILabel!
     @IBOutlet weak var label3: UILabel!
     var razorpay: RazorpayCheckout? = nil
     @IBOutlet var tbl_profile: UITableView!
@@ -90,7 +91,8 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         lbl1.isHidden = false
         lbl2.isHidden = true
         label3.isHidden = true
-        
+        kabel4.isHidden = true
+
         view_Report.isHidden = true
         viewblur.isHidden = true
         viewpopup.isHidden = true
@@ -211,11 +213,15 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         
         if QueryReportFormshow == "query"
         {
-            self.func_QueryForm()
+            self.func_QueryForm("0")
         }
         if QueryReportFormshow == "report"
         {
             self.func_ReportForm()
+        }
+        if QueryReportFormshow == "voice"
+        {
+            self.func_QueryForm("1")
         }
         if QueryReportFormshow == "remedy"
         {
@@ -465,7 +471,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
             AutoBcmLoadingView.dismiss()
         }
     }
-    func func_QueryForm() {
+    func func_QueryForm(_ type:String) {
         
         let setparameters = ["app_type":"ios",
                              "app_version":"1.0",
@@ -479,7 +485,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                              "email":self.Email,
                              "query":Enquiry,
                              "location":CurrentLocation,
-                             "paymentid":PaymentID] as [String : Any]
+                             "paymentid":PaymentID,"query_type":type] as [String : Any]
         
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
@@ -889,17 +895,27 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         lbl1.isHidden = false
         lbl2.isHidden = true
         label3.isHidden = true
-        
+        kabel4.isHidden = true
         QueryReportFormshow = "query"
         
-        
     }
+    
+    @IBAction func buttonVoiceQuery(_ sender: UIButton) {
+        view_Report.isHidden = true
+        lbl1.isHidden = true
+        lbl2.isHidden = true
+        label3.isHidden = true
+        kabel4.isHidden = false
+        QueryReportFormshow = "Voice"
+    }
+    
     @IBAction func btn_ReportAction(_ sender: Any)
     {
         lbl1.isHidden = true
         lbl2.isHidden = false
         label3.isHidden = true
-        
+        kabel4.isHidden = true
+
         view_Report.isHidden = false
         
         QueryReportFormshow = "report"
@@ -910,7 +926,8 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         lbl1.isHidden = true
         lbl2.isHidden = true
         label3.isHidden = false
-        
+        kabel4.isHidden = true
+
         QueryReportFormshow = "remedy"
     }
     
@@ -918,13 +935,9 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     {
         if Validate.shared.validatequeryform(vc: self)
         {
-            
-            
             self.viewblur.isHidden = false
             self.viewpopup.isHidden = false
-            
-            
-            
+
         }
     }
     
@@ -1149,10 +1162,13 @@ extension QueryReportVC : DelegateStripePayment{
         if isSuccess{
             self.showAlert(withTitle: SUCCESS_TITLE, andMessage: SUCCESS_MESSAGE)
             if QueryReportFormshow == "query" {
-                self.func_QueryForm()
+                self.func_QueryForm("0")
             }
             if QueryReportFormshow == "report"{
                 self.func_ReportForm()
+            }
+            if QueryReportFormshow == "voice"{
+                self.func_QueryForm("1")
             }
             if QueryReportFormshow == "remedy"{
                 self.func_RemedyForm()

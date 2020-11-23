@@ -17,11 +17,6 @@ class BabypdfviewVC: UIViewController , WKNavigationDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //        https://www.astroshubh.in/festivals.php
-        //        https://www.astroshubh.in/babyname.php
-        //        https://www.astroshubh.in/daily_horoscope.php
-        //        https://www.astroshubh.in/kundali_matching.php
-        //        https://www.astroshubh.in/panchang.php
         self.wkWebView.navigationDelegate = self
         AutoBcmLoadingView.show("Loading......")
         switch value {
@@ -53,6 +48,12 @@ class BabypdfviewVC: UIViewController , WKNavigationDelegate {
         case 5:
             self.btntop.setTitle("  Daily Horoscope", for: .normal)
             let url = URL (string: "https://www.astroshubh.in/daily_horoscope.php")
+            let requestObj = URLRequest(url: url!)
+            self.wkWebView.load(requestObj)
+            
+        case 8:
+            self.btntop.setTitle("  Chart Making", for: .normal)
+            let url = URL (string: "https://www.astroshubh.in/staging/chart_making.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
         default:

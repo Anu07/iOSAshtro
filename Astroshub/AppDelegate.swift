@@ -224,15 +224,28 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-        }
+//        if let messageID = userInfo[gcmMessageIDKey] {
+//            print("Message ID: \(messageID)")
+//        }
         print(userInfo)
+        let title = userInfo["title"] as! String
+
         let datw = userInfo["user_data"] as! String
         let dict = datw.convertJsonStringToDictionary()
         print("string > \(datw)")
         // string > {"name":"zgpeace"}
         print("dicionary > \(String(describing: dict))")
+        if  title == "Astrologer Chat End"{
+            
+        } else if title == "Astrologer Accepted Chat Request"{
+            chatStartorEnd = title
+            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: dict)
+          
+        }
+        else if title == "Astrologer Rejected Chat Request"{
+            chatStartorEnd = title
+            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierRejected"), object: nil, userInfo: dict)
+        }
         if UIApplication.shared.applicationState == .active { // In iOS 10 if app is in foreground do nothing.
             completionHandler([.alert, .badge, .sound])
         } else { // If app is not active you can show banner, sound and badge.
@@ -264,8 +277,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let loginvc = storyboard.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
-            //            self.navigationC = UINavigationController(rootViewController: loginvc)
-//            loginvc.anotherUserId = userInfo["body"] as? String
             chatStartorEnd = title
             loginvc.data = dict
             self.window?.clipsToBounds = true
@@ -273,14 +284,15 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             self.window?.makeKeyAndVisible()
             
         }  else if title == "Astrologer Rejected Chat Request"{
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let loginvc = storyboard.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
-            //            self.navigationC = UINavigationController(rootViewController: loginvc)
-            chatStartorEnd = title
-            self.window?.clipsToBounds = true
-            self.window?.rootViewController = loginvc
-            self.window?.makeKeyAndVisible()
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let loginvc = storyboard.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
+//            chatStartorEnd = title
+//            loginvc.data = dict
+//            self.window?.clipsToBounds = true
+//            self.window?.rootViewController = loginvc
+//            self.window?.makeKeyAndVisible()
+//            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierRejected"), object: nil, userInfo: dict)
+
         }
         completionHandler()
     }

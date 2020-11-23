@@ -281,6 +281,12 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         cell_Add.btnRateUs.addTarget(self, action: #selector(buttonRateAction), for: .touchUpInside)
         cell_Add.btnRateUs.layer.borderColor = UIColor.green.cgColor
         
+        cell_Add.notifyButton.layer.borderWidth = 2
+        cell_Add.notifyButton.layer.borderWidth = 2
+        cell_Add.notifyButton.setTitleColor(.green, for: .normal)
+        cell_Add.notifyButton.tag = indexPath.row
+        cell_Add.notifyButton.addTarget(self, action: #selector(buttonNotifyAction), for: .touchUpInside)
+        cell_Add.notifyButton.layer.borderColor = UIColor.green.cgColor
 //        if chatBusyStatus == "1" {
 //            cell_Add.btnCall.setTitleColor(.red, for: .normal)
 //            cell_Add.btnCall.layer.borderColor = UIColor.red.cgColor
@@ -291,17 +297,22 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 cell_Add.btnCall.setTitleColor(.green, for: .normal)
                 cell_Add.btnCall.layer.borderColor = UIColor.green.cgColor
                 cell_Add.btnCall.setTitle("Call",for: .normal)
+                cell_Add.notifyButton.isHidden = true
             } else  if talkstatus == "2"
             {
                 cell_Add.btnCall.setTitleColor(.red, for: .normal)
                            cell_Add.btnCall.layer.borderColor = UIColor.red.cgColor
                            cell_Add.btnCall.setTitle("Busy",for: .normal)
+                cell_Add.notifyButton.isHidden = false
+
             }
             else
             {
                 cell_Add.btnCall.setTitleColor(.darkGray, for: .normal)
                 cell_Add.btnCall.layer.borderColor = UIColor.darkGray.cgColor
                 cell_Add.btnCall.setTitle("Offline",for: .normal)
+                cell_Add.notifyButton.isHidden = false
+
             }
 //        }
 //        if chatStatus == "1"
@@ -404,6 +415,11 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         
     }
     
+    @objc func buttonNotifyAction(sender:UIButton) {
+        let dict_eventpoll = self.arrTalk[sender.tag]
+
+        NotifyCallMethods(dict_eventpoll["astrologers_uni_id"] as? String ?? "")
+    }
     @objc func btn_calling(_ sender: UIButton)
     {
         let dict_eventpoll = self.arrTalk[sender.tag]
@@ -524,6 +540,7 @@ extension AstroTalkListVC {
 
 class TalkListCell: UITableViewCell {
     
+    @IBOutlet weak var notifyButton: UIButton!
     @IBOutlet weak var btnRateUs: UIButton!
     @IBOutlet weak var view_back: UIView!
     @IBOutlet weak var img_User: UIImageView!
@@ -558,4 +575,40 @@ class EstimatePriceModel {
     var balance = ""
     var number = ""
     var timeInHours = ""
+}
+
+extension AstroTalkListVC {
+    func NotifyCallMethods(_ astroId:String) {
+        
+        
+        let deviceID = UIDevice.current.identifierForVendor!.uuidString
+        print(deviceID)
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,
+                             "app_version":MethodName.APPVERSION.rawValue,
+                             "user_api_key":user_apikey,
+                             "user_id":user_id,"astrologer_id":astroId,"request_type":"call"] as [String : Any]
+        print(setparameters)
+        AutoBcmLoadingView.show("Loading......")
+        AppHelperModel.requestPOSTURL("astroNotifyMe", params: setparameters as [String : AnyObject],headers: nil,
+                                      success: { (respose) in
+                                        AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        
+                                        let success=tempDict["response"] as!   Bool
+                                        let message=tempDict["msg"] as!   String
+                                        
+                                        if success == true
+                                        {
+                                        
+                                        }
+                                        
+        }) { (error) in
+            AutoBcmLoadingView.dismiss()
+        }
+        
+        
+        
+    }
+    
 }

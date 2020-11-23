@@ -10,6 +10,7 @@ import UIKit
 
 class OffersTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var labelDate: UILabel!
     @IBOutlet weak var labelForDesc: UILabel!
     @IBOutlet weak var labelOfferName: UILabel!
     override func awakeFromNib() {

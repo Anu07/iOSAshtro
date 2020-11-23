@@ -9,7 +9,7 @@
 import UIKit
 import SDWebImage
 import Kingfisher
-
+import AVFoundation
 class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate{
     @IBOutlet weak var view_top: UIView!
     @IBOutlet var tbl_blog: UITableView!
@@ -26,9 +26,12 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
     var url_flag = 1
     var index_value = 0
     var refreshController = UIRefreshControl()
+    
+    let speechSynthesizer                       = AVSpeechSynthesizer()
+    var previousSelectedIndexPath              : IndexPath?
     override func viewDidLoad() {
         super.viewDidLoad()
-         AutoBcmLoadingView.show("Loading......")
+        AutoBcmLoadingView.show("Loading......")
         
         refreshController = UIRefreshControl()
         refreshController.addTarget(self, action:#selector(handleRefresh(_:)), for: .valueChanged)
@@ -36,12 +39,13 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
         
         tbl_blog.tableFooterView = UIView()
         
-        
+        speechSynthesizer.delegate = self
+
         self.blogApiCallMethods()
         self.tbl_blog.am.addInfiniteScrolling { [unowned self] in
             self.fetchMoreData(completion: { (fetchedItems) in
                 self.items.append(contentsOf: fetchedItems)
-             
+                
                 if self.arrBlogs.count >= 10
                 {
                     self.pagereload = 1
@@ -58,19 +62,19 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                 }
             })
         }
-         self.tbl_blog.am.pullToRefreshView?.trigger()
+        self.tbl_blog.am.pullToRefreshView?.trigger()
         
         // Do any additional setup after loading the view.
     }
     @objc func handleRefresh(_ sender: Any?)
-       {
-           print("Pull To Refresh Method Called")
-           page = 0
-           pagereload = 0
-           url_flag = 1
-           refreshController.endRefreshing()
-           blogApiCallMethods()
-       }
+    {
+        print("Pull To Refresh Method Called")
+        page = 0
+        pagereload = 0
+        url_flag = 1
+        refreshController.endRefreshing()
+        blogApiCallMethods()
+    }
     func fetchDataFromStart(completion handler:@escaping (_ fetchedItems: [Int])->Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2)
         {
@@ -85,18 +89,11 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                 handler([])
                 return
             }
-
+            
             let fetchedItems = Array(self.items.count..<(self.items.count + self.kPageLength))
             handler(fetchedItems)
         }
     }
-        
-    //****************************************************
-    // MARK: - Custom Method
-    //****************************************************
-    
-    
-    
     
     //****************************************************
     // MARK: - API Methods
@@ -121,11 +118,11 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                                         {
                                             let dict_Data = tempDict["data"] as! [String:Any]
                                             print("dict_Data is:- ",dict_Data)
-//                                            if let arrblog = dict_Data["blogs"] as? [[String:Any]]
-//                                            {
-//                                                self.arrBlogs = arrblog
-//                                            }
-//                                            print("arrBlogs is:- ",self.arrBlogs)
+                                            //                                            if let arrblog = dict_Data["blogs"] as? [[String:Any]]
+                                            //                                            {
+                                            //                                                self.arrBlogs = arrblog
+                                            //                                            }
+                                            //                                            print("arrBlogs is:- ",self.arrBlogs)
                                             
                                             
                                             
@@ -138,7 +135,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                                                 if self.pagereload == 0
                                                 {
                                                     self.arrBlogs.removeAll()
-                                                 
+                                                    
                                                     
                                                     for i in 0..<arrProducts.count
                                                     {
@@ -151,7 +148,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                                                 }
                                                 else
                                                 {
-                                                   
+                                                    
                                                     for i in 0..<arrProducts.count
                                                     {
                                                         var dict_Products = arrProducts[i]
@@ -166,13 +163,13 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                                             
                                             self.tbl_blog.reloadData()
                                         }
-                                            
+                                        
                                         else
                                         {
                                             CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                         }
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -208,7 +205,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                                             
                                             
                                         }
-                                            
+                                        
                                         else
                                         {
                                             
@@ -218,7 +215,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                                         }
                                         
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -252,7 +249,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                                             
                                             
                                         }
-                                            
+                                        
                                         else
                                         {
                                             
@@ -262,7 +259,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                                         }
                                         
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -308,15 +305,15 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
         cell_Add.view_back.layer.cornerRadius = 5.0
         cell_Add.img_blog.kf.indicatorType = .activity
         // cell_Add.img_blog.layer.cornerRadius = 12
-      //  cell_Add.img_blog.SDWebImageActivityIndicator(true)
-       // cell_Add.img_blog.sd_imageIndicator = SDWebImageActivityIndicator.gray
+        //  cell_Add.img_blog.SDWebImageActivityIndicator(true)
+        // cell_Add.img_blog.sd_imageIndicator = SDWebImageActivityIndicator.gray
         let dict_eventpoll = self.arrBlogs[indexPath.row]
         //cell_Add.img_blog.kf.indicatorType = .activity
         
         let package_icon_url = dict_eventpoll["blog_image_url"] as! String
         let blogtotallikes = dict_eventpoll["blog_total_likes"] as! String
         let like = dict_eventpoll["like"] as! Int
-       // cell_Add.img_blog.sd_setImage(with: URL(string: package_icon_url), placeholderImage: UIImage(named: "astroshubh_full log"))
+        // cell_Add.img_blog.sd_setImage(with: URL(string: package_icon_url), placeholderImage: UIImage(named: "astroshubh_full log"))
         
         
         let activityIndicator = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.gray)
@@ -324,19 +321,19 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
         activityIndicator.hidesWhenStopped = true
         cell_Add.img_blog.addSubview(activityIndicator)
         activityIndicator.startAnimating()
-
+        
         cell_Add.img_blog.sd_setImage(with: URL(string: package_icon_url), completed: { (image: UIImage?, error: Error?, cacheType: SDImageCacheType, imageURL: URL?) in
             activityIndicator.removeFromSuperview()
         })
-
+        
         
         
         
         //cell_Add.img_blog.sd_setShowActivityIndicatorView(true)
-       // cell_Add.img_blog.sd_setIndicatorStyle(.gray)
+        // cell_Add.img_blog.sd_setIndicatorStyle(.gray)
         
         
-       // cell_Add.img_blog.kf.setImage(with: fruit.image, placeholder: #imageLiteral(resourceName: "placeholder"))
+        // cell_Add.img_blog.kf.setImage(with: fruit.image, placeholder: #imageLiteral(resourceName: "placeholder"))
         
         let title = dict_eventpoll["blog_title"] as! String
         let description = dict_eventpoll["blog_content"] as! String
@@ -349,9 +346,9 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
         
         cell_Add.lbl_blogtitle.text  = title
         cell_Add.lbl_views.text  = "Views : " + views
-        
-        
-      //  let partOne = NSMutableAttributedString(string: "Description : ", attributes: description.htmlToAttributedString)
+        cell_Add.playButton.tag = indexPath.row
+        cell_Add.playButton.addTarget(self, action: #selector(playButton), for: .touchUpInside)
+        //  let partOne = NSMutableAttributedString(string: "Description : ", attributes: description.htmlToAttributedString)
         
         cell_Add.lbl_blogdescription.attributedText =  description.htmlToAttributedString
         //cell_Add.lbl_blogdescription.text  = "Description : " + description
@@ -371,15 +368,76 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
         return cell_Add
         
     }
-   @objc func shareButton(_ sender :UIButton){
-    let dict_eventpoll = self.arrBlogs[sender.tag]
+    @objc func playButton(_ sender :UIButton){
+        sender.isSelected = !sender.isSelected
+        let dict_eventpoll = self.arrBlogs[sender.tag]
 
-    let text = "" 
-                                                          let myWebsite = URL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
-                                                          let shareAll = [text , myWebsite as Any] as [Any]
-                                                          let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
-                                                          activityViewController.popoverPresentationController?.sourceView = self.view
-                                                          self.present(activityViewController, animated: true, completion: nil)
+        let point = sender.convert(CGPoint.zero, to: self.tbl_blog)
+        let indexPath = self.tbl_blog.indexPathForRow(at: point)
+
+        if previousSelectedIndexPath == indexPath {
+
+            let cell = self.tbl_blog.cellForRow(at: indexPath!) as! BlogCell
+            speechSynthesizer.stopSpeaking(at: .immediate)
+            cell.playButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            previousSelectedIndexPath = nil
+
+        } else {
+
+            if previousSelectedIndexPath == nil {
+
+                previousSelectedIndexPath = indexPath
+
+                let cell = self.tbl_blog.cellForRow(at: indexPath!) as! BlogCell
+                cell.playButton.setImage(#imageLiteral(resourceName: "menu"), for: .normal)
+
+                if speechSynthesizer.isSpeaking {
+
+                    speechSynthesizer.stopSpeaking(at: .immediate)
+
+                } else {
+
+                    let speechUtterance = AVSpeechUtterance(string: dict_eventpoll["blog_content"] as! String)
+
+                    DispatchQueue.main.async {
+                        self.speechSynthesizer.speak(speechUtterance)
+                    }
+                }
+
+            } else {
+
+                let oldCell = self.tbl_blog.cellForRow(at: previousSelectedIndexPath!) as! BlogCell
+                oldCell.playButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+
+                let cell = self.tbl_blog.cellForRow(at: indexPath!) as! BlogCell
+                cell.playButton.setImage(#imageLiteral(resourceName: "menu"), for: .normal)
+
+                previousSelectedIndexPath = indexPath
+
+                if speechSynthesizer.isSpeaking {
+
+                    speechSynthesizer.stopSpeaking(at: .immediate)
+
+                } else {
+
+                    let speechUtterance = AVSpeechUtterance(string: dict_eventpoll["blog_content"] as! String)
+
+                    DispatchQueue.main.async {
+                        self.speechSynthesizer.speak(speechUtterance)
+                    }
+                }
+
+            }
+        }
+    }
+    @objc func shareButton(_ sender :UIButton){
+        let dict_eventpoll = self.arrBlogs[sender.tag]
+        let text = ""
+        let myWebsite = URL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
+        let shareAll = [text , myWebsite as Any] as [Any]
+        let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
     }
     @objc func btn_LikeAction(_ sender: UIButton)
     {
@@ -410,9 +468,24 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
     //****************************************************
     
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return UITableView.automaticDimension
-//    }
-//    
+    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //        return UITableView.automaticDimension
+    //    }
+    //
     
 }
+extension BlogVC: AVSpeechSynthesizerDelegate {
+
+       func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        let dict_eventpoll = self.arrBlogs[previousSelectedIndexPath!.row]
+
+           speechSynthesizer.stopSpeaking(at: .word)
+
+           if previousSelectedIndexPath != nil {
+               let speechUtterance = AVSpeechUtterance(string: dict_eventpoll["blog_content"] as! String)
+               DispatchQueue.main.async {
+                   self.speechSynthesizer.speak(speechUtterance)
+               }
+           }
+       }
+   }

@@ -91,7 +91,7 @@ class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UI
                                             
                                             
                                         }
-                                            
+                                        
                                         else
                                         {
                                             self.arrProductcategory = [[String:Any]]()
@@ -102,7 +102,7 @@ class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UI
                                         }
                                         
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -133,14 +133,14 @@ class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UI
                                             print("arrProductcategory is:- ",self.arrProductcategory)
                                             self.tbl_productcategory.isHidden = false
                                             self.tbl_productcategory.reloadData()
-
+                                            
                                         }else {
                                             self.arrProductcategory = [[String:Any]]()
                                             self.tbl_productcategory.isHidden = true
                                             //CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                             
                                         }
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -203,10 +203,15 @@ class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UI
         let Image = dict_eventpoll["product_image"] as! String
         
         cell_Add.lbl1.text = Name
-        // cell_Add.lbl2.text = "$ " + price
+        if CurrentLocation == "India" {
+            cell_Add.lbl2.text =  "₹ \(dict_eventpoll["price_inr"] as! String)"
+        } else {
+            cell_Add.lbl2.text = "$ \(dict_eventpoll["price_dollar"] as! String)"
+            
+        }
         cell_Add.lbl3.text = Description.htmlToString
         
-        
+        cell_Add.labelCategory.text = dict_eventpoll["product_category_name"] as? String
         let activityIndicator = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.gray)
         activityIndicator.center = cell_Add.img_user.center
         activityIndicator.hidesWhenStopped = true
@@ -228,9 +233,10 @@ class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UI
     @objc func btn_Enquiry(_ sender: UIButton){
         if self.PerformActionIfLogin(changeMessage: true) {
             let dict_eventpoll = self.arrProductcategory[sender.tag]
-                   productcatyegoryIDD = dict_eventpoll["productid"] as! String
-                   let EnquiryShop = self.storyboard?.instantiateViewController(withIdentifier: "EnquiryShopVC")
-                   self.navigationController?.pushViewController(EnquiryShop!, animated: true)
+            productcatyegoryIDD = dict_eventpoll["productid"] as! String
+            let EnquiryShop = self.storyboard?.instantiateViewController(withIdentifier: "EnquiryShopVC") as! EnquiryShopVC
+            EnquiryShop.arrProductcategory = dict_eventpoll
+            self.navigationController?.pushViewController(EnquiryShop, animated: true)
         }
     }
     
@@ -253,4 +259,7 @@ class ProductCell: UITableViewCell {
     @IBOutlet weak var lbl3: UILabel!
     @IBOutlet weak var img_user: UIImageView!
     @IBOutlet weak var btnEnquiry: UIButton!
+    
+    @IBOutlet weak var labelCategory: UILabel!
+    
 }

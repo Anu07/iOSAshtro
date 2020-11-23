@@ -27,6 +27,8 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
     var ProblemArea = ""
     var Price = ""
     var Locationnn = ""
+    var couponCode = ""
+
     var dobandtimeclick = ""
     var countryArray = NSArray()
     var countryNameArray = [String]()
@@ -255,7 +257,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
                              "problem_area":self.ProblemArea,
                              "price":AstrologerrPrice,
                              "location":self.Locationnn,
-                             "busy_status":1] as [String : Any]
+                             "busy_status":1,"coupon_id":couponCode] as [String : Any]
         
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
@@ -490,10 +492,8 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
             }
             
             cell_Add.mainDropDown.arrowSize = 20
-            
-            
-            // cell_Add.btncountryy.tag = indexPath.row
-            //cell_Add.btncountryy.addTarget(self, action: #selector(self.btn_CountryAction(_:)), for: .touchUpInside)
+            cell_Add.buttonViewOffers.tag = indexPath.row
+            cell_Add.buttonViewOffers.addTarget(self, action: #selector(self.viewOffers(_:)), for: .touchUpInside)
             
             
             if self.Timmeee != ""
@@ -506,6 +506,20 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
         
         
         
+    }
+    
+    @objc  func viewOffers(_ sender:UIButton) {
+        let point = sender.convert(CGPoint.zero, to: self.tbl_profile)
+        let indexPath = self.tbl_profile.indexPathForRow(at: point)
+        let cell = self.tbl_profile.cellForRow(at: indexPath!) as! ProfileCell4
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "OffersViewController") as! OffersViewController
+        vc.completionHandler = { text in
+            cell.textFieldPromoCode.text = text["coupon_code"] as? String
+            print("text = \(text)")
+            self.couponCode = text["id"] as! String
+            return text
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     @objc func btn_maleAction(_ sender: UIButton)
     {

@@ -9,27 +9,29 @@
 import UIKit
 
 class OffersViewController: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
     var dataStatus =  Array<Any>()
+    var completionHandler:(([String : Any]) -> [String : Any])?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         tableView.register(UINib(nibName: "OffersTableViewCell", bundle: nil), forCellReuseIdentifier: "OffersTableViewCell")
-   
+        
         apiForGetmytras()
     }
     
     @IBAction func backButton(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: false)
     }
-  
-
+    
+    
     func apiForGetmytras() {
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey,"user_id":user_id] 
 
         AutoBcmLoadingView.show("Loading......")
-        AppHelperModel.requestPOSTURL(MethodName.coupon.rawValue, params:nil,headers: nil,
+        AppHelperModel.requestPOSTURL(MethodName.coupon.rawValue, params:setparameters as [String : AnyObject],headers: nil,
                                       success: { (respose) in
                                         AutoBcmLoadingView.dismiss()
                                         let tempDict = respose as! NSDictionary
@@ -42,9 +44,8 @@ class OffersViewController: UIViewController {
                                             let dict_Data = tempDict["data"] as! [String:Any]
                                             self.dataStatus = dict_Data["coupon_list"] as! Array<Any>
                                             self.tableView.reloadData()
-                                            }
-                                      
-                                            
+                                        }
+                                        
                                         else
                                         {
                                             
@@ -53,7 +54,7 @@ class OffersViewController: UIViewController {
                                             
                                         }
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -62,7 +63,7 @@ class OffersViewController: UIViewController {
         
     }
     
-
+    
 }
 extension OffersViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,8 +74,8 @@ extension OffersViewController:UITableViewDelegate,UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "OffersTableViewCell", for: indexPath) as! OffersTableViewCell
         let data = self.dataStatus[indexPath.row] as! [String:Any]
         cell.labelOfferName.text = "Coupon Code:  \(data["coupon_code"] as! String)"
-        cell.labelForDesc.text = "Coupon expiry date: \(data["coupon_expiry_date"] as! String)"
-
+        cell.labelDate.text = "Valid Till : \(data["coupon_expiry_date"] as! String)"
+        cell.labelForDesc.text =  "\(data["coupon_description"] as? String ?? "")" 
         return cell
     }
     
@@ -85,8 +86,11 @@ extension OffersViewController:UITableViewDelegate,UITableViewDataSource {
         return 0.01
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let data = self.dataStatus[indexPath.row] as! [String:Any]
-//        idForMantras = data["id"] as? String
-//        self.tableView.reloadData()
+                let data = self.dataStatus[indexPath.row] as! [String:Any]
+        //        idForMantras = data["id"] as? String
+        //        self.tableView.reloadData()
+        self.completionHandler!(data)
+        self.navigationController?.popViewController(animated: false)
+
     }
 }

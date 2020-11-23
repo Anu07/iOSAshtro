@@ -395,6 +395,7 @@ PODS:
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
   - NohanaImagePicker (0.9.0)
+  - ObjectMapper (4.2.0)
   - PGEZTransition (1.1.2)
   - PromisesObjC (1.2.8)
   - Protobuf (3.11.2)
@@ -434,6 +435,7 @@ DEPENDENCIES:
   - Kingfisher
   - MessageKit
   - NohanaImagePicker
+  - ObjectMapper (from `https://github.com/tristanhimmelman/ObjectMapper.git`, branch `master`)
   - PGEZTransition
   - razorpay-pod (~> 1.1.1)
   - SDWebImage
@@ -504,6 +506,16 @@ SPEC REPOS:
     - SVProgressHUD
     - SwiftyJSON
 
+EXTERNAL SOURCES:
+  ObjectMapper:
+    :branch: master
+    :git: https://github.com/tristanhimmelman/ObjectMapper.git
+
+CHECKOUT OPTIONS:
+  ObjectMapper:
+    :commit: a593b4d647a970b3d184d046f8f52b945083ccf9
+    :git: https://github.com/tristanhimmelman/ObjectMapper.git
+
 SPEC CHECKSUMS:
   abseil: 18063d773f5366ff8736a050fe035a28f635fd27
   ADCountryPicker: 502cee76a30ea1c3834eb0df170ce635691655c9
@@ -553,6 +565,7 @@ SPEC CHECKSUMS:
   MessageKit: 3beb578737a5aa2bba25cc27c7b6d6faa09af5a7
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   NohanaImagePicker: b39fa5623cabab69597ea6f6a2d6729b9895cd2b
+  ObjectMapper: 5a6c9f063ef67e7fc0d7eb8958919e3121396a96
   PGEZTransition: 97fcec2efcef7c1f82de47b3ecddc2b48a178ce3
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Protobuf: dd1aaea7140debfe4dd0683fb8ef208e527ae153
@@ -564,6 +577,6 @@ SPEC CHECKSUMS:
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: ce3584dcf434c00f192e7b9ff8cebec2d5cb37f2
+PODFILE CHECKSUM: e13a5c0a37608e937290f1b4051f1831cb7f3c6f
 
 COCOAPODS: 1.9.1

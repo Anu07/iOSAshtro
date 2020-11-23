@@ -11,7 +11,8 @@ target 'Astroshub' do
   
   #Side menu
   pod 'FAPanels'
-  
+  pod 'ObjectMapper', :git => 'https://github.com/tristanhimmelman/ObjectMapper.git', :branch => 'master'
+
   # FLoating text fields 
   pod 'SkyFloatingLabelTextField'
   pod 'Alamofire'

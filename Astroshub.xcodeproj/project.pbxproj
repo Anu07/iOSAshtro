@@ -9,8 +9,14 @@
 /* Begin PBXBuildFile section */
 		71265F8624C5EF7400D9A9E4 /* CFSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 71265F8424C5EF3300D9A9E4 /* CFSDK.xcframework */; };
 		71265F8724C5EF7400D9A9E4 /* CFSDK.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 71265F8424C5EF3300D9A9E4 /* CFSDK.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		93027B72256995B50053A57E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93027B71256995B50053A57E /* AVFoundation.framework */; };
+		93027B752569CB490053A57E /* ScarcthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93027B742569CB470053A57E /* ScarcthView.swift */; };
 		93234D4F252A0C2E00E5BF69 /* PopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93234D4E252A0C2E00E5BF69 /* PopUPVC.swift */; };
 		932748FC25308E260059C902 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 932748FB25308E250059C902 /* GoogleService-Info.plist */; };
+		937545DB2569CDEE00F7B21C /* ScratchCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937545DA2569CDEE00F7B21C /* ScratchCardViewController.swift */; };
+		93C2951D2567109000883C2D /* RemedyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C2951A2567109000883C2D /* RemedyData.swift */; };
+		93C2951E2567109000883C2D /* RemedyBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C2951B2567109000883C2D /* RemedyBase.swift */; };
+		93C2951F2567109000883C2D /* User_id.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C2951C2567109000883C2D /* User_id.swift */; };
 		93C74BEC255C2932004F07B7 /* OffersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C74BEB255C2932004F07B7 /* OffersViewController.swift */; };
 		93C74BEF255C29E2004F07B7 /* OffersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C74BED255C29E2004F07B7 /* OffersTableViewCell.swift */; };
 		93C74BF0255C29E2004F07B7 /* OffersTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93C74BEE255C29E2004F07B7 /* OffersTableViewCell.xib */; };
@@ -219,8 +225,14 @@
 		70617EE616EC735281030BE6 /* Pods_Astroshub.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Astroshub.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		71265F8424C5EF3300D9A9E4 /* CFSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = CFSDK.xcframework; sourceTree = "<group>"; };
 		8B3FE30B5A0F217709672DB5 /* Pods-Astroshub.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Astroshub.debug.xcconfig"; path = "Target Support Files/Pods-Astroshub/Pods-Astroshub.debug.xcconfig"; sourceTree = "<group>"; };
+		93027B71256995B50053A57E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		93027B742569CB470053A57E /* ScarcthView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScarcthView.swift; sourceTree = "<group>"; };
 		93234D4E252A0C2E00E5BF69 /* PopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUPVC.swift; sourceTree = "<group>"; };
 		932748FB25308E250059C902 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		937545DA2569CDEE00F7B21C /* ScratchCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScratchCardViewController.swift; sourceTree = "<group>"; };
+		93C2951A2567109000883C2D /* RemedyData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemedyData.swift; sourceTree = "<group>"; };
+		93C2951B2567109000883C2D /* RemedyBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemedyBase.swift; sourceTree = "<group>"; };
+		93C2951C2567109000883C2D /* User_id.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User_id.swift; sourceTree = "<group>"; };
 		93C74BEB255C2932004F07B7 /* OffersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffersViewController.swift; sourceTree = "<group>"; };
 		93C74BED255C29E2004F07B7 /* OffersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffersTableViewCell.swift; sourceTree = "<group>"; };
 		93C74BEE255C29E2004F07B7 /* OffersTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OffersTableViewCell.xib; sourceTree = "<group>"; };
@@ -431,6 +443,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93027B72256995B50053A57E /* AVFoundation.framework in Frameworks */,
 				FB6186D324FD87D4006C1467 /* Pods_Astroshub.framework in Frameworks */,
 				E63E759524FBE4E100DE1119 /* Stripe.framework in Frameworks */,
 				71265F8624C5EF7400D9A9E4 /* CFSDK.xcframework in Frameworks */,
@@ -452,12 +465,20 @@
 		8B7C86A38C88965CF5A0AD3C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				93027B71256995B50053A57E /* AVFoundation.framework */,
 				FB6186D024FD8782006C1467 /* Razorpay.framework */,
 				E63E759424FBE4E100DE1119 /* Stripe.framework */,
 				E6F2534924FBDBE2003558A7 /* Stripe.framework */,
 				70617EE616EC735281030BE6 /* Pods_Astroshub.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		93027B73256997380053A57E /* Blog */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Blog;
 			sourceTree = "<group>";
 		};
 		93118D5D2516375A00AD8728 /* BlogVc */ = {
@@ -533,6 +554,16 @@
 				F2B9E37623D720C2005AC9A2 /* ChatFormVC.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		93C295192567105F00883C2D /* RemedyModel */ = {
+			isa = PBXGroup;
+			children = (
+				93C2951A2567109000883C2D /* RemedyData.swift */,
+				93C2951B2567109000883C2D /* RemedyBase.swift */,
+				93C2951C2567109000883C2D /* User_id.swift */,
+			);
+			path = RemedyModel;
 			sourceTree = "<group>";
 		};
 		93EA8816255B13C800B731B6 /* Mantras */ = {
@@ -809,6 +840,8 @@
 		F26360E523C44FFB0088C51F /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				93027B73256997380053A57E /* Blog */,
+				93C295192567105F00883C2D /* RemedyModel */,
 				93EA8816255B13C800B731B6 /* Mantras */,
 				93F0286B253E249A00F81067 /* QueryReportVC */,
 				9347A8EB2536B01000070B96 /* Chat */,
@@ -875,9 +908,11 @@
 				D47D1EE3248D1F6B00E6EBCB /* CallEstimateVC.swift */,
 				D47D1EE5248D671100E6EBCB /* FirstMinuteVC.swift */,
 				D4A5DBA4249BDE32000FB7E1 /* FrequentlyAskQuestionVC.swift */,
+				93027B742569CB470053A57E /* ScarcthView.swift */,
 				93C74BEB255C2932004F07B7 /* OffersViewController.swift */,
 				93C74BED255C29E2004F07B7 /* OffersTableViewCell.swift */,
 				93C74BEE255C29E2004F07B7 /* OffersTableViewCell.xib */,
+				937545DA2569CDEE00F7B21C /* ScratchCardViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -1079,6 +1114,7 @@
 				F2DC8D5923C8463500BE8C76 /* NewProfileVC.swift in Sources */,
 				F263617223C44FFC0088C51F /* ImageCropView.m in Sources */,
 				D4F7A49924501B0000D01A23 /* DashBoardMainTVC.swift in Sources */,
+				937545DB2569CDEE00F7B21C /* ScratchCardViewController.swift in Sources */,
 				F263614423C44FFC0088C51F /* AssetCell.swift in Sources */,
 				F2C3361723C5BBFB008C3AFF /* ProfileVC.swift in Sources */,
 				F2D2A3EC23F2778B00F7E06A /* KundaliMatchingVC.swift in Sources */,
@@ -1157,6 +1193,7 @@
 				F263612E23C44FFB0088C51F /* SignupCell.swift in Sources */,
 				F29C60AE240CC61100BDDC3B /* AstrologychannelVC.swift in Sources */,
 				D4A5DBAC249BE39E000FB7E1 /* FAQCell2.swift in Sources */,
+				93C2951D2567109000883C2D /* RemedyData.swift in Sources */,
 				F2BCF00623D321D300CF6D48 /* BlogVC.swift in Sources */,
 				F2D22C5923E2DD42009FEE1B /* EFImageViewZoom.swift in Sources */,
 				F2C3361C23C601B6008C3AFF /* AppDelegate.swift in Sources */,
@@ -1190,6 +1227,7 @@
 				F263613623C44FFB0088C51F /* NohanaImagePickerController.swift in Sources */,
 				F263611623C44FFB0088C51F /* AMTumblrHud.m in Sources */,
 				F263617B23C47B650088C51F /* RegistrationotpVC.swift in Sources */,
+				93C2951E2567109000883C2D /* RemedyBase.swift in Sources */,
 				F2C9C91B2403902700BCC7E4 /* KundaliMatchingListVC.swift in Sources */,
 				F263617323C44FFC0088C51F /* FXBlurView.m in Sources */,
 				F2C3362423C60DD9008C3AFF /* EarningVC.swift in Sources */,
@@ -1223,6 +1261,7 @@
 				F2CBCDF423D570FF0009FAC4 /* ContactVC.swift in Sources */,
 				F2BCF00823D3234F00CF6D48 /* ChangePassVC.swift in Sources */,
 				93C74BEC255C2932004F07B7 /* OffersViewController.swift in Sources */,
+				93027B752569CB490053A57E /* ScarcthView.swift in Sources */,
 				F263613823C44FFB0088C51F /* ActivityIndicatable.swift in Sources */,
 				F263612823C44FFB0088C51F /* LoginCell.swift in Sources */,
 				F2478C4F23F4220B003E5334 /* Message.swift in Sources */,
@@ -1233,6 +1272,7 @@
 				F2DFCA9F23E066BE00FBBBE0 /* ZoomImageView.swift in Sources */,
 				F25BE80523F161B500FD2CC2 /* ProductsVC.swift in Sources */,
 				F263613423C44FFB0088C51F /* AssetListViewController.swift in Sources */,
+				93C2951F2567109000883C2D /* User_id.swift in Sources */,
 				F263614A23C44FFC0088C51F /* AnimatableNavigationController.swift in Sources */,
 				F263612F23C44FFB0088C51F /* NewPasswordCell.swift in Sources */,
 				F263614223C44FFC0088C51F /* PhotoKitAssetList.swift in Sources */,

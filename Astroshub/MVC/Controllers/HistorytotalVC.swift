@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import ObjectMapper
 class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate{
     
     @IBOutlet weak var lbl1: UILabel!
@@ -16,6 +16,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
     @IBOutlet weak var lbl4: UILabel!
     @IBOutlet weak var labelChat: UILabel!
     
+    @IBOutlet weak var label6: UILabel!
     
     @IBOutlet var tbl_querylist: UITableView!
     @IBOutlet weak var view_Report: UIView!
@@ -28,7 +29,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
     var arrReport = [[String:Any]]()
     var arrChat = [[String:Any]]()
     var arrCall = [[String:Any]]()
-    var arrRemedy = [[String:Any]]()
+    var arrRemedy =  [User_id]()
     var strForRemedyreport :String?
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +38,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         lbl3.isHidden = true
         lbl4.isHidden = true
         labelChat.isHidden = true
-
+        label6.isHidden = true
         view_Report.isHidden = true
         view_Chat.isHidden = true
         view_Call.isHidden = true
@@ -259,18 +260,11 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
                                         
                                         if success == true
                                         {
-                                            
-                                            self.arrRemedy = [[String:Any]]()
-                                            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            
-                                            // let dict_Data = tempDict["data"] as! [String:Any]
-                                            // print("dict_Data is:- ",dict_Data)
-                                            if let arrqry = tempDict["data"] as? [[String:Any]]
-                                            {
-                                                self.arrRemedy = arrqry
+                                            if let responseObject = respose as? [String:Any] {
+                                                if let loginData = Mapper<RemedyBase>().map(JSONObject: responseObject) {
+                                                    self.arrRemedy = loginData.data?.user_id ?? []
+                                                }
                                             }
-                                            print("arrBlogs is:- ",self.arrRemedy)
-                                            
                                             self.tbl_querylist.reloadData()
                                             
                                         }
@@ -302,6 +296,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         lbl3.isHidden = true
         lbl4.isHidden = true
         labelChat.isHidden = true
+        label6.isHidden = true
         strForRemedyreport = "Query"
 
         view_Report.isHidden = true
@@ -310,11 +305,28 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         self.func_QuerytFormListing()
 
     }
-    @IBAction func btn_ReportAction(_ sender: Any)
-    {
+    @IBAction func btn_VoiceQuery(_ sender: UIButton) {
+        
         lbl1.isHidden = true
         lbl2.isHidden = false
         lbl3.isHidden = true
+        lbl4.isHidden = true
+        labelChat.isHidden = true
+        label6.isHidden = true
+
+        strForRemedyreport = "voice"
+
+        view_Report.isHidden = true
+        view_Chat.isHidden = true
+        view_Call.isHidden = true
+        self.func_QuerytFormListing()
+        
+    }
+    @IBAction func btn_ReportAction(_ sender: Any)
+    {
+        lbl1.isHidden = true
+        lbl2.isHidden = true
+        lbl3.isHidden = false
         lbl4.isHidden = true
         labelChat.isHidden = true
         view_Report.isHidden = false
@@ -327,8 +339,9 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         lbl1.isHidden = true
         lbl2.isHidden = true
         lbl3.isHidden = true
-        lbl4.isHidden = false
-        labelChat.isHidden = true
+        lbl4.isHidden = true
+        labelChat.isHidden = false
+        label6.isHidden = true
 
         view_Report.isHidden = true
         view_Chat.isHidden = false
@@ -342,7 +355,8 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         lbl2.isHidden = true
         lbl3.isHidden = true
         lbl4.isHidden = true
-        labelChat.isHidden = false
+        labelChat.isHidden = true
+        label6.isHidden = false
 
         view_Report.isHidden = true
         view_Chat.isHidden = true
@@ -353,9 +367,11 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
     @IBAction func btnRemdy(_ sender: UIButton) {
         lbl1.isHidden = true
         lbl2.isHidden = true
-        lbl3.isHidden = false
-        lbl4.isHidden = true
+        lbl3.isHidden = true
+        lbl4.isHidden = false
         labelChat.isHidden = true
+        label6.isHidden = true
+        
         view_Report.isHidden = true
         view_Chat.isHidden = true
         view_Call.isHidden = true
@@ -431,7 +447,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
             if dict_eventpoll["status"] as! String == "Pending"
             {
                 cell_Add.lbl7.textColor = UIColor.red
-                cell_Add.btnDownload.isHidden = false
+                cell_Add.btnDownload.isHidden = true
             }
             else if dict_eventpoll["status"] as! String == "Complete"
             {
@@ -452,7 +468,33 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
             cell_Add.lbl6.text = (dict_eventpoll["asked_query_message"] as! String)
             cell_Add.lbl7.text = (dict_eventpoll["status"] as! String)
             } else {
+                cell_Add.btnDownload.tag = indexPath.row
+
+                cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction(_:)), for: .touchUpInside)
+                cell_Add.btnDownload.isHidden = true
+                if arrRemedy[indexPath.row].status == "Pending"
+                {
+                    cell_Add.lbl7.textColor = UIColor.red
+                    cell_Add.btnDownload.isHidden = true
+                }
+                else if arrRemedy[indexPath.row].status == "Complete"
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = false
+                }
+                else
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = true
+                }
                 
+                cell_Add.lbl1.text = arrRemedy[indexPath.row].remedy_name
+                cell_Add.lbl2.text = arrRemedy[indexPath.row].remedy_contact_no
+                cell_Add.lbl3.text = arrRemedy[indexPath.row].remedy_email
+                cell_Add.lbl4.text = arrRemedy[indexPath.row].remedy_dob
+                cell_Add.lbl5.text = arrRemedy[indexPath.row].remedy_time_of_birth
+                cell_Add.lbl6.text = arrRemedy[indexPath.row].remedy_message
+                cell_Add.lbl7.text =  arrRemedy[indexPath.row].status
             }
             return cell_Add
         }
@@ -627,16 +669,18 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
     
     @objc func btn_downloadAction(_ sender: UIButton)
     {
-//        CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
-//        
-//        
-//        return
+        if strForRemedyreport == "Query" {
                 AutoBcmLoadingView.show("Loading......")
                 let dict_eventpoll = self.arrQuery[sender.tag]
         
                 let querydownload = dict_eventpoll["asked_query_download"] as! String
         
                 self.downloadpdf(pdfURL: querydownload)
+        } else {
+            AutoBcmLoadingView.show("Loading......")
+            let querydownload = arrRemedy[sender.tag].asked_redemy_download ?? ""
+            self.downloadpdf(pdfURL: querydownload)
+        }
         //
     }
     
