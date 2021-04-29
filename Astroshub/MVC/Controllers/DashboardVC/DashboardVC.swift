@@ -20,9 +20,10 @@ import Fabric
 import Crashlytics
 import FirebaseDatabase
 import MessageUI
-
+import WOWRibbonView
+import FBSDKCoreKit
 class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , CLLocationManagerDelegate,UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, MFMailComposeViewControllerDelegate {
-    
+    var fromSignup = ""
     var users = [Userrrr]().self
     var return_Response = [[String:Any]]()
     var index_value = 0
@@ -33,6 +34,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     @IBOutlet weak var constraintsBottomViewHeight: NSLayoutConstraint!
     @IBOutlet weak var viewBottom: UIView!
     @IBOutlet weak var btnCalls: UIButton!
+    var selectedZodiac = [String:Any]()
     
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var lbl_typecall: UILabel!
@@ -47,16 +49,16 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     let propertyArray1 = [
         "Chat with Astrologer",
         "Talk to Astrologer",
-        "Ask Query/Report/Remedy",
-        "Astro Shubh Shop"
+        "Ask Query/Report",
+        "Astro Shop"
         
     ]
     
     let propertyArrayImages1 = [
-        "astrochat",
-        "astrotalk",
-        "astroquery",
-        "astroshop"
+        "chat",
+        "talk",
+        "report",
+        "cart "
     ]
     var arrastroprice = [[String:Any]]()
     var astro_price_dollarcall = ""
@@ -82,7 +84,10 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
         view1.layer.cornerRadius = 6
         print(Supportmobile)
         tbl_dashboard.register(UINib(nibName: "DashBoardHeaderTableViewCell", bundle: nil), forCellReuseIdentifier: "DashBoardHeaderTableViewCell")
-       
+        
+        
+        tbl_dashboard.register(UINib(nibName: "ButtonsForQueryRemedyCell", bundle: nil), forCellReuseIdentifier: "ButtonsForQueryRemedyCell")
+        
         let timestamp = NSDate().timeIntervalSince1970
         let timeStamp = Int(1000 * Date().timeIntervalSince1970)
         let myTimeInterval = TimeInterval(timeStamp)
@@ -114,8 +119,6 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
             print(self.view.frame.height)
             
             user_apikey = UserDefaults.standard.value(forKey: "userKey") as? String ?? ""
-            
-            
             user_id = dict_IsLogin?["user_uni_id"] as? String ?? ""
             //user_apikey = dict_IsLogin["user_api_key"] as! String
             user_Email = dict_IsLogin?["email"] as? String ?? ""
@@ -137,20 +140,53 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
         }
         self.tbl_dashboard.register(UINib(nibName: "DashBoardMainTVC", bundle: nil), forCellReuseIdentifier: "DashBoardMainTVC")
         self.tbl_dashboard.register(UINib(nibName: "DashBoardSecCell", bundle: nil), forCellReuseIdentifier: "DashBoardSecCell")
+        
     }
     
-
+    override func viewDidAppear(_ animated: Bool) {
+//        if !hasLocationPermission() {
+//            let alertController = UIAlertController(title: "Location Permission Required", message: "Please enable location permissions in settings.", preferredStyle: UIAlertController.Style.alert)
+//                  
+//                  let okAction = UIAlertAction(title: "Settings", style: .default, handler: {(cAlertAction) in
+//                      //Redirect to Settings app
+//                    UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
+//                  })
+//                  
+////                  let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+////                  alertController.addAction(cancelAction)
+//                  
+//                  alertController.addAction(okAction)
+//                  
+//                  self.present(alertController, animated: true, completion: nil)
+//              }
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         manager.delegate = self
         manager.requestLocation()
         manager.requestAlwaysAuthorization()
         self.manager.requestWhenInUseAuthorization()
-
-//        if CLLocationManager.locationServicesEnabled() {
-//            manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-//            manager.startUpdatingLocation()
-//        }
+        self.manager.startMonitoringSignificantLocationChanges()
+                if CLLocationManager.locationServicesEnabled() {
+                    manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+//                 manager.startUpdatingLocation()
+               }
+        
+//        if !hasLocationPermission() {
+//            let alertController = UIAlertController(title: "Location Permission Required", message: "Please enable location permissions in settings.", preferredStyle: UIAlertController.Style.alert)
+//
+//                  let okAction = UIAlertAction(title: "Settings", style: .default, handler: {(cAlertAction) in
+//                      //Redirect to Settings app
+//                    UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
+//                  })
+//
+////                  let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+////                  alertController.addAction(cancelAction)
+//
+//                  alertController.addAction(okAction)
+//
+//                  self.present(alertController, animated: true, completion: nil)
+//              }
         if CurrentLocation.count != 0 {
             self.func_CallWelcomeAPI()
             if let _ = UserDefaults.standard.value(forKey: "isUserData") as? Data {
@@ -158,7 +194,21 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
             }
         }
     }
-    
+    func hasLocationPermission() -> Bool {
+           var hasPermission = false
+           if CLLocationManager.locationServicesEnabled() {
+               switch CLLocationManager.authorizationStatus() {
+               case .notDetermined, .restricted, .denied:
+                   hasPermission = false
+               case .authorizedAlways, .authorizedWhenInUse:
+                   hasPermission = true
+               }
+           } else {
+            hasPermission = false
+        }
+           return hasPermission
+       }
+
     func checkIfUserisLoggedIN(){
         if Auth.auth().currentUser?.uid == nil{
             
@@ -192,16 +242,15 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                 print(self.users)
             }
         }, withCancel: nil)
-        
     }
     
     //MARK:- Custom Method
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
-            print("Found user's location: \(location)")
+//            print("Found user's location: \(location)")
             let geocoder = CLGeocoder()
             geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
-                if (error != nil){
+                if (error != nil) {
                     print("error in reverseGeocode")
                 }
                 if let placemark = placemarks, placemark.count > 0 {
@@ -228,40 +277,40 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     //https://www.astroshubh.in/api/appManagement
     func getDashboardAPI(){
         
-       // AutoBcmLoadingView.show("Loading......")
+        // AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestGETURL("appManagement",
                                      success: { (respose) in
-                                               //AutoBcmLoadingView.dismiss()
-                                               let tempDict = respose as! NSDictionary
-                                               print(tempDict)
-                                               let success=tempDict["response"] as!   Bool
-                                               if success == true{
-                                                   let dict_Data = tempDict["data"] as! [String:Any]
-                                                   let dashboardData = DashboardTitles.init(dict: dict_Data)
-                                                self.dashboard = dashboardData
-                                                let isBottomEnable = self.dashboard?.bottomOptions?.first?.isEnable == "1"
-                                                self.viewBottom?.isHidden = !isBottomEnable
-                                                self.btnCalls?.isHidden = !isBottomEnable
-                                                self.constraintsBottomViewHeight.constant = isBottomEnable ? 100.0 : 0.0
-                                                self.tbl_dashboard.reloadData()
-                                               }
-               }) { (error) in
-                   print(error)
-                  // AutoBcmLoadingView.dismiss()
-               }
+                                        //AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        let success=tempDict["response"] as!   Bool
+                                        if success == true{
+                                            let dict_Data = tempDict["data"] as! [String:Any]
+                                            let dashboardData = DashboardTitles.init(dict: dict_Data)
+                                            self.dashboard = dashboardData
+                                            let isBottomEnable = self.dashboard?.bottomOptions?.first?.isEnable == "1"
+                                            self.viewBottom?.isHidden = !isBottomEnable
+                                            self.btnCalls?.isHidden = !isBottomEnable
+                                            self.constraintsBottomViewHeight.constant = isBottomEnable ? 100.0 : 0.0
+                                            self.tbl_dashboard.reloadData()
+                                        }
+                                     }) { (error) in
+            print(error)
+            // AutoBcmLoadingView.dismiss()
+        }
     }
     
     func func_CallWelcomeAPI(){
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
-        let setparameters = ["app_type":kIOS ,"app_version":kAppVersion,"location":CurrentLocation]
+        let setparameters = ["app_type":kIOS ,"app_version":kAppVersion,"location":CurrentLocation,"user_api_key":user_apikey,"user_id":user_id]
         print(setparameters)
-        AutoBcmLoadingView.show("Loading......")
+//        AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL("welcome", params: setparameters as [String : AnyObject],headers: nil,
                                       success: { (respose) in
                                         AutoBcmLoadingView.dismiss()
                                         let tempDict = respose as! NSDictionary
-                                        print(tempDict)
+//                                        print(tempDict)
                                         let success=tempDict["response"] as!   Bool
                                         if success == true
                                         {
@@ -270,12 +319,44 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                                             Supportmobile = dict_Data["mobile_number"] as! String
                                             whatsappmobile = dict_Data["whatsapp_number"] as! String
                                             FormQueryPrice = dict_Data["query_price"] as! Int
+                                            FormVoiceQueryPrice = dict_Data["price_voice_query"] as! Int
                                             FormReportPrice = dict_Data["report_price"] as! Int
                                             FormRemedyPrice = Int(dict_Data["inr_remedy_price"] as! String)!
                                             FormRemedydollarPrice = Int(dict_Data["doller_remedy_price"] as! String)!
+                                            
+                                            if UserDefaults.standard.value(forKey: "offerShowPopUp") as? Bool == true {
+                                                
+                                            }else {
+                                            let offer = dict_Data["recharge"] as? Array<Any>
+                                                ?? []
+                                            if offer.count == 0 {
+                                                
+                                            } else {
+                                            let valueoffer = offer[0] as! [String:Any]
+                                            let walletAmount = valueoffer["wallet_amount"] as! String
+                                            if walletAmount == "1" ||  walletAmount == "50" {
+                                                UserDefaults.standard.setValue(true, forKey: "offerShowPopUp")
+                                                if self.PerformActionIfLogin() {
+                                                let vc =  self.storyboard?.instantiateViewController(withIdentifier: "WalletOfferViewController") as! WalletOfferViewController
+                                                vc.strForAmount = walletAmount
+                                                vc.completionHandler = { text in
+                                                    if self.PerformActionIfLogin()  {
+                                                        let WalletNew = self.storyboard?.instantiateViewController(withIdentifier: "WalletNewVC") as? WalletNewVC
+                                                        
+                                                        self.navigationController?.pushViewController(WalletNew!, animated: true)
+                                                    }
+                                                    return ""
+                                                }
+                                                self.navigationController?.present(vc, animated: true, completion: nil)
+                                                }
+                                            }
+                                            else{
+                                                
+                                            }
+                                            }}
                                         }
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -314,68 +395,78 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                                         } else {
                                             CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                         }
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
     }
     
     @objc func horoscopeApiCallMethods() {
-        let deviceID = UIDevice.current.identifierForVendor!.uuidString
-        print(deviceID)
-        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad" ,"user_id":user_id.count > 0 ? user_id: "CUSGUS","zodic_id":""]
-        print(setparameters)
-        ActivityIndicator.shared.startLoading()
-        //AutoBcmLoadingView.show("Loading......")
-        AppHelperModel.requestPOSTURL(MethodName.HOROSCOPE.rawValue, params: setparameters as [String : AnyObject],headers: nil,
-                                      success: { (respose) in
-                                        ActivityIndicator.shared.stopLoader()
-                                        let tempDict = respose as! NSDictionary
-                                        print(tempDict)
-                                        let success=tempDict["response"] as!   Bool
-                                        let message=tempDict["msg"] as!   String
-                                        if success == true
-                                        {
-                                            self.arrhoroscope = [[String:Any]]()
-                                            self.return_Response = [[String:Any]]()
-                                            var arrProducts = [[String:Any]]()
-                                            arrProducts=tempDict["data"] as! [[String:Any]]
-                                            for i in 0..<arrProducts.count
-                                            {
-                                                var dict_Products = arrProducts[i]
-                                                dict_Products["isSelectedDeselected"] = "0"
-                                                dict_Products["id"] = i+1
-                                                self.index_value = i
-                                                self.arrhoroscope.append(dict_Products)
-                                            }
-                                            self.return_Response = self.arrhoroscope
-                                            let horoscopevC = self.storyboard?.instantiateViewController(withIdentifier: "HoroScopeVC") as! HoroScopeVC
-                                            horoscopevC.horoscopeRes = self.return_Response
-                                            self.navigationController?.pushViewController(horoscopevC, animated: true)
-                                        }
-                                        else
-                                        {
-                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                        }
-        }) { (error) in
-            print(error)
-            AutoBcmLoadingView.dismiss()
-        }
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "BabypdfviewVC") as! BabypdfviewVC
+        controller.value = 4
+        self.navigationController?.pushViewController(controller, animated: true)
         
+//        let horoscopevC = self.storyboard?.instantiateViewController(withIdentifier: "HoroScopeVC") as! HoroScopeVC
+////        horoscopevC.horoscopeRes = self.return_Response
+//        self.navigationController?.pushViewController(horoscopevC, animated: true)
         
+//
+//        let deviceID = UIDevice.current.identifierForVendor!.uuidString
+//        print(deviceID)
+//        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad" ,"user_id":user_id.count > 0 ? user_id: "CUSGUS","zodic_id":""]
+//        print(setparameters)
+//        //        ActivityIndicator.shared.startLoading()
+//        //AutoBcmLoadingView.show("Loading......")
+//        AppHelperModel.requestPOSTURL(MethodName.HOROSCOPE.rawValue, params: setparameters as [String : AnyObject],headers: nil,
+//                                      success: { (respose) in
+//                                        ActivityIndicator.shared.stopLoader()
+//                                        let tempDict = respose as! NSDictionary
+//                                        print(tempDict)
+//                                        let success=tempDict["response"] as!   Bool
+//                                        let message=tempDict["msg"] as!   String
+//                                        if success == true
+//                                        {
+//                                            self.arrhoroscope = [[String:Any]]()
+//
+//                                            self.return_Response = [[String:Any]]()
+//                                            var arrProducts = [[String:Any]]()
+//                                            arrProducts=tempDict["data"] as! [[String:Any]]
+//                                            for i in 0..<arrProducts.count
+//                                            {
+//                                                var dict_Products = arrProducts[i]
+//                                                dict_Products["isSelectedDeselected"] = "0"
+//                                                dict_Products["id"] = i+1
+//                                                self.index_value = i
+//                                                self.arrhoroscope.append(dict_Products)
+//                                            }
+//
+//                                            self.return_Response = self.arrhoroscope
+//                                            let horoscopevC = self.storyboard?.instantiateViewController(withIdentifier: "HoroScopeVC") as! HoroScopeVC
+//                                            horoscopevC.horoscopeRes = self.return_Response
+//                                            self.navigationController?.pushViewController(horoscopevC, animated: true)
+//                                        }
+//                                        else
+//                                        {
+//                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
+//                                        }
+//                                      }) { (error) in
+//            print(error)
+//            AutoBcmLoadingView.dismiss()
+//        }
+//
+//
         
     }
-    
     func walletApiCallMethods() {
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
         let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey,"user_id":user_id,"location":CurrentLocation]
         print(setparameters)
-        AppHelperModel.requestPOSTURL(MethodName.RECHARGE.rawValue, params: setparameters as [String : AnyObject],headers: nil,
+        AppHelperModel.requestPOSTURL("getTotalBalance", params: setparameters as [String : AnyObject],headers: nil,
                                       success: {
                                         (respose) in
                                         let tempDict = respose as! NSDictionary
-                                        print(tempDict)
+//                                        print(tempDict)
                                         
                                         let success = tempDict["response"] as!   Bool
                                         let message = tempDict["msg"] as!   String
@@ -383,13 +474,15 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                                         if success == true
                                         {
                                             let dict_Data = tempDict["data"] as! [String:Any]
-                                            let amount = dict_Data["wallet"] as! String
+                                            let amount = dict_Data["user_wallet_amt"] as! String
                                             
                                             let amount1 = String(amount)
                                             var splitString = amount1.split(separator: " ")
                                             if splitString.count == 2 {
                                                 if let getBalance = Double(splitString[1]) {
                                                     walletBalanceNew = getBalance
+                                                    let defaults = UserDefaults.standard
+                                                    defaults.set(walletBalanceNew, forKey: "balance")
                                                 }
                                             }
                                             
@@ -402,7 +495,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                                                 self.lbl_walletamount.text = amount1
                                             }
                                         }
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -425,6 +518,8 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     @IBAction func wallet_Action(_ sender: Any)
     {
         if self.PerformActionIfLogin()  {
+            AppEvents.logEvent(AppEvents.Name(rawValue: "wallet"))
+
             let WalletNew = self.storyboard?.instantiateViewController(withIdentifier: "WalletNewVC")
             self.navigationController?.pushViewController(WalletNew!, animated: true)
         }
@@ -432,7 +527,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     
     @IBAction func actionChatWith(_ sender: UIButton) {
         //let string1 = whatsappmobile
-        let string1 = "+919999122091"
+        let string1 = "+919999603996"
         let url = string1
         
         //let whatsappURL = URL(string: "https://api.whatsapp.com/send?phone=\(url)&text=Invitation")
@@ -465,17 +560,17 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     {
         let refreshAlert = UIAlertController(title: "Log Out", message: "Are You Sure to Log Out ? ", preferredStyle: UIAlertController.Style.alert)
         refreshAlert.addAction(UIAlertAction(title: "Confirm", style: .default, handler:
-            {
-                (action: UIAlertAction!) in
-                //            self.navigationController?.popToRootViewController(animated: true)
-                
-                self.logoutFun()
-        }))
+                                                {
+                                                    (action: UIAlertAction!) in
+                                                    //            self.navigationController?.popToRootViewController(animated: true)
+                                                    
+                                                    self.logoutFun()
+                                                }))
         refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler:
-            {
-                (action: UIAlertAction!) in
-                refreshAlert .dismiss(animated: true, completion: nil)
-        }))
+                                                {
+                                                    (action: UIAlertAction!) in
+                                                    refreshAlert .dismiss(animated: true, completion: nil)
+                                                }))
         present(refreshAlert, animated: true, completion: nil)
     }
     func logoutFun()
@@ -501,7 +596,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     func dialNumber(number : String) {
         
         if let url = URL(string: "tel://\(number)"),
-            UIApplication.shared.canOpenURL(url) {
+           UIApplication.shared.canOpenURL(url) {
             if #available(iOS 10, *) {
                 UIApplication.shared.open(url, options: [:], completionHandler:nil)
             } else {
@@ -525,8 +620,11 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
             return 80
         } else if indexPath.row >= 1 && indexPath.row <= 4 {
             return 80
-        } else if indexPath.row == 5 {
+        } else if indexPath.row == 4 {
             return 200
+        }
+        else if indexPath.row == 5 {
+            return 80
         }
         return 200
     }
@@ -534,7 +632,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return 6
+        return 7
         
     }
     
@@ -574,35 +672,46 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                 offSet += self.view.bounds.size.width
             }
             DispatchQueue.main.async()
-                {
-                    UIView.animate(withDuration: 0.3, delay: 0, options: UIView.AnimationOptions.curveLinear, animations: {
-                        sliderImageCell.scrollView.contentOffset.x = CGFloat(self.offSet)
-                        let pageWidth:CGFloat = sliderImageCell.scrollView.frame.width
-                        let currentPage:CGFloat = floor((sliderImageCell.scrollView.contentOffset.x-pageWidth/2)/pageWidth)+1
-                        sliderImageCell.pageControl.currentPage = Int(currentPage)
-                    }, completion: nil)
+            {
+                UIView.animate(withDuration: 0.3, delay: 0, options: UIView.AnimationOptions.curveLinear, animations: {
+                    sliderImageCell.scrollView.contentOffset.x = CGFloat(self.offSet)
+                    let pageWidth:CGFloat = sliderImageCell.scrollView.frame.width
+                    let currentPage:CGFloat = floor((sliderImageCell.scrollView.contentOffset.x-pageWidth/2)/pageWidth)+1
+                    sliderImageCell.pageControl.currentPage = Int(currentPage)
+                }, completion: nil)
             }
             
             return sliderImageCell
         }
-//        else if indexPath.row == 1
-//        {
-//            let cell = tableView.dequeueReusableCell(withIdentifier: "VisitedCell", for: indexPath) as! VisitedCell
-//
-//            return cell
-//        }
         
         else if indexPath.row >= 1 && indexPath.row <= 4 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DashBoardMainTVC", for: indexPath) as! DashBoardMainTVC
             cell.imageViewDashBoard.image = UIImage(named: propertyArrayImages1[indexPath.row - 1])
             cell.lblHeading.text = propertyArray1[indexPath.row - 1]
-//            if let allTitles = self.dashboard?.cellTitle{
-//                let currentCellTitle = allTitles.filter{ $0.name == String(indexPath.row)}.first
-//                cell.lblHeading.text = currentCellTitle?.desc ?? ""
-//            }
+            if indexPath.row == 1 {
+                cell.imageviewNew.isHidden = true
+                cell.newView.isHidden = false
+                cell.newView.isLeft = true
+                cell.newView.isRift = false
+            } else {
+                cell.imageviewNew.isHidden = true
+                cell.newView.isHidden = true
+               
+
+
+            }
             
             return cell
-        } else if indexPath.row == 5 {
+        }
+        
+        else if indexPath.row == 5 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonsForQueryRemedyCell", for: indexPath) as! ButtonsForQueryRemedyCell
+            cell.buttonQuery.addTarget(self, action: #selector(voiceQueryButton), for: .touchUpInside)
+            cell.buttonRemedy.addTarget(self, action: #selector(askRemedy), for: .touchUpInside)
+            
+            return cell
+        }
+        else if indexPath.row == 6 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "DashBoardSecCell", for: indexPath) as! DashBoardSecCell
             cell.buttonZodiac.addTarget(self, action: #selector(horoscopeApiCallMethods), for: .touchUpInside)
             return cell
@@ -612,7 +721,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        if indexPath.row >= 1 && indexPath.row <= 4 {
+        if indexPath.row >= 0 && indexPath.row <= 4 {
             if  indexPath.row == 1// chat with astrologer
             {
                 userCountry = ""
@@ -620,6 +729,8 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                 chatcallingFormmm = "Chat"
                 let AstroChatList = self.storyboard?.instantiateViewController(withIdentifier: "AstroChatListVC")
                 self.navigationController?.pushViewController(AstroChatList!, animated: true)
+                AppEvents.logEvent(AppEvents.Name(rawValue: "chat"))
+
             }
             else if  indexPath.row == 2// talk to astrologer
             {
@@ -628,19 +739,51 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                 chatcallingFormmm = "Calling"
                 let AstroTalkList = self.storyboard?.instantiateViewController(withIdentifier: "AstroTalkListVC")
                 self.navigationController?.pushViewController(AstroTalkList!, animated: true)
+                AppEvents.logEvent(AppEvents.Name(rawValue: "call"))
+
             }
             else if  indexPath.row == 3
             {
                 //QueryReportVC
                 let QueryReport = self.storyboard?.instantiateViewController(withIdentifier: "QueryReportVC")
                 self.navigationController?.pushViewController(QueryReport!, animated: true)
+                AppEvents.logEvent(AppEvents.Name(rawValue: "query"))
+
             }
             else if  indexPath.row == 4// astroshop
             {
                 let ProductCategory = self.storyboard?.instantiateViewController(withIdentifier: "ProductCategoryVC")
                 self.navigationController?.pushViewController(ProductCategory!, animated: true)
+                AppEvents.logEvent(AppEvents.Name(rawValue: "category"))
+
+            }
+            else if  indexPath.row == 0// astroshop
+            {
+                userCountry = ""
+                userCountrycode = ""
+                chatcallingFormmm = "Chat"
+                let AstroChatList = self.storyboard?.instantiateViewController(withIdentifier: "AstroChatListVC")
+                self.navigationController?.pushViewController(AstroChatList!, animated: true)
+                AppEvents.logEvent(AppEvents.Name(rawValue: "chat"))
+
+                
             }
         }  
+    }
+    
+    @IBAction func voiceQueryButton(_ sender: UIButton) {
+        //VoiceQuery
+        let QueryReport = self.storyboard?.instantiateViewController(withIdentifier: "QueryReportVC") as! QueryReportVC
+        QueryReport.particilarTabStr = .voice
+        self.navigationController?.pushViewController(QueryReport, animated: true)
+    }
+    
+    @IBAction func askRemedy(_ sender: UIButton) {
+        let remedy = self.storyboard?.instantiateViewController(withIdentifier: "QueryReportVC") as! QueryReportVC
+        remedy.particilarTabStr = .remedy
+        self.navigationController?.pushViewController(remedy, animated: true)
+        AppEvents.logEvent(AppEvents.Name(rawValue: "remedy"))
+
     }
     
     @IBAction func btn_IsSelectedDeseleced(_ sender: UIButton) {
@@ -694,6 +837,10 @@ class collectionCell: UICollectionViewCell {
     @IBOutlet weak var VIEW1: UIView!
     @IBOutlet weak var lbl_UserName: UILabel!
     @IBOutlet weak var btn_click: UIButton!
+    @IBOutlet weak var labeOffer: UILabel!
+    
+    @IBOutlet weak var labelforOffer1: UILabel!
+    @IBOutlet weak var viewOffer: WOWRibbonView!
 }
 
 class VisitedCell: UITableViewCell {
@@ -715,7 +862,7 @@ class PushNotificationSender {
         let paramString: [String : Any] = ["to" : token,
                                            "notification" : ["title" : title, "body" : body, "sound" : "default"],
                                            "data" : ["user" : "test_id"]
-            
+                                           
         ]
         let request = NSMutableURLRequest(url: url as URL)
         request.httpMethod = "POST"

@@ -10,6 +10,7 @@ import UIKit
 
 class SlideMenuCell2: UITableViewCell {
     
+    @IBOutlet weak var imageNew: UIImageView!
     @IBOutlet weak var lbl_Profile: UILabel!
     @IBOutlet weak var img_picture: UIImageView!
 

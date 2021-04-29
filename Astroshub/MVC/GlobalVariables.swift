@@ -80,7 +80,7 @@ var arrchatList2 = [[String:Any]]()
 var BlogDetails = [String:Any]()
 
 var AstrologerrPrice = ""
-var FinalAmount = Float()
+var FinalAmount = Double()
 
 var Supportmobile = ""
 var whatsappmobile = ""
@@ -98,6 +98,8 @@ var CouponApplyID = Int()
 var CouponID = ""
 var RemainingDiscountAmount = ""
 var FormQueryPrice = Int()
+var FormVoiceQueryPrice = Int()
+
 var FormReportPrice = Int()
 var FormRemedyPrice = Int()
 var FormRemedydollarPrice = Int()
@@ -108,3 +110,4 @@ var PaymentID = ""
 var AMTNY = ""
 
 
+var signUpOffer = ""

@@ -73,7 +73,9 @@ class AppHelperModel: NSObject {
         if   strURL.contains("CallingAPI") {
             let splitString = strURL.split(separator: " ")
             let number = String(splitString[1])
-            url = "https://ivr2.virtuo.in/astroshubh.php?user=obcastroShubh&pwd=obcastroShubh202&uid=1&astronumber=\(number)"
+            let userid = String(splitString[2])
+            url = "http://ivr.virtuo.in/astroshubh.php?astronumber=\(number)&user=obcastroShubh&pwd=obcastroShubh202&uid=\(userid)"
+//                "https://ivr2.virtuo.in/astroshubh.php?user=obcastroShubh&pwd=obcastroShubh202&uid=1&astronumber=\(number)"
         } else if strURL.contains("generate_token") || strURL.contains("checkout"){
             url = strURL
         } else {

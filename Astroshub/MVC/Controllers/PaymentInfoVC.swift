@@ -12,7 +12,9 @@ import Razorpay
 
 
 //MARK:- CLASS VARIBALES
-private var KEY_ID = "rzp_live_1idxRp4tPV0Llx" // @"rzp_test_1DP5mmOlF5G5ag";
+private var KEY_ID = "rzp_live_1idxRp4tPV0Llx"
+//    "rzp_live_1idxRp4tPV0Llx"
+//    "rzp_live_1idxRp4tPV0Llx" // @"rzp_test_1DP5mmOlF5G5ag";
 private let SUCCESS_TITLE = "Yay!"
 private let SUCCESS_MESSAGE = "Your payment was successful. The payment ID is %@"
 private let FAILURE_TITLE = "Uh-Oh!"
@@ -34,6 +36,9 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
     //MARK:- PROPERTIES
     var razorpay: RazorpayCheckout? = nil
     var IntAmount = Float()
+    var offerPrice = ""
+    var gstPrice = Double()
+    var amountAddAfterOffer = ""
     
     //MARK:- VIEW CYCLE
     override func viewDidLoad() {
@@ -43,94 +48,158 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
         razorpay = RazorpayCheckout.initWithKey(KEY_ID, andDelegate: self)
         tbl_paymentInfo.reloadData()
     }
-    
     override func viewWillAppear(_ animated: Bool){
         super.viewWillAppear(true)
         self.tbl_paymentInfo.reloadData()
     }
-    
     //MARK:- TABLE VIEW DELEGATES
     func numberOfSections(in tableView: UITableView) -> Int{
-        return 6
+        if offerPrice == "hide"{
+            return 4
+        }
+        return 5
     }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         return 1
     }
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat{
         return UITableView.automaticDimension
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        if indexPath.section == 0 {
-            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell", for: indexPath) as! PaymentInfocell
-            //let text1 = Float(GstAmount)
-            //let text = String(format: "%.2f", text1)
-            cell_Add.lbl1.text = dollar + OnTabWalletAmount
-            cell_Add.lbl2.text = dollar + CouponDiscountAmount
-            //cell_Add.lbl3.text = rupee + String(TotalAmount)
-            return cell_Add
-        } else if indexPath.section == 1 {
-            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell2", for: indexPath) as! PaymentInfocell2
-            cell_Add.btnSelectApplyCoupon.tag = indexPath.row
-            cell_Add.btnSelectApplyCoupon.addTarget(self, action: #selector(self.btn_couponAction(_:)), for: .touchUpInside)
-            cell_Add.btncross.tag = indexPath.row
-            cell_Add.btncross.addTarget(self, action: #selector(self.btn_crossAction(_:)), for: .touchUpInside)
-            cell_Add.view3.layer.shadowColor = UIColor.lightGray.cgColor
-            cell_Add.view3.layer.shadowOpacity = 5.0
-            cell_Add.view3.layer.shadowRadius = 5.0
-            cell_Add.view3.layer.shadowOffset = CGSize (width: 1.5, height: 1.5)
-            cell_Add.view3.layer.masksToBounds = false
-            cell_Add.view3.layer.cornerRadius = 5.0
-            
-            if CouponDiscountAmount == ""{
-                cell_Add.view6.isHidden = true
-                // cell_Add.lbl_discount.text = rupee + " " + "0"
-            }else{
-                cell_Add.view6.isHidden = false
-                cell_Add.lbl_couponname.text = CouponCode
-                //cell_Add.lbl_discount.text = rupee + " " + CouponDiscountAmount
-            }
-            return cell_Add
-        }
-        else if indexPath.section == 2
-        {
-            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell3", for: indexPath) as! PaymentInfocell3
-            let successor = CurrentLocation == "India" ? " \n (18% GST included) " : ""
-            let multiplier = CurrentLocation == "India" ? 1.18 : 1
-            if CouponDiscountAmount == "" || CouponDiscountAmount == "0" {
-                let gstAddedFinalAmount = ((OnTabWalletAmount as NSString).doubleValue * multiplier).round(to: 2)
-                cell_Add.lbl_totalamount.text = "\(dollar) \(gstAddedFinalAmount)\(successor)"
-                
-            }else{
-                
-                let formatter = NumberFormatter()
-                formatter.locale = Locale.current // USA: Locale(identifier: "en_US")
-                formatter.numberStyle = .decimal
-                let number = formatter.number(from: RemainingDiscountAmount)
-                let doubleAmount = number?.doubleValue ?? 0.0
-                let gstAddedFinalAmount = doubleAmount * multiplier
-                
-                cell_Add.lbl_totalamount.text = "\(dollar) \(gstAddedFinalAmount)\(successor)"
+        if offerPrice == "hide"{
+            if indexPath.section == 0 {
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell", for: indexPath) as! PaymentInfocell
+                //let text1 = Float(GstAmount)
+                //let text = String(format: "%.2f", text1)
+                cell_Add.lbl1.text = dollar + OnTabWalletAmount
+                cell_Add.lbl2.text = dollar + CouponDiscountAmount
+                //cell_Add.lbl3.text = rupee + String(TotalAmount)
+                return cell_Add
+            } else if indexPath.section == 1 {
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell3", for: indexPath) as! PaymentInfocell3
+                let successor = CurrentLocation == "India" ? " \n (18% GST included) " : ""
+                let multiplier = CurrentLocation == "India" ? 1.18 : 1
+                //                if gstPrice == "0" {
+                //                    cell_Add.lbl_totalamount.text = "\(OnTabWalletAmount)"
+                //
+                //                } else {
+                if CouponDiscountAmount == "" || CouponDiscountAmount == "0" {
+                    let gstAddedFinalAmount = ((OnTabWalletAmount as NSString).doubleValue * multiplier).round(to: 2)
+                    cell_Add.lbl_totalamount.text = "\(dollar) \(gstAddedFinalAmount)\(successor)"
+                }else{
+                    let formatter = NumberFormatter()
+                    formatter.locale = Locale.current // USA: Locale(identifier: "en_US")
+                    formatter.numberStyle = .decimal
+                    let number = formatter.number(from: RemainingDiscountAmount)
+                    let doubleAmount = number?.doubleValue ?? 0.0
+                    let gstAddedFinalAmount = (doubleAmount * 0.18) + doubleAmount
+                    cell_Add.lbl_totalamount.text = "\(dollar) \(gstAddedFinalAmount)\(successor)"
+                }
+                //                }
+                return cell_Add
                 
             }
-            return cell_Add
-            
-        }
-        else if indexPath.section == 3{
-            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell1", for: indexPath) as! PaymentInfocell1
-            cell_Add.btnpay.tag = indexPath.row
-            cell_Add.btnpay.addTarget(self, action: #selector(self.btn_Pay(_:)), for: .touchUpInside)
-            return cell_Add
-        }else if indexPath.section == 4{
-            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfonewcell", for: indexPath) as! PaymentInfonewcell
-            cell_Add.btnpay.tag = indexPath.row
-            cell_Add.btnpay.addTarget(self, action: #selector(self.btn_Paypal(_:)), for: .touchUpInside)
-            return cell_Add
-        }else{
-            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "Notecell", for: indexPath) as! Notecell
-            return cell_Add
+            else if indexPath.section == 2{
+                
+                if CurrentLocation == "India" {
+                    let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell1", for: indexPath) as! PaymentInfocell1
+                    cell_Add.btnpay.tag = indexPath.row
+                    cell_Add.btnpay.addTarget(self, action: #selector(self.btn_Pay(_:)), for: .touchUpInside)
+                    return cell_Add
+                } else {
+                    
+                    let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfonewcell", for: indexPath) as! PaymentInfonewcell
+                    cell_Add.btnpay.tag = indexPath.row
+                    cell_Add.btnpay.addTarget(self, action: #selector(self.btn_Paypal(_:)), for: .touchUpInside)
+                    return cell_Add
+                }
+                
+            }
+            //            else if indexPath.section == 3{
+            //                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfonewcell", for: indexPath) as! PaymentInfonewcell
+            //                cell_Add.btnpay.tag = indexPath.row
+            //                cell_Add.btnpay.addTarget(self, action: #selector(self.btn_Paypal(_:)), for: .touchUpInside)
+            //                return cell_Add
+            //            }
+            else{
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "Notecell", for: indexPath) as! Notecell
+                return cell_Add
+            }
+        } else {
+            if indexPath.section == 0 {
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell", for: indexPath) as! PaymentInfocell
+                //let text1 = Float(GstAmount)
+                //let text = String(format: "%.2f", text1)
+                cell_Add.lbl1.text = dollar + OnTabWalletAmount
+                cell_Add.lbl2.text = dollar + CouponDiscountAmount
+                //cell_Add.lbl3.text = rupee + String(TotalAmount)
+                return cell_Add
+            } else if indexPath.section == 1 {
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell2", for: indexPath) as! PaymentInfocell2
+                cell_Add.btnSelectApplyCoupon.tag = indexPath.row
+                cell_Add.btnSelectApplyCoupon.addTarget(self, action: #selector(self.btn_couponAction(_:)), for: .touchUpInside)
+                cell_Add.btncross.tag = indexPath.row
+                cell_Add.btncross.addTarget(self, action: #selector(self.btn_crossAction(_:)), for: .touchUpInside)
+                cell_Add.view3.layer.shadowColor = UIColor.lightGray.cgColor
+                cell_Add.view3.layer.shadowOpacity = 5.0
+                cell_Add.view3.layer.shadowRadius = 5.0
+                cell_Add.view3.layer.shadowOffset = CGSize (width: 1.5, height: 1.5)
+                cell_Add.view3.layer.masksToBounds = false
+                cell_Add.view3.layer.cornerRadius = 5.0
+                
+                if CouponDiscountAmount == ""{
+                    cell_Add.view6.isHidden = true
+                    // cell_Add.lbl_discount.text = rupee + " " + "0"
+                }else{
+                    cell_Add.view6.isHidden = false
+                    cell_Add.lbl_couponname.text = CouponCode
+                    //cell_Add.lbl_discount.text = rupee + " " + CouponDiscountAmount
+                }
+                return cell_Add
+            }
+            else if indexPath.section == 2
+            {
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell3", for: indexPath) as! PaymentInfocell3
+                let successor = CurrentLocation == "India" ? " \n (18% GST included) " : ""
+                let multiplier = CurrentLocation == "India" ? 1.18 : 1
+                //            if gstPrice == "0" {
+                //                cell_Add.lbl_totalamount.text = "\(OnTabWalletAmount)"
+                //
+                //            } else {
+                if CouponDiscountAmount == "" || CouponDiscountAmount == "0" {
+                    let gstAddedFinalAmount = ((OnTabWalletAmount as NSString).doubleValue * multiplier).round(to: 2)
+                    cell_Add.lbl_totalamount.text = "\(dollar) \(gstAddedFinalAmount)\(successor)"
+                    
+                }else{
+                    
+                    let formatter = NumberFormatter()
+                    formatter.locale = Locale.current // USA: Locale(identifier: "en_US")
+                    formatter.numberStyle = .decimal
+                    let number = formatter.number(from: RemainingDiscountAmount)
+                    let doubleAmount = number?.doubleValue ?? 0.0
+                    let gstAddedFinalAmount = (doubleAmount * 0.18) + doubleAmount
+                    cell_Add.lbl_totalamount.text = "\(dollar) \(gstAddedFinalAmount)\(successor)"
+                    
+                }
+                //            }
+                return cell_Add
+                
+            }
+            else if indexPath.section == 3{
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfocell1", for: indexPath) as! PaymentInfocell1
+                cell_Add.btnpay.tag = indexPath.row
+                cell_Add.btnpay.addTarget(self, action: #selector(self.btn_Pay(_:)), for: .touchUpInside)
+                return cell_Add
+            }else if indexPath.section == 4{
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "PaymentInfonewcell", for: indexPath) as! PaymentInfonewcell
+                cell_Add.btnpay.tag = indexPath.row
+                cell_Add.btnpay.addTarget(self, action: #selector(self.btn_Paypal(_:)), for: .touchUpInside)
+                return cell_Add
+            }else{
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "Notecell", for: indexPath) as! Notecell
+                return cell_Add
+            }
         }
         
     }
@@ -148,7 +217,19 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
     }
     
     @IBAction func btnActionApplyCoupon(_ sender: UIButton) {
-        appleCoup()
+        //        appleCoup()
+        let point = sender.convert(CGPoint.zero, to: self.tbl_paymentInfo)
+        let indexPath = self.tbl_paymentInfo.indexPathForRow(at: point)
+        let cell = self.tbl_paymentInfo.cellForRow(at: indexPath!) as! PaymentInfocell2
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "ApplyCouponVC") as! ApplyCouponVC
+        //        vc.screenCome = .recharge
+        vc.completionHandler = { text in
+            cell.lbl_couponname.text = text["coupon_code"] as? String
+            print("text = \(text)")
+            //            self.couponCode = text["id"] as! String
+            return text
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     //MARK:- SELECTORS
@@ -157,49 +238,78 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
         let multiplier = CurrentLocation == "India" ? 1.18 : 1
         let currency = (CurrentLocation == "India" ? "INR" : "USD").lowercased()
         if allowed{
+            //            if gstPrice == "0" {
+            //                FinalAmount = Double(OnTabWalletAmount) ?? 0.0
+            //
+            //            } else{
             if CouponDiscountAmount == "" || CouponDiscountAmount == "0"{
                 //FinalAmount = Float(OnTabWalletAmount) ?? 0.0
                 let gstAddedFinalAmount = ((OnTabWalletAmount as NSString).doubleValue * multiplier).round(to: 2)
-                FinalAmount = Float(gstAddedFinalAmount)
+                FinalAmount = Double(gstAddedFinalAmount)
             }else{
                 
                 let formatter = NumberFormatter()
-               formatter.locale = Locale.current // USA: Locale(identifier: "en_US")
-               formatter.numberStyle = .decimal
-               let number = formatter.number(from: RemainingDiscountAmount)
-               let doubleAmount = number?.doubleValue ?? 0.0
-               let gstAddedFinalAmount = doubleAmount * multiplier
-                FinalAmount = Float(gstAddedFinalAmount)
+                formatter.locale = Locale.current // USA: Locale(identifier: "en_US")
+                formatter.numberStyle = .decimal
+                let number = formatter.number(from: RemainingDiscountAmount)
+                let doubleAmount = number?.doubleValue ?? 0.0
+                let gstAddedFinalAmount = doubleAmount * multiplier
+                FinalAmount = Double(gstAddedFinalAmount)
             }
-        
+            //            }
             guard let addNewCardVC = self.storyboard?.instantiateViewController(withIdentifier: "AddNewCardVC") as? AddNewCardVC else { return }
             addNewCardVC.stripePaymentParams = ["amount": FinalAmount,
                                                 "currency": currency]
+            addNewCardVC.amount = Int(FinalAmount)
             addNewCardVC.delegateStripePay = self
             self.navigationController?.pushViewController(addNewCardVC, animated: true)
         }
-
+        
     }
-    
     @objc func btn_Pay(_ sender: UIButton)
     {
         let allowed = self.checkPaymentGatewayAlert(isStripe:false)
         let multiplier = CurrentLocation == "India" ? 1.18 : 1
         if allowed {
+            //            if gstPrice == "0" {
+            //                FinalAmount = Double(OnTabWalletAmount) ?? 0.0
+            //                let abcccc1 = Double(100.0)
+            //                mYCURRNECY = CurrentLocation == "India" ? "INR" : "USD"
+            //
+            //                let abcccc2 = FinalAmount * abcccc1
+            //                let options: [String:Any] = [
+            //                    "amount" :  abcccc2,
+            //                    "currency" :  mYCURRNECY,
+            //                    "description": "",
+            //                    "image": "http://kriscenttechnohub.com/demo/astroshubh/admin/assets/images/astroshubh_full-log.png",
+            //                    "name": setCustomername,
+            //                    "prefill": [
+            //                        "contact": setCustomerphone,
+            //                        "email": setCustomeremail
+            //                    ],
+            //                    "theme": [
+            //                        "color": "#FF7B18"
+            //                    ]
+            //                ]
+            //
+            //                razorpay?.open(options, displayController: self)
+            //            } else {
             if CouponDiscountAmount == ""{
                 let gstAddedFinalAmount = ((OnTabWalletAmount as NSString).doubleValue * multiplier).round(to: 2)
-                FinalAmount = Float(gstAddedFinalAmount)
+                FinalAmount = Double(gstAddedFinalAmount)
+                gstPrice =  ((OnTabWalletAmount as NSString).doubleValue * 0.18)
             }else{
                 
                 let formatter = NumberFormatter()
-               formatter.locale = Locale.current // USA: Locale(identifier: "en_US")
-               formatter.numberStyle = .decimal
-               let number = formatter.number(from: RemainingDiscountAmount)
-               let doubleAmount = number?.doubleValue ?? 0.0
-               let gstAddedFinalAmount = doubleAmount * multiplier
-                FinalAmount = Float(gstAddedFinalAmount)
+                formatter.locale = Locale.current // USA: Locale(identifier: "en_US")
+                formatter.numberStyle = .decimal
+                let number = formatter.number(from: RemainingDiscountAmount)
+                let doubleAmount = number?.doubleValue ?? 0.0
+                let gstAddedFinalAmount = doubleAmount * multiplier
+                FinalAmount = Double(gstAddedFinalAmount)
+                gstPrice =  doubleAmount * 0.18
             }
-            let abcccc1 = Float(100.00)
+            let abcccc1 = Double(100.0)
             mYCURRNECY = CurrentLocation == "India" ? "INR" : "USD"
             
             let abcccc2 = FinalAmount * abcccc1
@@ -217,14 +327,28 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
                     "color": "#FF7B18"
                 ]
             ]
-
+            
             razorpay?.open(options, displayController: self)
         }
+        
+        //        }
         
     }
     
     @objc func btn_couponAction(_ sender: UIButton){
-        appleCoup()
+        //        appleCoup()
+        let point = sender.convert(CGPoint.zero, to: self.tbl_paymentInfo)
+        let indexPath = self.tbl_paymentInfo.indexPathForRow(at: point)
+        let cell = self.tbl_paymentInfo.cellForRow(at: indexPath!) as! PaymentInfocell2
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "ApplyCouponVC") as! ApplyCouponVC
+        //        vc.screenCome = .recharge
+        vc.completionHandler = { text in
+            cell.lbl_couponname.text = text["coupon_code"] as? String
+            print("text = \(text)")
+            //            self.couponCode = text["id"] as! String
+            return text
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func btn_crossAction(_ sender: UIButton){
@@ -285,23 +409,44 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
     //MARK:- API HANDLER
     
     func func_rechargeamount() {
+        var welcome = 0
         if CouponDiscountAmount == "" || CouponDiscountAmount == "0"{
-            AMTNY = OnTabWalletAmount
+            AMTNY = amountAddAfterOffer
             CouponDiscountAmount = "0"
         }else{
-            AMTNY = RemainingDiscountAmount
+            AMTNY = amountAddAfterOffer
         }
-        
+        if CurrentLocation == "India"{
+            if OnTabWalletAmount == "1" {
+                AMTNY = "100"
+                welcome = 1
+                CouponDiscountAmount = "1"
+            } else if OnTabWalletAmount == "50"{
+                AMTNY = "150"
+                welcome = 1
+                CouponDiscountAmount = "50"
+            }
+        } else {
+            if OnTabWalletAmount == "1" {
+                AMTNY = "3"
+                welcome = 1
+                CouponDiscountAmount = "1"
+
+            }
+        }
         
         let setparameters = ["app_type":"ios",
                              "app_version":"1.0",
                              "user_api_key":user_apikey,
                              "user_id":user_id,
-                             "amount":AMTNY,
+                             "credit_amount":AMTNY,
                              "location":CurrentLocation,
                              "paymentid":PaymentID,
                              "coupan_amount":CouponDiscountAmount,
-                             "gstamount":FinalAmount] as [String : Any]
+                             "gst_amount":gstPrice
+                             ,"transaction_amount":FinalAmount,"isWelcomeRecharge":welcome] as [String : Any]
+        
+        //        user_id,user_api_key,credit_amount,gst_amount,transaction_amount,coupan_amount
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL("addCustomerWalletRecharge", params: setparameters as [String : AnyObject],headers: nil,
@@ -316,12 +461,12 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
                                             
                                             let refreshAlert = UIAlertController(title: "Astroshubh", message: message, preferredStyle: UIAlertController.Style.alert)
                                             refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
-                                                {
-                                                    (action: UIAlertAction!) in
-                                                    //            self.navigationController?.popToRootViewController(animated: true)
-                                                    
-                                                    self.backFun()
-                                            }))
+                                                                                    {
+                                                                                        (action: UIAlertAction!) in
+                                                                                        //            self.navigationController?.popToRootViewController(animated: true)
+                                                                                        
+                                                                                        self.backFun()
+                                                                                    }))
                                             
                                             self.present(refreshAlert, animated: true, completion: nil)
                                             
@@ -330,7 +475,7 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
                                         }
                                         
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -357,7 +502,7 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
                                         }else{
                                             CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                         }
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }

@@ -58,7 +58,7 @@ class RefertofriendVC: UIViewController {
     @IBAction func btn_shareAction(_ sender: Any)
        {
        
-          let text = "Join me on Astroshubh,Use My Referral code" + "(" + ReferellCode + ")" + "to sign up on app.We both gets referral bonus"
+          let text = "Join me on Astroshubh"
          // let image = UIImage(named: "3")
           let myWebsite = NSURL(string:"https://stackoverflow.com/users/4600136/mr-javed-multani?tab=profile")
           let shareAll = [text , myWebsite ?? "nil"] as [Any]

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import ObjectMapper
 class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDataSource,UITextFieldDelegate {
     
     @IBOutlet var tbl_querylist: UITableView!
@@ -18,10 +18,12 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
     
     @IBOutlet weak var lbl3: UILabel!
     var pdfString = ""
-    
+    var docController:UIDocumentInteractionController!
+
     var arrQuery = [[String:Any]]()
     var arrReport = [[String:Any]]()
-    
+    var arrQuery1: DataQuery?
+var strForQuery = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         lbl1.isHidden = false
@@ -29,7 +31,7 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
         lbl3.isHidden = true
 
         view_Report.isHidden = true
-        
+        strForQuery = "query"
         
         self.func_QuerytFormListing()
         
@@ -64,14 +66,11 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
                                         if success == true
                                         {
                                             
-                                            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            let dict_Data = tempDict["data"] as! [String:Any]
-                                            print("dict_Data is:- ",dict_Data)
-                                            if let arrqry = dict_Data["user_id"] as? [[String:Any]]
-                                            {
-                                                self.arrQuery = arrqry
+                                            if let responseObject = respose as? [String:Any] {
+                                                if let loginData = Mapper<QueryVoIceText>().map(JSONObject: responseObject) {
+                                                    self.arrQuery1 = loginData.data
+                                                }
                                             }
-                                            print("arrBlogs is:- ",self.arrQuery)
                                             self.view_Report.isHidden = true
                                             self.lbl1.isHidden = false
                                             self.lbl2.isHidden = true
@@ -198,14 +197,28 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
     }
     @IBAction func btn_QueryAction(_ sender: Any)
     {
+        strForQuery = "query"
+        self.lbl1.isHidden = false
+        self.lbl2.isHidden = true
+        self.lbl2.isHidden = true
         self.func_QuerytFormListing()
     }
     @IBAction func btn_ReportAction(_ sender: Any)
     {
+        strForQuery = "report"
+        self.lbl1.isHidden = true
+        self.lbl2.isHidden = true
+        self.lbl2.isHidden = false
         self.func_ReportFormListing()
     }
     
     @IBAction func btnVoiceQueryAction(_ sender: UIButton) {
+        self.lbl1.isHidden = true
+        self.lbl2.isHidden = false
+        self.lbl2.isHidden = true
+        strForQuery = "voice"
+        self.func_QuerytFormListing()
+
     }
     
     //****************************************************
@@ -230,7 +243,11 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
         
         if tableView == tbl_querylist
         {
-            return self.arrQuery.count
+            if strForQuery == "query" {
+                return self.arrQuery1?.user_id?.text?.count ?? 0
+            }  else {
+                return self.arrQuery1?.user_id?.audio?.count ?? 0
+            }
         }
         else
         {
@@ -246,42 +263,101 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
         if tableView == tbl_querylist
         {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "QueryListingCellN", for: indexPath) as! QueryListingCellN
-            
-            
-            cell_Add.btnDownload.tag = indexPath.row
-            cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction(_:)), for: .touchUpInside)
-            
-            let dict_eventpoll = self.arrQuery[indexPath.row]
-            let name = dict_eventpoll["asked_query_name"] as! String
-            let contact = dict_eventpoll["asked_query_contact_no"] as! String
-            let email = dict_eventpoll["asked_query_email"] as! String
-            let dob = dict_eventpoll["asked_query_dob"] as! String
-            let time = dict_eventpoll["asked_query_time_of_birth"] as! String
-            let message = dict_eventpoll["asked_query_message"] as! String
-            let status = dict_eventpoll["status"] as! String
-            cell_Add.btnDownload.isHidden = true
-            
-            if status == "Pending"
-            {
-                cell_Add.lbl7.textColor = UIColor.red
+            if strForQuery == "query" {
+                cell_Add.btnDownload.tag = indexPath.row
+                cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction(_:)), for: .touchUpInside)
                 cell_Add.btnDownload.isHidden = true
-            }
-            else
-            {
-                cell_Add.lbl7.textColor = UIColor.green
-                cell_Add.btnDownload.isHidden = false
-                //cell_Add.btnDownload.isHidden = true
+                let dict_eventpoll = self.arrQuery1?.user_id?.text?[indexPath.row]
+                if dict_eventpoll?.status ?? "" == "Pending"
+                {
+                    cell_Add.lbl7.textColor = UIColor.red
+                    cell_Add.btnDownload.isHidden = true
+                }
+                else if dict_eventpoll?.status  ?? "" == "Complete"
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = false
+                }
+                else
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = true
+                }
+                
+                cell_Add.lbl1.text = (dict_eventpoll?.asked_query_name ?? "")
+                cell_Add.lbl2.text = (dict_eventpoll?.asked_query_contact_no ?? "")
+                cell_Add.lbl3.text = (dict_eventpoll?.asked_query_email ?? "")
+                cell_Add.lbl4.text = dict_eventpoll?.asked_query_dob ?? ""
+                cell_Add.lbl5.text = (dict_eventpoll?.asked_query_time_of_birth ?? "")
+                cell_Add.lbl6.text = (dict_eventpoll?.asked_query_message ?? "")
+                cell_Add.lbl7.text = (dict_eventpoll?.status ?? "")
+            } else  {
+                cell_Add.btnDownload.tag = indexPath.row
+                cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction2(_:)), for: .touchUpInside)
+                cell_Add.btnDownload.isHidden = true
+                let dict_eventpoll = self.arrQuery1?.user_id?.audio?[indexPath.row]
+                if dict_eventpoll?.status  ?? "" == "Pending"
+                {
+                    cell_Add.lbl7.textColor = UIColor.red
+                    cell_Add.btnDownload.isHidden = true
+                }
+                else if dict_eventpoll?.status  ?? "" == "Complete"
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = false
+                }
+                else
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = true
+                }
+                
+                cell_Add.lbl1.text = dict_eventpoll?.asked_query_name ?? ""
+                cell_Add.lbl2.text = dict_eventpoll?.asked_query_contact_no ?? ""
+                cell_Add.lbl3.text = dict_eventpoll?.asked_query_email ?? ""
+                cell_Add.lbl4.text = dict_eventpoll?.asked_query_dob ?? ""
+                cell_Add.lbl5.text = dict_eventpoll?.asked_query_time_of_birth ?? ""
+                cell_Add.lbl6.text = dict_eventpoll?.asked_query_message ?? ""
+                cell_Add.lbl7.text = dict_eventpoll?.status ?? ""
             }
             
-            cell_Add.lbl1.text = name
-            cell_Add.lbl2.text = contact
-            cell_Add.lbl3.text = email
-            cell_Add.lbl4.text = dob
-            cell_Add.lbl5.text = time
-            cell_Add.lbl6.text = message
-            cell_Add.lbl7.text = status
             
             return cell_Add
+//
+//            cell_Add.btnDownload.tag = indexPath.row
+//            cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction(_:)), for: .touchUpInside)
+//
+//            let dict_eventpoll = self.arrQuery[indexPath.row]
+//            let name = dict_eventpoll["asked_query_name"] as! String
+//            let contact = dict_eventpoll["asked_query_contact_no"] as! String
+//            let email = dict_eventpoll["asked_query_email"] as! String
+//            let dob = dict_eventpoll["asked_query_dob"] as! String
+//            let time = dict_eventpoll["asked_query_time_of_birth"] as! String
+//            let message = dict_eventpoll["asked_query_message"] as! String
+//            let status = dict_eventpoll["status"] as! String
+//            cell_Add.btnDownload.isHidden = true
+//
+//            if status == "Pending"
+//            {
+//                cell_Add.lbl7.textColor = UIColor.red
+//                cell_Add.btnDownload.isHidden = true
+//            }
+//            else
+//            {
+//                cell_Add.lbl7.textColor = UIColor.green
+//                cell_Add.btnDownload.isHidden = false
+//                //cell_Add.btnDownload.isHidden = true
+//            }
+//
+//            cell_Add.lbl1.text = name
+//            cell_Add.lbl2.text = contact
+//            cell_Add.lbl3.text = email
+//            cell_Add.lbl4.text = dob
+//            cell_Add.lbl5.text = time
+//            cell_Add.lbl6.text = message
+//            cell_Add.lbl7.text = status
+//
+//            return cell_Add
         }
         else
         {
@@ -331,130 +407,98 @@ class QueryReportListingVC: UIViewController ,UITableViewDelegate, UITableViewDa
     }
     @objc func btn_downloadAction(_ sender: UIButton)
     {
-        CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
+        let dict_eventpoll = self.arrQuery1?.user_id?.text?[sender.tag]
+        let querydownload = dict_eventpoll?.asked_query_download ?? ""
+        self.downloadpdf(pdfURL: querydownload)
+    }
+    
+    @objc func btn_downloadAction2(_ sender: UIButton)
+    {
+        let dict_eventpoll = self.arrQuery1?.user_id?.audio?[sender.tag]
+        let querydownload = dict_eventpoll?.asked_query_download ?? ""
+        self.downloadpdf(pdfURL: querydownload)
+    }
+    
+    func downloadpdf(pdfURL : String){
+        let urlString = pdfURL
+        let url = URL(string: urlString)
         
-        return
-        //        AutoBcmLoadingView.show("Loading......")
-        //        let dict_eventpoll = self.arrQuery[sender.tag]
-        //
-        //        let querydownload = dict_eventpoll["asked_query_download"] as! String
-        //      //  pdfString = querydownload
-        //        DispatchQueue.main.async {
-        //            self.downloadpdf(pdfURL: querydownload)
-        //        }
-        //
-        //       // self.downloa
-        //
-        ////        let url = URL(string: querydownload)
-        ////        FileDownloader.loadFileAsync(url: url!) { (path, error) in
-        ////            print("PDF File downloaded to : \(path!)")
-        ////        }
-        
-        
+        if !urlString.isEmpty{
+            checkBookFileExists(withLink: urlString){ [weak self] downloadPath in
+                guard let self = self else{
+                    return
+                }
+                //                    play(url: downloadedURL)
+            }
+        }
+    }
+    func checkBookFileExists(withLink link: String, completion: @escaping ((_ filePath: URL)->Void)){
+        let urlString = link.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        if let url  = URL.init(string: urlString ?? ""){
+            let fileManager = FileManager.default
+            if let documentDirectory = try? fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create: false){
+                
+                let filePath = documentDirectory.appendingPathComponent(url.lastPathComponent, isDirectory: false)
+                
+                do {
+                    if try filePath.checkResourceIsReachable() {
+                        print("file exist")
+                        completion(filePath)
+                        self.open_pdf(pdfUrl : filePath)
+                        
+                    } else {
+                        print("file doesnt exist")
+                        downloadFile(withUrl: url, andFilePath: filePath, completion: completion)
+                    }
+                } catch {
+                    print("file doesnt exist")
+                    downloadFile(withUrl: url, andFilePath: filePath, completion: completion)
+                }
+            }else{
+                print("file doesnt exist")
+            }
+        }else{
+            print("file doesnt exist")
+        }
+    }
+    func downloadFile(withUrl url: URL, andFilePath filePath: URL, completion: @escaping ((_ filePath: URL)->Void)){
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try Data.init(contentsOf: url)
+                try data.write(to: filePath, options: .atomic)
+                print("saved at \(filePath.absoluteString)")
+                self.open_pdf(pdfUrl : filePath)
+                DispatchQueue.main.async {
+                    completion(filePath)
+                }
+            } catch {
+                print("an error happened while downloading or saving the file")
+            }
+        }
+    }
+    func open_pdf(pdfUrl : URL) {
+        self.docController = UIDocumentInteractionController(url: pdfUrl)
+        self.docController.delegate = self
+        self.docController.presentOptionsMenu(from: view.frame, in: self.view, animated: true)
     }
     
     @objc func btn_downloadAction1(_ sender: UIButton)
     {
-        CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
-        
-        return
-        //        AutoBcmLoadingView.show("Loading......")
-        //        let dict_eventpoll = self.arrReport[sender.tag]
-        //
-        //        let querydownload = dict_eventpoll["asked_report_customer_download"] as! String
-        //
-        //        let url = URL(string: querydownload)
-        ////        FileDownloader.loadFileAsync(url: url!) { (path, error) in
-        ////            print("PDF File downloaded to : \(path!)")
-        ////        }
-        //        self.downloadpdf(pdfURL: querydownload)
+        let dict_eventpoll = self.arrReport[sender.tag]
+        let querydownload = dict_eventpoll["asked_report_customer_download"] as! String
+        self.downloadpdf(pdfURL: querydownload)
     }
     
     func formattedDateFromString(dateString: String, withFormat format: String) -> String? {
-        
         let inputFormatter = DateFormatter()
         inputFormatter.dateFormat = "dd-MM-yyyy"
-        
         if let date = inputFormatter.date(from: dateString) {
-            
             let outputFormatter = DateFormatter()
             outputFormatter.dateFormat = format
-            
             return outputFormatter.string(from: date)
         }
-        
         return nil
     }
-    func downloadpdf(pdfURL : String){
-        CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
-        
-        return
-        let urlString = pdfURL
-        let url = URL(string: urlString)
-        let fileName = String((url!.lastPathComponent)) as NSString
-        // Create destination URL
-        let documentsUrl:URL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let destinationFileUrl = documentsUrl.appendingPathComponent("\(fileName)")
-        //Create URL to the source file you want to download
-        let fileURL = URL(string: urlString)
-        let sessionConfig = URLSessionConfiguration.default
-        let session = URLSession(configuration: sessionConfig)
-        let request = URLRequest(url:fileURL!)
-        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
-            if let tempLocalUrl = tempLocalUrl, error == nil {
-                // Success
-                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                    print("Successfully downloaded. Status code: \(statusCode)")
-                    
-                    DispatchQueue.main.async { [weak self] in
-                        
-                        AutoBcmLoadingView.dismiss()
-                        // 3
-                        CommenModel.showDefaltAlret(strMessage:"Successfully downloaded.", controller: self!)
-                    }
-                    
-                    //
-                    
-                }
-                do {
-                    try FileManager.default.copyItem(at: tempLocalUrl, to: destinationFileUrl)
-                    do {
-                        //Show UIActivityViewController to save the downloaded file
-                        let contents  = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-                        for indexx in 0..<contents.count {
-                            if contents[indexx].lastPathComponent == destinationFileUrl.lastPathComponent {
-                                let activityViewController = UIActivityViewController(activityItems: [contents[indexx]], applicationActivities: nil)
-                                self.present(activityViewController, animated: true, completion: nil)
-                            }
-                        }
-                    }
-                    catch (let err) {
-                        print("error: \(err)")
-                    }
-                } catch (let writeError) {
-                    print("Error creating a file \(destinationFileUrl) : \(writeError)")
-                }
-            } else {
-                print("Error took place while downloading a file. Error description: \(error?.localizedDescription ?? "")")
-            }
-        }
-        task.resume()
-        
-        
-        //       let url = URL(string: pdfURL)
-        //       FileDownloader.loadFileAsync(url: url!) { (path, error) in
-        //           print("PDF File downloaded to : \(path!)")
-        //          AutoBcmLoadingView.dismiss()
-        //       }
-        
-        
-    }
-    
-    //****************************************************
-    // MARK: - Memory CleanUP
-    //****************************************************
-    
-    
 }
 class QueryListingCellN: UITableViewCell {
     @IBOutlet weak var view1: UIView!
@@ -477,4 +521,11 @@ class ReportListingCellN: UITableViewCell {
     @IBOutlet weak var lbl6: UILabel!
     @IBOutlet weak var btnDownload: UIButton!
     // Initialization code
+}
+extension QueryReportListingVC:UIDocumentInteractionControllerDelegate{
+    
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
+    }
+    
 }

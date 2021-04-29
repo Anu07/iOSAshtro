@@ -61,7 +61,7 @@ class Validate: NSObject {
     var appColor = mainColor2
     
     func showMessage(message:String){
-        CRNotifications.showNotification(textColor: .white, backgroundColor: UIColor().setRGBColors(R: 253.0, G: 148.0, B: 34.0, alpha: 1.0), image: UIImage(named: "ui"), title: kAppName, message: message, dismissDelay: 3)
+        CRNotifications.showNotification(textColor: .white, backgroundColor: UIColor().setRGBColors(R: 246.0, G: 197.0, B: 0.0, alpha: 1.0), image: UIImage(named: "ui"), title: kAppName, message: message, dismissDelay: 3)
     }
     
     //    class func isValidMobileNumber(testString:String) -> Bool
@@ -193,11 +193,49 @@ class Validate: NSObject {
                     self.showMessage(message: Messages.ENQUIRY_EMPTY.rawValue)
                     return false
                 }
-                    
+                else if vc.self.weight == ""
+                {
+                    self.showMessage(message: Messages.weight_EMPTY.rawValue)
+                    return false
+                }
                 else {
                     return true
                 }
             }
+    
+    
+    func validatenquiryyyform1(vc:EnquiryShopVC) -> Bool {
+        if vc.self.Subject == "" {
+            self.showMessage(message: Messages.SUBJECT_EMPTY.rawValue)
+            return false
+        }
+        else if vc.self.Personname == ""
+        {
+            self.showMessage(message: Messages.NAME_EMPTY.rawValue)
+            return false
+        }
+        else if vc.self.Email == ""
+        {
+            self.showMessage(message: Messages.EMAIL_EMPTY.rawValue)
+            return false
+        }
+        else if vc.self.MopbileNumber == ""
+        {
+            self.showMessage(message: Messages.PHONE_EMPTY.rawValue)
+            return false
+        }
+            
+        else if vc.self.Message == ""
+        {
+            self.showMessage(message: Messages.ENQUIRY_EMPTY.rawValue)
+            return false
+        }
+      
+        else {
+            return true
+        }
+    }
+
     
         //Validate Query form
         func validatequeryform(vc:QueryReportVC) -> Bool {

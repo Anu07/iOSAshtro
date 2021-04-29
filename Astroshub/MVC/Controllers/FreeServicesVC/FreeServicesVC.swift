@@ -13,18 +13,20 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
     
     @IBOutlet var tbl_dashboard: UITableView!
     let propertyArray = [
-        "Panchang",
+        "Birth Chart",
         "Kundali Matching",
         "Numerology",
         "Baby Name Analysis",
-        "Festival 2020","Daily Horoscope","Prashnavali","Mytras","Chart Making"
+//        "Festival 2021",
+        "Daily Horoscope","Mantras","Panchang"
     ]
     let propertyArrayImages = [
-        "panchang",
-        "kundali matching",
-        "numerology",
-        "baby name analysis",
-        "festival","festival","festival","Mantras","Mantras"
+        "birthchart",
+        "kundali-matching",
+        "asset-4",
+        "birth-name-analysis",
+//        "festival2021",
+        "horoscope","mantras","panchang"
     ]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,7 +103,9 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
+        
         return CGSize(width: (collectionView.bounds.size.width)/2.2   , height: (collectionView.bounds.size.width)/2.2);
+        
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
@@ -113,10 +117,7 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
         //        https://astroshubh.in/tearms.php
         //        https://astroshubh.in/numerology.php
         
-        if indexPath.item == 6{
-            let controller = self.storyboard?.instantiateViewController(withIdentifier: "PrashnavaliVC") as! PrashnavaliVC
-            self.navigationController?.pushViewController(controller, animated: true)
-        } else if indexPath.item == 7 {
+        if indexPath.item == 5{
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "MytrasViewController") as! MytrasViewController
             self.navigationController?.pushViewController(controller, animated: true)
         } else{

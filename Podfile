@@ -45,6 +45,11 @@ target 'Astroshub' do
   pod 'BraintreeDropIn'
   pod 'Stripe'
   pod 'Cosmos', '~> 20.0'
+  pod 'WOWRibbonView'
+  pod 'FBSDKCoreKit'
+   pod 'FBSDKLoginKit'
+   pod 'FBSDKShareKit'
+  
 	post_install do |installer|
       installer.pods_project.targets.each do |target|
           if target.name == 'MessageKit'

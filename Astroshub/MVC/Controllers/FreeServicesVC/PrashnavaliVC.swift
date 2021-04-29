@@ -25,7 +25,7 @@ class PrashnavaliVC: UIViewController {
     }
     
     func apiForGetPransvlai() {
-        let setparameters = ["user_api_key":user_apikey,"user_id":user_id]
+        let setparameters = ["user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad","user_id":user_id.count > 0 ? user_id: "CUSGUS"]
         print(setparameters)
         //ActivityIndicator.shared.startLoading()
         AutoBcmLoadingView.show("Loading......")

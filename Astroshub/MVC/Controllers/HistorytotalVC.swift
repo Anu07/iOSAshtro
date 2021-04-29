@@ -25,7 +25,10 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
     @IBOutlet var tbl_reportlist: UITableView!
     @IBOutlet var tbl_chatlist: UITableView!
     @IBOutlet var tbl_calllist: UITableView!
-    var arrQuery = [[String:Any]]()
+    var arrQuery: DataQuery?
+    var arrVoiceQuery = [[String:Any]]()
+    var docController:UIDocumentInteractionController!
+
     var arrReport = [[String:Any]]()
     var arrChat = [[String:Any]]()
     var arrCall = [[String:Any]]()
@@ -43,6 +46,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         view_Chat.isHidden = true
         view_Call.isHidden = true
         self.func_QuerytFormListing()
+        tbl_querylist.reloadData()
         strForRemedyreport = "Query"
         // Do any additional setup after loading the view.
     }
@@ -60,39 +64,47 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
     func func_QuerytFormListing() {
         
         
-        let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id]
-        print(setparameters)
-        AutoBcmLoadingView.show("Loading......")
-        AppHelperModel.requestPOSTURL("viewQueryUser", params: setparameters as [String : AnyObject],headers: nil,
-                                      success: { (respose) in
-                                        AutoBcmLoadingView.dismiss()
-                                        let tempDict = respose as! NSDictionary
-                                        print(tempDict)
-                                        let success=tempDict["response"] as!   Bool
-                                        let message=tempDict["msg"] as!   String
-                                        
-                                        if success == true
-                                        {
-                                            self.arrQuery = [[String:Any]]()
-                                            
-                                            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            let dict_Data = tempDict["data"] as! [String:Any]
-                                            print("dict_Data is:- ",dict_Data)
-                                            if let arrqry = dict_Data["user_id"] as? [[String:Any]]
-                                            {
-                                                self.arrQuery = arrqry
-                                            }
-                                            print("arrBlogs is:- ",self.arrQuery)
-                                            // self.view_Report.isHidden = true
-                                            // self.lbl1.isHidden = false
-                                            // self.lbl2.isHidden = true
-                                            self.tbl_querylist.reloadData()
-                                            
-                                            
-                                        }
-                                        
-                                        else
-                                        {
+    let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id]
+    print(setparameters)
+    AutoBcmLoadingView.show("Loading......")
+    AppHelperModel.requestPOSTURL("viewQueryUser", params: setparameters as [String : AnyObject],headers: nil,
+      success: { (respose) in
+        AutoBcmLoadingView.dismiss()
+        let tempDict = respose as! NSDictionary
+        print(tempDict)
+        let success=tempDict["response"] as!   Bool
+        let message=tempDict["msg"] as!   String
+        
+        if success == true
+        {
+            
+            if let responseObject = respose as? [String:Any] {
+                if let loginData = Mapper<QueryVoIceText>().map(JSONObject: responseObject) {
+                    self.arrQuery = loginData.data
+                }
+            }
+//            
+//            self.arrQuery = [[String:Any]]()
+            
+            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
+//            let dict_Data = tempDict["data"] as! [String:Any]
+//            print("dict_Data is:- ",dict_Data)
+//            if let arrqry = dict_Data["user_id"] as? [[String:Any]]
+//            {
+//                self.arrQuery = arrqry[""]
+//                self.arrVoiceQuery =  arrqry["audio"]
+//            }
+//            print("arrBlogs is:- ",self.arrQuery)
+            // self.view_Report.isHidden = true
+            // self.lbl1.isHidden = false
+            // self.lbl2.isHidden = true
+            self.tbl_querylist.reloadData()
+            
+            
+        }
+        
+        else
+        {
                                             
                                             CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                             
@@ -153,8 +165,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         }
     }
     func func_ChatFormListing() {
-        
-        
+
         let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id,"location":CurrentLocation]
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
@@ -298,12 +309,12 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         labelChat.isHidden = true
         label6.isHidden = true
         strForRemedyreport = "Query"
-
+       
         view_Report.isHidden = true
         view_Chat.isHidden = true
         view_Call.isHidden = true
         self.func_QuerytFormListing()
-
+        tbl_querylist.reloadData()
     }
     @IBAction func btn_VoiceQuery(_ sender: UIButton) {
         
@@ -313,9 +324,9 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         lbl4.isHidden = true
         labelChat.isHidden = true
         label6.isHidden = true
-
+        
         strForRemedyreport = "voice"
-
+        
         view_Report.isHidden = true
         view_Chat.isHidden = true
         view_Call.isHidden = true
@@ -342,7 +353,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         lbl4.isHidden = true
         labelChat.isHidden = false
         label6.isHidden = true
-
+        
         view_Report.isHidden = true
         view_Chat.isHidden = false
         view_Call.isHidden = true
@@ -357,7 +368,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         lbl4.isHidden = true
         labelChat.isHidden = true
         label6.isHidden = false
-
+        
         view_Report.isHidden = true
         view_Chat.isHidden = true
         view_Call.isHidden = false
@@ -376,7 +387,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         view_Chat.isHidden = true
         view_Call.isHidden = true
         strForRemedyreport = "Remedy"
-
+        
         func_RemedyFormListing()
     }
     
@@ -399,7 +410,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         }
         else
         {
-            return 249
+            return 270
         }
     }
     
@@ -410,16 +421,19 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         if tableView == tbl_querylist
         {
             if strForRemedyreport == "Query" {
-            return self.arrQuery.count
-            } else {
-            return self.arrRemedy.count
+                return self.arrQuery?.user_id?.text?.count ?? 0
+            } else if strForRemedyreport == "voice" {
+                return self.arrQuery?.user_id?.audio?.count ?? 0
             }
-          
+            else {
+                return self.arrRemedy.count
+            }
+            
         }
         else if tableView == tbl_reportlist
         {
             return self.arrReport.count
-       
+            
         }
         else if tableView == tbl_chatlist
         {
@@ -440,36 +454,66 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "QueryListingCellN", for: indexPath) as! QueryListingCellN
             if strForRemedyreport == "Query" {
-            cell_Add.btnDownload.tag = indexPath.row
-            cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction(_:)), for: .touchUpInside)
-            cell_Add.btnDownload.isHidden = true
-            let dict_eventpoll = self.arrQuery[indexPath.row]
-            if dict_eventpoll["status"] as! String == "Pending"
-            {
-                cell_Add.lbl7.textColor = UIColor.red
+                cell_Add.btnDownload.tag = indexPath.row
+                cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction(_:)), for: .touchUpInside)
                 cell_Add.btnDownload.isHidden = true
-            }
-            else if dict_eventpoll["status"] as! String == "Complete"
-            {
-                cell_Add.lbl7.textColor = UIColor.green
-                cell_Add.btnDownload.isHidden = false
-            }
-            else
-            {
-                cell_Add.lbl7.textColor = UIColor.green
+                let dict_eventpoll = self.arrQuery?.user_id?.text?[indexPath.row]
+                if dict_eventpoll?.status ?? "" == "Pending"
+                {
+                    cell_Add.lbl7.textColor = UIColor.red
+                    cell_Add.btnDownload.isHidden = true
+                }
+                else if dict_eventpoll?.status  ?? "" == "Complete"
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = false
+                }
+                else
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = true
+                }
+                
+                cell_Add.lbl1.text = (dict_eventpoll?.asked_query_name ?? "")
+                cell_Add.lbl2.text = (dict_eventpoll?.asked_query_contact_no ?? "")
+                cell_Add.lbl3.text = (dict_eventpoll?.asked_query_email ?? "")
+                cell_Add.lbl4.text = dict_eventpoll?.asked_query_dob ?? ""
+                cell_Add.lbl5.text = (dict_eventpoll?.asked_query_time_of_birth ?? "")
+                cell_Add.lbl6.text = (dict_eventpoll?.asked_query_message ?? "")
+                cell_Add.lbl7.text = (dict_eventpoll?.status ?? "")
+            } else if strForRemedyreport == "voice" {
+                cell_Add.btnDownload.tag = indexPath.row
+                cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction(_:)), for: .touchUpInside)
                 cell_Add.btnDownload.isHidden = true
+                let dict_eventpoll = self.arrQuery?.user_id?.audio?[indexPath.row]
+                if dict_eventpoll?.status  ?? "" == "Pending"
+                {
+                    cell_Add.lbl7.textColor = UIColor.red
+                    cell_Add.btnDownload.isHidden = true
+                }
+                else if dict_eventpoll?.status  ?? "" == "Complete"
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = false
+                }
+                else
+                {
+                    cell_Add.lbl7.textColor = UIColor.green
+                    cell_Add.btnDownload.isHidden = true
+                }
+                
+                cell_Add.lbl1.text = dict_eventpoll?.asked_query_name ?? ""
+                cell_Add.lbl2.text = dict_eventpoll?.asked_query_contact_no ?? ""
+                cell_Add.lbl3.text = dict_eventpoll?.asked_query_email ?? ""
+                cell_Add.lbl4.text = dict_eventpoll?.asked_query_dob ?? ""
+                cell_Add.lbl5.text = dict_eventpoll?.asked_query_time_of_birth ?? ""
+                cell_Add.lbl6.text = dict_eventpoll?.asked_query_message ?? ""
+                cell_Add.lbl7.text = dict_eventpoll?.status ?? ""
             }
             
-            cell_Add.lbl1.text = (dict_eventpoll["asked_query_name"] as! String)
-            cell_Add.lbl2.text = (dict_eventpoll["asked_query_contact_no"] as! String)
-            cell_Add.lbl3.text = (dict_eventpoll["asked_query_email"] as! String)
-            cell_Add.lbl4.text = (dict_eventpoll["asked_query_dob"] as! String)
-            cell_Add.lbl5.text = (dict_eventpoll["asked_query_time_of_birth"] as! String)
-            cell_Add.lbl6.text = (dict_eventpoll["asked_query_message"] as! String)
-            cell_Add.lbl7.text = (dict_eventpoll["status"] as! String)
-            } else {
+            else {
                 cell_Add.btnDownload.tag = indexPath.row
-
+                
                 cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction(_:)), for: .touchUpInside)
                 cell_Add.btnDownload.isHidden = true
                 if arrRemedy[indexPath.row].status == "Pending"
@@ -501,39 +545,28 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         else if tableView == tbl_reportlist
         {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ReportListingCellN", for: indexPath) as! ReportListingCellN
-//            if strForRemedyreport == "Report" {
-                cell_Add.btnDownload.tag = indexPath.row
-                cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction1(_:)), for: .touchUpInside)
-                let dict_eventpoll = self.arrReport[indexPath.row]
+            //            if strForRemedyreport == "Report" {
+            cell_Add.btnDownload.tag = indexPath.row
+            cell_Add.btnDownload.addTarget(self, action: #selector(self.btn_downloadAction1(_:)), for: .touchUpInside)
+            let dict_eventpoll = self.arrReport[indexPath.row]
+            cell_Add.btnDownload.isHidden = true
+            if dict_eventpoll["status"] as! String == "Pending"
+            {
+                cell_Add.lbl6.textColor = UIColor.red
                 cell_Add.btnDownload.isHidden = true
-
-                
-                if dict_eventpoll["status"] as! String == "Pending"
-                {
-                    cell_Add.lbl6.textColor = UIColor.red
-                    cell_Add.btnDownload.isHidden = true
-                }
-                else if dict_eventpoll["status"] as! String == "Complete"
-                {
-                    cell_Add.lbl6.textColor = UIColor.green
-                    cell_Add.btnDownload.isHidden = false
-                }
-                else
-                {
-                    cell_Add.lbl6.textColor = UIColor.green
-                    cell_Add.btnDownload.isHidden = true
-                }
-                
-                cell_Add.lbl1.text = (dict_eventpoll["asked_report_customer_name"] as! String )
-                cell_Add.lbl2.text = ( dict_eventpoll["asked_report_customer_phone_no"] as! String)
-                cell_Add.lbl3.text = (dict_eventpoll["asked_report_customer_email"] as! String)
-                cell_Add.lbl4.text = (dict_eventpoll["asked_report_customer_report_name"] as! String)
-                cell_Add.lbl5.text = (dict_eventpoll["asked_report_customer_text_message"] as! String)
-                cell_Add.lbl6.text = (dict_eventpoll["status"] as! String)
-//            } else {
-//
-//            }
-            
+            } else if dict_eventpoll["status"] as! String == "Complete" {
+                cell_Add.lbl6.textColor = UIColor.green
+                cell_Add.btnDownload.isHidden = false
+            } else {
+                cell_Add.lbl6.textColor = UIColor.green
+                cell_Add.btnDownload.isHidden = true
+            }
+            cell_Add.lbl1.text = (dict_eventpoll["asked_report_customer_name"] as! String )
+            cell_Add.lbl2.text = ( dict_eventpoll["asked_report_customer_phone_no"] as! String)
+            cell_Add.lbl3.text = (dict_eventpoll["asked_report_customer_email"] as! String)
+            cell_Add.lbl4.text = (dict_eventpoll["asked_report_customer_report_name"] as! String)
+            cell_Add.lbl5.text = (dict_eventpoll["asked_report_customer_text_message"] as! String)
+            cell_Add.lbl6.text = (dict_eventpoll["status"] as! String)
             return cell_Add
         }
         else if tableView == tbl_chatlist
@@ -550,6 +583,21 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
             cell_Add.btnRefundRequest.clipsToBounds = true
             cell_Add.btnRefundRequest.tag = indexPath.row
             cell_Add.btnRefundRequest.addTarget(self, action: #selector(self.btn_RefundApi(_:)), for: .touchUpInside)
+            let array = (dict_eventpoll["order_date"] as! String).components(separatedBy: "(")
+print(array)
+//            let strForDate = (dict_eventpoll["order_date"] as! String).replacingCharacters(in: "()", with: "")
+            let get_OutputStr = convertDateFormat(inputDate:array[0])
+
+//            if let date1 = get_OutputStr {
+                if let diff = Calendar.current.dateComponents([.hour], from: get_OutputStr, to: Date()).hour, diff > 48 {
+                    //do something
+                    cell_Add.btnRefundRequest.isHidden = true
+                    
+                } else {
+                    cell_Add.btnRefundRequest.isHidden = false
+
+                }
+//            }
             return cell_Add
         }
         else
@@ -557,7 +605,8 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "CallListingCellN", for: indexPath) as! CallListingCellN
             //            let dict_eventpoll = self.arrReport[indexPath.row]
             //
-            
+            cell_Add.refundrequest.tag = indexPath.row
+            cell_Add.refundrequest.addTarget(self, action: #selector(self.btn_RefundCallApi(_:)), for: .touchUpInside)
             let dict_eventpoll = self.arrCall[indexPath.row]
             
             let orderid = dict_eventpoll["orderid"] as! String
@@ -583,7 +632,21 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
             {
                 cell_Add.lbl7.textColor = UIColor.red
             }
-            
+            let array = (dict_eventpoll["order_date"] as! String).components(separatedBy: "(")
+print(array)
+//            let strForDate = (dict_eventpoll["order_date"] as! String).replacingCharacters(in: "()", with: "")
+            let get_OutputStr = convertDateFormat(inputDate:array[0])
+
+//            if let date1 = get_OutputStr {
+                if let diff = Calendar.current.dateComponents([.hour], from: get_OutputStr, to: Date()).hour, diff > 48 {
+                    //do something
+                    cell_Add.refundrequest.isHidden = true
+                    
+                } else {
+                    cell_Add.refundrequest.isHidden = false
+
+                }
+//            }
             cell_Add.lbl1.text = orderid
             cell_Add.lbl2.text = customername
             cell_Add.lbl3.text = user_gender
@@ -597,7 +660,20 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         
         
     }
-    
+    func convertDateFormat(inputDate: String) -> Date {
+
+         let olDateFormatter = DateFormatter()
+         olDateFormatter.dateFormat = "dd-MMM-yyyy"
+
+         let oldDate = olDateFormatter.date(from: inputDate)
+
+         let convertDateFormatter = DateFormatter()
+         convertDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+let str =  convertDateFormatter.string(from: oldDate!)
+        return convertDateFormatter.date(from: str) ?? Date()
+           
+    }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         //            tbl_productcategory.deselectRow(at: indexPath as IndexPath, animated: true)
@@ -605,26 +681,45 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         //            self.navigationController?.pushViewController(EnquiryShop!, animated: true)
     }
     
+    
+    func dayDifference(from interval : TimeInterval) -> String
+    {
+        let calendar = Calendar.current
+        let date = Date(timeIntervalSince1970: interval)
+        if calendar.isDateInYesterday(date) { return "Yesterday" }
+        else if calendar.isDateInToday(date) { return "Today" }
+        else if calendar.isDateInTomorrow(date) { return "Tomorrow" }
+        else {
+            let startOfNow = calendar.startOfDay(for: Date())
+            let startOfTimeStamp = calendar.startOfDay(for: date)
+            let components = calendar.dateComponents([.day], from: startOfNow, to: startOfTimeStamp)
+            let day = components.day!
+            if day < 1 { return "\(-day) days ago" }
+            else { return "In \(day) days" }
+        }
+    }
     @objc func btn_RefundApi(_ sender: UIButton)
     {
         let dict_eventpoll = self.arrChat[sender.tag]
-        func_RefundChat(dict_eventpoll["uniqeid"] as? String ?? "", title: dict_eventpoll["AstroName"] as? String ?? "", message: dict_eventpoll["AstroName"] as? String ?? "")
-//        refundRequest
-        
+        func_RefundChat(dict_eventpoll["uniqeid"] as? String ?? "", title: dict_eventpoll["AstroName"] as? String ?? "", message: dict_eventpoll["AstroName"] as? String ?? "", type: "chat")
     }
     
-    
-    func func_RefundChat(_ uniqueId:String, title:String, message:String) {
-//        map.put("app_version", "" + Config.App_Version);
-//                map.put("app_type", "" + Config.App_Type);
-//                map.put("user_id", sessionManager.getPreferences(getActivity(), Config.User_uni_id));
-//                map.put("user_api_key", sessionManager.getPreferences(getActivity(), Config.User_api_key));
-//                map.put("refund_unique_id", "" + chat_id);
-//                map.put("title", "" + title);
-//                map.put("message", "" + message);
-//                map.put("type", "call");
+    @objc func btn_RefundCallApi(_ sender: UIButton)
+    {
+        let dict_eventpoll = self.arrCall[sender.tag]
+        func_RefundChat(dict_eventpoll["uniqeid"] as? String ?? "", title: dict_eventpoll["AstroName"] as? String ?? "", message: dict_eventpoll["AstroName"] as? String ?? "", type: "call")
+    }
+    func func_RefundChat(_ uniqueId:String, title:String, message:String,type:String) {
+        //        map.put("app_version", "" + Config.App_Version);
+        //                map.put("app_type", "" + Config.App_Type);
+        //                map.put("user_id", sessionManager.getPreferences(getActivity(), Config.User_uni_id));
+        //                map.put("user_api_key", sessionManager.getPreferences(getActivity(), Config.User_api_key));
+        //                map.put("refund_unique_id", "" + chat_id);
+        //                map.put("title", "" + title);
+        //                map.put("message", "" + message);
+        //                map.put("type", "call");
         
-        let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id,"refund_unique_id":uniqueId,"title":title,"message":message,"type":"chat"]
+        let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id,"refund_unique_id":uniqueId,"title":title,"message":message,"type":type]
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL("refundRequest", params: setparameters as [String : AnyObject],headers: nil,
@@ -638,18 +733,20 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
                                         if success == true
                                         {
                                             
-                                            self.arrCall = [[String:Any]]()
-                                            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            
-                                            // let dict_Data = tempDict["data"] as! [String:Any]
-                                            // print("dict_Data is:- ",dict_Data)
-                                            if let arrqry = tempDict["data"] as? [[String:Any]]
-                                            {
-                                                self.arrCall = arrqry
-                                            }
-                                            print("arrBlogs is:- ",self.arrCall)
-                                            
-                                            self.tbl_calllist.reloadData()
+                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
+
+//                                            self.arrCall = [[String:Any]]()
+//                                            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
+//                                            
+//                                            // let dict_Data = tempDict["data"] as! [String:Any]
+//                                            // print("dict_Data is:- ",dict_Data)
+//                                            if let arrqry = tempDict["data"] as? [[String:Any]]
+//                                            {
+//                                                self.arrCall = arrqry
+//                                            }
+//                                            print("arrBlogs is:- ",self.arrCall)
+//                                            
+//                                            self.tbl_calllist.reloadData()
                                             
                                         }
                                         
@@ -670,30 +767,109 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
     @objc func btn_downloadAction(_ sender: UIButton)
     {
         if strForRemedyreport == "Query" {
-                AutoBcmLoadingView.show("Loading......")
-                let dict_eventpoll = self.arrQuery[sender.tag]
-        
-                let querydownload = dict_eventpoll["asked_query_download"] as! String
-        
-                self.downloadpdf(pdfURL: querydownload)
-        } else {
+          AutoBcmLoadingView.show("Loading......")
+            let dict_eventpoll = self.arrQuery?.user_id?.text?[sender.tag]
+            let querydownload = dict_eventpoll?.asked_query_download ?? ""
+            self.downloadpdf(pdfURL: querydownload)
+        } else  if strForRemedyreport == "voice" {
+            AutoBcmLoadingView.show("Loading......")
+            let dict_eventpoll = self.arrQuery?.user_id?.audio?[sender.tag]
+            let querydownload = dict_eventpoll?.asked_query_download ?? ""
+            self.downloadpdf(pdfURL: querydownload)
+        }
+        else {
             AutoBcmLoadingView.show("Loading......")
             let querydownload = arrRemedy[sender.tag].asked_redemy_download ?? ""
             self.downloadpdf(pdfURL: querydownload)
         }
-        //
+    }
+    
+
+    func downloadpdf(pdfURL : String){
+        let urlString = pdfURL
+        _ = URL(string: urlString)
+        if !urlString.isEmpty{
+            checkBookFileExists(withLink: urlString){ [weak self] downloadPath in
+                guard self != nil else{
+                    return
+                }
+            }
+        }
+    }
+    func checkBookFileExists(withLink link: String, completion: @escaping ((_ filePath: URL)->Void)){
+        
+        let urlString = link.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        if let url  = URL.init(string: urlString ?? ""){
+            let fileManager = FileManager.default
+            if let documentDirectory = try? fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create: false){
+                let filePath = documentDirectory.appendingPathComponent(url.lastPathComponent, isDirectory: false)
+                do {
+                    AutoBcmLoadingView.dismiss()
+                    if try filePath.checkResourceIsReachable() {
+                        print("file exist")
+                        completion(filePath)
+                        
+                        self.open_pdf(pdfUrl : filePath)
+                    } else {
+                        print("file doesnt exist")
+                        downloadFile(withUrl: url, andFilePath: filePath, completion: completion)
+                    }
+                } catch {
+                    print("file doesnt exist")
+                    downloadFile(withUrl: url, andFilePath: filePath, completion: completion)
+                }
+            } else {
+                print("file doesnt exist")
+            }
+        } else {
+            print("file doesnt exist")
+        }
+    }
+    func downloadFile(withUrl url: URL, andFilePath filePath: URL, completion: @escaping ((_ filePath: URL)->Void)){
+        AutoBcmLoadingView.dismiss()
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try Data.init(contentsOf: url)
+                try data.write(to: filePath, options: .atomic)
+                print("saved at \(filePath.absoluteString)")
+                self.open_pdf(pdfUrl : filePath)
+                DispatchQueue.main.async {
+                    completion(filePath)
+                }
+            } catch {
+                print("an error happened while downloading or saving the file")
+            }
+        }
+    }
+    func open_pdf(pdfUrl : URL) {
+        
+        //        if let fileURL = NSBundle.mainBundle().URLForResource("MyImage", withExtension: "jpg") {
+        // Instantiate the interaction controller
+        
+        //        if (pdfUrl != "") {
+        // Initialize Document Interaction Controller
+        self.docController = UIDocumentInteractionController(url: pdfUrl)
+        
+        // Configure Document Interaction Controller
+        self.docController.delegate = self
+        DispatchQueue.main.async {
+        // Present Open In Menu
+//            DispatchQueue.global().async {
+            self.docController.presentOptionsMenu(from: self.view.frame, in: self.view, animated: true)
+        }
+     
     }
     
     @objc func btn_downloadAction1(_ sender: UIButton)
     {
-//        CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
-//
-//        return
-        //        AutoBcmLoadingView.show("Loading......")
-        //        let dict_eventpoll = self.arrReport[sender.tag]
+        //        CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
         //
-        //        let querydownload = dict_eventpoll["asked_query_download"] as! String
-        //        self.downloadpdf(pdfURL: querydownload)
+        //        return
+                AutoBcmLoadingView.show("Loading......")
+                let dict_eventpoll = self.arrReport[sender.tag]
+        
+                let querydownload = dict_eventpoll["asked_report_customer_download"] as! String
+                self.downloadpdf(pdfURL: querydownload)
     }
     
     func formattedDateFromString(dateString: String, withFormat format: String) -> String? {
@@ -712,63 +888,7 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
         return nil
     }
     
-    func downloadpdf(pdfURL : String){
-//        CommenModel.showDefaltAlret(strMessage:"Report emailed to you", controller: self)
-//
-//        return
-        let urlString = pdfURL
-        let url = URL(string: urlString)
-        let fileName = String((url!.lastPathComponent)) as NSString
-        // Create destination URL
-        let documentsUrl:URL? =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let destinationFileUrl = documentsUrl?.appendingPathComponent("\(fileName)")
-        //Create URL to the source file you want to download
-        let fileURL = URL(string: urlString)
-        let sessionConfig = URLSessionConfiguration.default
-        let session = URLSession(configuration: sessionConfig)
-        let request = URLRequest(url:fileURL!)
-        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
-            if let tempLocalUrl = tempLocalUrl, error == nil {
-                // Success
-                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                    print("Successfully downloaded. Status code: \(statusCode)")
-                    
-                    DispatchQueue.main.async { [weak self] in
-                        // 3
-                        AutoBcmLoadingView.dismiss()
-                        CommenModel.showDefaltAlret(strMessage:"Successfully downloaded.", controller: self!)
-                    }
-                    
-                    //
-                    
-                }
-                do {
-                    if let getDestinationFileUrl = destinationFileUrl, let getDocumentUrl = documentsUrl {
-                        try FileManager.default.copyItem(at: tempLocalUrl, to: getDestinationFileUrl)
-                        do {
-                            //Show UIActivityViewController to save the downloaded file
-                            let contents  = try FileManager.default.contentsOfDirectory(at: getDocumentUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-                            for indexx in 0..<contents.count {
-                                if contents[indexx].lastPathComponent == getDestinationFileUrl.lastPathComponent {
-                                    let activityViewController = UIActivityViewController(activityItems: [contents[indexx]], applicationActivities: nil)
-                                    self.present(activityViewController, animated: true, completion: nil)
-                                }
-                            }
-                        }
-                        catch (let err) {
-                            print("error: \(err)")
-                        }
-                    }
-                } catch (let writeError) {
-                    print("Error creating a file \(destinationFileUrl) : \(writeError)")
-                }
-            } else {
-                print("Error took place while downloading a file. Error description: \(error?.localizedDescription ?? "")")
-            }
-        }
-        task.resume()
-        
-    }
+   
     //****************************************************
     // MARK: - Memory CleanUP
     //****************************************************
@@ -806,6 +926,39 @@ class CallListingCellN: UITableViewCell {
     @IBOutlet weak var lbl7: UILabel!
     @IBOutlet weak var lbl8: UILabel!
     
+    @IBOutlet weak var refundrequest: UIButton!
     
     // Initialization code
+}
+extension HistorytotalVC:UIDocumentInteractionControllerDelegate{
+    
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
+    }
+    
+}
+extension Date
+{
+
+  func dateAt(hours: Int, minutes: Int) -> Date
+  {
+    let calendar = NSCalendar(calendarIdentifier: NSCalendar.Identifier.gregorian)!
+
+    //get the month/day/year componentsfor today's date.
+
+
+    var date_components = calendar.components(
+      [NSCalendar.Unit.year,
+       NSCalendar.Unit.month,
+       NSCalendar.Unit.day],
+      from: self)
+
+    //Create an NSDate for the specified time today.
+    date_components.hour = hours
+    date_components.minute = minutes
+    date_components.second = 0
+
+    let newDate = calendar.date(from: date_components)!
+    return newDate
+  }
 }

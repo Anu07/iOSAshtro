@@ -10,6 +10,9 @@ import UIKit
 
 class ProfileCell: UITableViewCell {
 
+    @IBOutlet weak var circlImage: UIImageView!
+    @IBOutlet weak var tagList: TagListView!
+    @IBOutlet weak var labelforOnline: UILabel!
     @IBOutlet var colletionCategoryyy: UICollectionView!
     @IBOutlet weak var img_profile: UIImageView!
     @IBOutlet weak var btn_edit: UIButton!
@@ -18,9 +21,11 @@ class ProfileCell: UITableViewCell {
     @IBOutlet weak var txt_Fullname: UITextField!
     @IBOutlet weak var view_camera: UIView!
     
+    @IBOutlet weak var lblPrice: UILabel!
     @IBOutlet weak var view_email: UIView!
     @IBOutlet weak var txt_Email: UITextField!
     
+    @IBOutlet weak var lblNextOnlineTime: UILabel!
     @IBOutlet weak var view_mobile: UIView!
     @IBOutlet weak var txt_Mobile: UITextField!
     

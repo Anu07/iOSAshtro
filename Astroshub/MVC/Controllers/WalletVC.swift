@@ -41,7 +41,7 @@ class WalletVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITe
         view_top.layer.cornerRadius = 40.0
         let btnayer = CAGradientLayer()
         btnayer.frame = CGRect(x: 0.0, y: 0.0, width: view_top.frame.size.width, height: view_top.frame.size.height)
-        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
+//        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
         btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         view_top.layer.insertSublayer(btnayer, at: 1)
@@ -123,7 +123,7 @@ class WalletVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITe
         
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
-        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_id":user_id ,"user_api_key":user_apikey,"page":page,"location":CurrentLocation] as [String : Any]
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_id":user_id ,"user_api_key":user_apikey,"page_no":page,"location":CurrentLocation] as [String : Any]
         print(setparameters)
   
         AppHelperModel.requestPOSTURL("getAmountHistory", params: setparameters as [String : AnyObject],headers: nil,

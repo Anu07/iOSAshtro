@@ -225,7 +225,7 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
                                                 {
                                                     (action: UIAlertAction!) in
                                                     //            self.navigationController?.popToRootViewController(animated: true)
-                                                    
+                                                   
                                                     self.backFun()
                                             }))
                                             self.present(refreshAlert, animated: true, completion: nil)
@@ -247,7 +247,6 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         }
     }
     func func_GetCOUNTRY() {
-        
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
         let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue]
@@ -437,14 +436,14 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         
         cell_Add.btn_countrycode.tag = indexPath.row
         
-        let btnayer = CAGradientLayer()
-        
-        btnayer.frame = CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Submit.frame.size.width, height: cell_Add.btn_Submit.frame.size.height)
-        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
-        btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+//        let btnayer = CAGradientLayer()
+//        
+//        btnayer.frame = CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Submit.frame.size.width, height: cell_Add.btn_Submit.frame.size.height)
+////        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
+//        btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+//        btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         cell_Add.txt_MobileNo.isUserInteractionEnabled = false
-        cell_Add.btn_Submit.layer.insertSublayer(btnayer, at: 1)
+//        cell_Add.btn_Submit.layer.insertSublayer(btnayer, at: 1)
         
         
         cell_Add.view_Signup.layer.cornerRadius = 10
@@ -475,11 +474,14 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         if privacyterms == ""
         {
             cell_Add.img_box.image=UIImage(named: "")
-            
+            cell_Add.img_box.tintColor = UIColor.init(red: 246.0/255.0, green: 197.0/255.0, blue: 0/255.0, alpha: 1.0)
+
         }
         else
         {
             cell_Add.img_box.image=UIImage(named: "checkBox")
+            cell_Add.img_box.tintColor = UIColor.init(red: 246.0/255.0, green: 197.0/255.0, blue: 0/255.0, alpha: 1.0)
+
         }
         
         cell_Add.txt_MobileNo.text = MobileNumber

@@ -190,15 +190,15 @@ class ChangePassVC: UIViewController,UITableViewDataSource,UITableViewDelegate,U
         cell_Add.txt_cnfPassword.delegate = (self as UITextFieldDelegate)
         
         
-        let btnayer = CAGradientLayer()
-        
-        
-        btnayer.frame = CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Signin.frame.size.width, height: cell_Add.btn_Signin.frame.size.height)
-        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
-        btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        
-        cell_Add.btn_Signin.layer.insertSublayer(btnayer, at: 1)
+//        let btnayer = CAGradientLayer()
+//        
+//        
+//        btnayer.frame = CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Signin.frame.size.width, height: cell_Add.btn_Signin.frame.size.height)
+//        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
+//        btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+//        btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+//        
+//        cell_Add.btn_Signin.layer.insertSublayer(btnayer, at: 1)
         
         
         

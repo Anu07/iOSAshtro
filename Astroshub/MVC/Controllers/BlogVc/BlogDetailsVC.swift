@@ -9,12 +9,14 @@
 import UIKit
 import SDWebImage
 import Kingfisher
-
+import AVFoundation
 class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate{
     @IBOutlet weak var view_top: UIView!
     @IBOutlet var tbl_blog: UITableView!
     
-    
+    let speechSynthesizer                       = AVSpeechSynthesizer()
+    var previousSelectedIndexPath              : IndexPath?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,7 +43,7 @@ class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate
            
            let deviceID = UIDevice.current.identifierForVendor!.uuidString
            print(deviceID)
-           let setparameters = ["app_type":"ios","app_version":"1.0","user_id":user_id ,"user_api_key":user_apikey,"blog_id":iddd]
+           let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad","user_id":user_id.count > 0 ? user_id: "CUSGUS","blog_id":iddd]
            
            print(setparameters)
            //AutoBcmLoadingView.show("Loading......")
@@ -85,6 +87,8 @@ class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate
     //****************************************************
     @IBAction func btn_backAction(_ sender: Any)
     {
+        speechSynthesizer.stopSpeaking(at: .immediate)
+
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -143,12 +147,40 @@ class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate
         //cell_Add.lbl_blogdescription.text  = "Description : " + description
         cell_Add.lbl_blogdescription.attributedText =  description.htmlToAttributedString
         cell_Add.lbl_views.text  = "Views : " + views
-        
+        cell_Add.playButtonDetail.tag = indexPath.row
+        cell_Add.playButtonDetail.addTarget(self, action: #selector(playButton), for: .touchUpInside)
         return cell_Add
         
     }
-    
-    
+    @objc func playButton(_ sender :UIButton){
+        sender.isSelected = !sender.isSelected
+//        let dict_eventpoll = self.BlogDetails[sender.tag]
+        let point = sender.convert(CGPoint.zero, to: self.tbl_blog)
+        let indexPath = self.tbl_blog.indexPathForRow(at: point)
+        let cell = self.tbl_blog.cellForRow(at: indexPath!) as! BlogCell
+        cell.playButtonDetail.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+
+        if speechSynthesizer.isSpeaking {
+            cell.playButtonDetail.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+
+            speechSynthesizer.stopSpeaking(at: .immediate)
+
+        } else {
+            let content = removeSpecialCharsFromString(text: BlogDetails["blog_content"] as! String)
+
+            let speechUtterance = AVSpeechUtterance(string: (BlogDetails["blog_content"] as! String).withoutSpecialCharacters)
+            speechUtterance.voice = AVSpeechSynthesisVoice(language: "hi-IN")
+
+            DispatchQueue.main.async {
+                self.speechSynthesizer.speak(speechUtterance)
+            }
+        }
+
+    }
+    func removeSpecialCharsFromString(text: String) -> String {
+        let okayChars = Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890+-=().!_")
+        return text.filter {okayChars.contains($0) }
+    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
         
@@ -168,3 +200,17 @@ class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate
     
     
 }
+extension BlogDetailsVC: AVSpeechSynthesizerDelegate {
+
+       func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+
+           speechSynthesizer.stopSpeaking(at: .word)
+
+           if previousSelectedIndexPath != nil {
+               let speechUtterance = AVSpeechUtterance(string: BlogDetails["blog_content"] as! String)
+               DispatchQueue.main.async {
+                   self.speechSynthesizer.speak(speechUtterance)
+               }
+           }
+       }
+   }

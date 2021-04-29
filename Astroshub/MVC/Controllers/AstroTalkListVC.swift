@@ -10,6 +10,7 @@ import UIKit
 import SDWebImage
 import CoreLocation
 import MapKit
+import ObjectMapper
 class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MKMapViewDelegate {
     @IBOutlet var txt_search: UITextField!
     @IBOutlet weak var view_top: UIView!
@@ -28,6 +29,22 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if !hasLocationPermission() {
+            let alertController = UIAlertController(title: "Location Permission Required", message: "Please enable location permissions in settings.", preferredStyle: UIAlertController.Style.alert)
+                  
+                  let okAction = UIAlertAction(title: "Settings", style: .default, handler: {(cAlertAction) in
+                      //Redirect to Settings app
+                    UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
+                  })
+                  
+//                  let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+//                  alertController.addAction(cancelAction)
+                  
+                  alertController.addAction(okAction)
+                  
+                  self.present(alertController, animated: true, completion: nil)
+        } else {
         self.astrotalklistApiCallMethods()
         refreshController.addTarget(self, action:#selector(handleRefresh(_:)), for: .valueChanged)
         tbl_talklist.addSubview(refreshController)
@@ -52,6 +69,8 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
             })
         }
         self.tbl_talklist.am.pullToRefreshView?.trigger()
+        }
+        
     }
     
     @objc func handleRefresh(_ sender: Any?)
@@ -70,7 +89,25 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
             handler(fetchedItems)
         }
     }
+    override func viewWillAppear(_ animated: Bool) {
+      
+    }
     
+    func hasLocationPermission() -> Bool {
+           var hasPermission = false
+           if CLLocationManager.locationServicesEnabled() {
+               switch CLLocationManager.authorizationStatus() {
+               case .notDetermined, .restricted, .denied:
+                   hasPermission = false
+               case .authorizedAlways, .authorizedWhenInUse:
+                   hasPermission = true
+               }
+           } else {
+               hasPermission = false
+           }
+           
+           return hasPermission
+       }
     func getCategoryString(data:[[String:Any]]) -> String {
         var category = ""
         for value in data {
@@ -101,7 +138,6 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
     //****************************************************
     func astrotalklistApiCallMethods() {
         
-        
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
         let setparameters = ["app_type":MethodName.APPTYPE.rawValue,
@@ -109,7 +145,7 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                              "user_api_key":user_apikey,
                              "user_id":user_id,
                              "search":txt_search.text ?? "",
-                             "sort_by":"",
+                             "sort_by":"Call",
                              "page":page,
                              "location":CurrentLocation] as [String : Any]
         print(setparameters)
@@ -125,7 +161,20 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                                         
                                         if success == true
                                         {
-                                            
+//                                            if let responseObject = respose as? [String:Any] {
+//                                                if let categoryObj = responseObject["data"] as? [[String:Any]] {
+//                                                    if let userList = Mapper<AstroList>().mapArray(JSONObject:categoryObj){
+//                                                        print(userList)
+////                                                        self.notificiationDetail = userList
+////                                                        if (self.notificiationDetail.count ) > 0 {
+////                                                            self.tableView.backgroundView = nil
+////                                                        } else {
+////                                                            self.setUpNoDataBackgroundView(textMessage: "Nothing to display!")
+////                                                        }
+////                                                        self.tableView.reloadData()
+//                                                    }
+//                                                }
+//                                            }
                                             
                                             var arrProducts = [[String:Any]]()
                                             arrProducts=tempDict["data"] as! [[String:Any]]
@@ -160,6 +209,14 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                                                 }
                                             }
                                             self.tbl_talklist.reloadData()
+                                        } else {
+                                            
+                                            if self.txt_search.text != "" {
+                                                self.arrTalk.removeAll()
+                                                self.tbl_talklist.reloadData()
+                                            }
+//                                            self.arrTalk.removeAll()
+//                                            self.tbl_talklist.reloadData()
                                         }
                                         
         }) { (error) in
@@ -227,8 +284,6 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         cell_Add.view_back.layer.shadowOffset = CGSize (width: 1.5, height: 1.5)
         cell_Add.view_back.layer.masksToBounds = false
         cell_Add.view_back.layer.cornerRadius = 5.0
-        cell_Add.img_User.layer.cornerRadius = cell_Add.img_User.frame.size.height/2
-        cell_Add.img_User.clipsToBounds = true
         //cell_Add.btnCall.layer.cornerRadius = 23.0
         
         cell_Add.btnCall.tag = indexPath.row
@@ -236,7 +291,9 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         
         cell_Add.btnProfile.tag = indexPath.row
         cell_Add.btnProfile.addTarget(self, action: #selector(self.btn_Profile(_:)), for: .touchUpInside)
-        
+        if self.arrTalk.count == 0 {
+            
+        } else{
         let dict_eventpoll = self.arrTalk[indexPath.row]
         var category = ""
         if let getCategoryArray = dict_eventpoll["category_arr"] as? [[String:Any]] {
@@ -253,12 +310,12 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         let Rating = dict_eventpoll["rating"] as? String ?? ""
         let talkstatus = dict_eventpoll["astro_call_status"] as? String ?? ""
         let chatBusyStatus = dict_eventpoll["call_busy_status"] as? String ?? ""
-        let rating1 = Float(rating)
+        let rating1 = Double(rating)
         
         print(rating1 ?? "nil")
         
         //let avvv = name.uppercased
-        
+        cell_Add.labelLng.text =  dict_eventpoll["astrologers_language"] as? String ?? ""
         let capStr = name.capitalized
         
         // let m = name.firstCharacterUpperCase()
@@ -266,79 +323,36 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         let rating2 = Int(rating1!)
         
         print(rating2)
-        cell_Add.lbl_total.text = Rating + " Total"
-        cell_Add.img_User.sd_setImage(with: URL(string: imagee), placeholderImage: UIImage(named: "astrotalk"))
+        cell_Add.lbl_total.text = "\(rating1 ?? 0.0) (\(Rating))"
+        cell_Add.img_User.sd_setImage(with: URL(string: imagee), placeholderImage: #imageLiteral(resourceName: "userdefault"))
         cell_Add.lbl_Username.text = capStr
         cell_Add.lbl_Category.text = category
-        cell_Add.lbl_exp.text = "Exp: " + exp + " Years"
-        //cell_Add.btnCall.layer.cornerRadius = cell_Add.img_User.frame.size.height/2
-        cell_Add.btnCall.clipsToBounds = true
-        cell_Add.btnCall.layer.borderWidth = 2
-        cell_Add.btnRateUs.layer.borderWidth = 2
-        cell_Add.btnRateUs.layer.borderWidth = 2
-        cell_Add.btnRateUs.setTitleColor(.green, for: .normal)
-        cell_Add.btnRateUs.tag = indexPath.row
-        cell_Add.btnRateUs.addTarget(self, action: #selector(buttonRateAction), for: .touchUpInside)
-        cell_Add.btnRateUs.layer.borderColor = UIColor.green.cgColor
-        
-        cell_Add.notifyButton.layer.borderWidth = 2
-        cell_Add.notifyButton.layer.borderWidth = 2
-        cell_Add.notifyButton.setTitleColor(.green, for: .normal)
-        cell_Add.notifyButton.tag = indexPath.row
-        cell_Add.notifyButton.addTarget(self, action: #selector(buttonNotifyAction), for: .touchUpInside)
-        cell_Add.notifyButton.layer.borderColor = UIColor.green.cgColor
-//        if chatBusyStatus == "1" {
-//            cell_Add.btnCall.setTitleColor(.red, for: .normal)
-//            cell_Add.btnCall.layer.borderColor = UIColor.red.cgColor
-//            cell_Add.btnCall.setTitle("Busy",for: .normal)
-//        } else {
-            if talkstatus == "1"
-            {
-                cell_Add.btnCall.setTitleColor(.green, for: .normal)
-                cell_Add.btnCall.layer.borderColor = UIColor.green.cgColor
-                cell_Add.btnCall.setTitle("Call",for: .normal)
-                cell_Add.notifyButton.isHidden = true
-            } else  if talkstatus == "2"
-            {
-                cell_Add.btnCall.setTitleColor(.red, for: .normal)
-                           cell_Add.btnCall.layer.borderColor = UIColor.red.cgColor
-                           cell_Add.btnCall.setTitle("Busy",for: .normal)
-                cell_Add.notifyButton.isHidden = false
+        cell_Add.lbl_exp.text =  exp + " Years"
+        cell_Add.btnCall.tag = indexPath.row
+        cell_Add.btnCall.addTarget(self, action: #selector(btn_calling), for: .touchUpInside)
 
-            }
-            else
-            {
-                cell_Add.btnCall.setTitleColor(.darkGray, for: .normal)
-                cell_Add.btnCall.layer.borderColor = UIColor.darkGray.cgColor
-                cell_Add.btnCall.setTitle("Offline",for: .normal)
-                cell_Add.notifyButton.isHidden = false
-
-            }
-//        }
-//        if chatStatus == "1"
-//        {
-//            cell_Add.btnChat.setTitleColor(.green, for: .normal)
-//            cell_Add.btnChat.layer.borderColor = UIColor.green.cgColor
-//            cell_Add.btnChat.setTitle("Chat",for: .normal)
-//        } else  if chatStatus == "2"
-//        {
-//            cell_Add.btnChat.setTitleColor(.red, for: .normal)
-//                        cell_Add.btnChat.layer.borderColor = UIColor.red.cgColor
-//                        cell_Add.btnChat.setTitle("Busy",for: .normal)
-//        }
-//        else
-//        {
-//            cell_Add.btnChat.setTitleColor(.darkGray, for: .normal)
-//            cell_Add.btnChat.layer.borderColor = UIColor.darkGray.cgColor
-//            cell_Add.btnChat.setTitle("Offline",for: .normal)
-//        }
-//
+        if talkstatus == "1"
+        {
+            cell_Add.btnCall.setTitle("Call",for: .normal)
+            cell_Add.btnCall.backgroundColor = #colorLiteral(red: 0.06656374782, green: 0.6171005368, blue: 0.03814116493, alpha: 1)
+        } else  if talkstatus == "2" {
+            cell_Add.btnCall.setTitle("Busy",for: .normal)
+            cell_Add.btnCall.backgroundColor = #colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1)
+        } else {
+            cell_Add.btnCall.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+            cell_Add.btnCall.setTitle("Offline",for: .normal)
+        }
+        if dict_eventpoll["astrologers_tag"] as? String ?? "" == "" {
+            cell_Add.labelForTag.text = ""
+            cell_Add.imageTag.isHidden = true
+        } else {
+            cell_Add.labelForTag.text = dict_eventpoll["astrologers_tag"] as? String ?? ""
+            cell_Add.imageTag.isHidden = false
+        }
         if CurrentLocation == "India"
         {
             cell_Add.lbl_price.text = rupee + String(price1) + "/minute"
-        }
-        else
-        {
+        } else {
             cell_Add.lbl_price.text = "$" + String(price2) + "/minute"
         }
         
@@ -348,63 +362,16 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         {
             // cell_Add.img_varify.isHidden = true
             
-            cell_Add.img_varify.image = UIImage(named: "non-certificate")
+            cell_Add.img_varify.image = #imageLiteral(resourceName: "checked")
         }
         if varify == "1"
         {
             // cell_Add.img_varify.isHidden = false
-            cell_Add.img_varify.image = UIImage(named: "certificate")
+            cell_Add.img_varify.image = #imageLiteral(resourceName: "checked")
         }
-        if rating2 == 0
-        {
-            cell_Add.img_1.image = UIImage(named: "stargray")
-            cell_Add.img_2.image = UIImage(named: "stargray")
-            cell_Add.img_3.image = UIImage(named: "stargray")
-            cell_Add.img_4.image = UIImage(named: "stargray")
-            cell_Add.img_5.image = UIImage(named: "stargray")
+        cell_Add.ratingView.rating = rating1 ?? 0.0
+        cell_Add.ratingView.editable = false
         }
-        if rating2 == 1
-        {
-            cell_Add.img_1.image = UIImage(named: "star")
-            cell_Add.img_2.image = UIImage(named: "stargray")
-            cell_Add.img_3.image = UIImage(named: "stargray")
-            cell_Add.img_4.image = UIImage(named: "stargray")
-            cell_Add.img_5.image = UIImage(named: "stargray")
-        }
-        if rating2 == 2
-        {
-            cell_Add.img_1.image = UIImage(named: "star")
-            cell_Add.img_2.image = UIImage(named: "star")
-            cell_Add.img_3.image = UIImage(named: "stargray")
-            cell_Add.img_4.image = UIImage(named: "stargray")
-            cell_Add.img_5.image = UIImage(named: "stargray")
-        }
-        if rating2 == 3
-        {
-            cell_Add.img_1.image = UIImage(named: "star")
-            cell_Add.img_2.image = UIImage(named: "star")
-            cell_Add.img_3.image = UIImage(named: "star")
-            cell_Add.img_4.image = UIImage(named: "stargray")
-            cell_Add.img_5.image = UIImage(named: "stargray")
-        }
-        if rating2 == 4
-        {
-            cell_Add.img_1.image = UIImage(named: "star")
-            cell_Add.img_2.image = UIImage(named: "star")
-            cell_Add.img_3.image = UIImage(named: "star")
-            cell_Add.img_4.image = UIImage(named: "star")
-            cell_Add.img_5.image = UIImage(named: "stargray")
-        }
-        if rating2 == 5
-        {
-            cell_Add.img_1.image = UIImage(named: "star")
-            cell_Add.img_2.image = UIImage(named: "star")
-            cell_Add.img_3.image = UIImage(named: "star")
-            cell_Add.img_4.image = UIImage(named: "star")
-            cell_Add.img_5.image = UIImage(named: "star")
-        }
-        
-        
         return cell_Add
         
     }
@@ -414,14 +381,35 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         //AstrologerUniID
         
     }
-    
+    @objc func buttonShareAction(sender:UIButton) {
+        let text = ""
+        let shareAll = [text ] as [Any]
+        let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
+    }
     @objc func buttonNotifyAction(sender:UIButton) {
+        sender.isSelected = !sender.isSelected
+        if sender.titleLabel?.text == "Notify Me" {
         let dict_eventpoll = self.arrTalk[sender.tag]
-
         NotifyCallMethods(dict_eventpoll["astrologers_uni_id"] as? String ?? "")
+        }
     }
     @objc func btn_calling(_ sender: UIButton)
     {
+        let dict_eventpoll = self.arrTalk[sender.tag]
+
+        if CurrentLocation == "India" {
+        if walletBalanceNew <= 99 {
+            CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
+
+        } else if  walletBalanceNew <= Double(dict_eventpoll["chat_price_Inr"] as? String ?? "") ?? 0.0{
+            CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
+
+        }
+        else {
+        if sender.titleLabel?.text == "Call" {
+
         let dict_eventpoll = self.arrTalk[sender.tag]
         let chatStatus = dict_eventpoll["astro_call_status"] as? String ?? ""
         let chatBusyStatus = dict_eventpoll["call_busy_status"] as? String ?? ""
@@ -462,6 +450,62 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 self.moveToCallVC()
             }
             self.present(controller, animated: true, completion: nil)
+        } }
+        }
+        }else {
+            if walletBalanceNew <= 1 {
+                CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
+
+            }else if  walletBalanceNew <= Double(dict_eventpoll["chat_price_dollar"] as? String ?? "") ?? 0.0{
+                CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
+
+            }
+            
+            else {
+                if sender.titleLabel?.text == "Call" {
+
+                let dict_eventpoll = self.arrTalk[sender.tag]
+                let chatStatus = dict_eventpoll["astro_call_status"] as? String ?? ""
+                let chatBusyStatus = dict_eventpoll["call_busy_status"] as? String ?? ""
+                if chatStatus == "2" {
+                    return
+                } else {
+                    if chatStatus == "0" {
+                        return
+                    }
+                }
+                if self.PerformActionIfLogin() {
+                    AstrologerUniID = dict_eventpoll["astrologers_uni_id"] as? String ?? ""
+                    OnTabfcmUserIDD = dict_eventpoll["fcm_user_id"] as? String ?? ""
+                    let name = dict_eventpoll["astrologers_name"] as? String ?? ""
+                    if CurrentLocation == "India"
+                    {
+                        AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
+                    }
+                    else
+                    {
+                        AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as? String ?? ""
+                    }
+                    var callDuration = ""
+                    if let getPrice = Double(AstrologerrPrice) {
+                        callDuration = convertMaximumCallDuration(price: getPrice)
+                    }
+                    let estimateModel = EstimatePriceModel()
+                    estimateModel.charge = AstrologerrPrice
+                    estimateModel.name = name
+                    estimateModel.timeInHours = callDuration
+                    estimateModel.number = setCustomerphone
+                    estimateModel.balance = String(walletBalanceNew)
+                    
+                    let controller = self.storyboard?.instantiateViewController(withIdentifier: "CallEstimateVC") as! CallEstimateVC
+                    controller.modalPresentationStyle = .overCurrentContext
+                    controller.estimateModel = estimateModel
+                    controller.completionHandler = {
+                        self.moveToCallVC()
+                    }
+                    self.present(controller, animated: true, completion: nil)
+                } }
+                }
         }
     }
     
@@ -497,8 +541,15 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         chatcallingFormmm = "Calling"
         //AstrologerUniID = dict_eventpoll["astrologers_uni_id"] as! String
         //Astrologer_apikey = dict_eventpoll["astrologers_uni_id"] as! String
-        AstrologerFullData = dict_eventpoll
-        let NewProfile = self.storyboard?.instantiateViewController(withIdentifier: "NewProfileVC")
+//        AstrologerFullData = dict_eventpoll
+        let NewProfile = self.storyboard?.instantiateViewController(withIdentifier: "NewProfileVC") as? NewProfileVC
+        NewProfile?.AstrologerFullData1 = dict_eventpoll
+
+        NewProfile?.completionHandler = { text in
+            self.arrTalk[sender.tag]["call_notify_status"] = text["chat_notify_status"]
+            return text
+            
+        }
         self.navigationController?.pushViewController(NewProfile!, animated: true)
     }
     //****************************************************
@@ -515,33 +566,32 @@ extension AstroTalkListVC {
             self.isSearchingEnable = true
             self.astrotalklistApiCallMethods()
         }
-        //        if text.count >= 3 {
-        //            self.isSearchingEnable = true
-        //            self.page = 0
-        //            self.arrTalk.removeAll()
-        //            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        //                self.astrotalklistApiCallMethods()
-        //            }
-        //
-        //        } else if text.count == 2 {
-        //            if isSearchingEnable {
-        //                self.isSearchingEnable = false
-        //                self.page = 0
-        //                self.arrTalk.removeAll()
-        //                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        //                    self.astrotalklistApiCallMethods()
-        //                }
-        //            }
-        //        }
+                if text.count >= 3 {
+                    self.isSearchingEnable = true
+                    self.page = 0
+                    self.arrTalk.removeAll()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self.astrotalklistApiCallMethods()
+                    }
+        
+                } else if text.count == 2 {
+                    if isSearchingEnable {
+                        self.isSearchingEnable = false
+                        self.page = 0
+                        self.arrTalk.removeAll()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            self.astrotalklistApiCallMethods()
+                        }
+                    }
+                }
         return true
     }
 }
 
 
 class TalkListCell: UITableViewCell {
-    
-    @IBOutlet weak var notifyButton: UIButton!
-    @IBOutlet weak var btnRateUs: UIButton!
+    @IBOutlet weak var imageTag: UIImageView!
+    @IBOutlet weak var labelForTag: UILabel!
     @IBOutlet weak var view_back: UIView!
     @IBOutlet weak var img_User: UIImageView!
     @IBOutlet weak var lbl_Username: UILabel!
@@ -551,12 +601,10 @@ class TalkListCell: UITableViewCell {
     @IBOutlet weak var lbl_exp: UILabel!
     @IBOutlet weak var lbl_price: UILabel!
     @IBOutlet weak var img_varify: UIImageView!
-    @IBOutlet weak var img_1: UIImageView!
-    @IBOutlet weak var img_2: UIImageView!
-    @IBOutlet weak var img_3: UIImageView!
-    @IBOutlet weak var img_4: UIImageView!
-    @IBOutlet weak var img_5: UIImageView!
     @IBOutlet weak var btnProfile: UIButton!
+    
+    @IBOutlet weak var labelLng: UILabel!
+    @IBOutlet weak var ratingView: FloatRatingView!
 }
 extension String {
     func capitalizingFirstLetter() -> String {

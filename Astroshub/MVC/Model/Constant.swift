@@ -11,8 +11,10 @@ import UIKit
 
 struct Constants {
     static let BASE_URL =
-"https://www.astroshubh.in/staging/api/"
-//    "https://www.astroshubh.in/api/"
+//"https://www.astroshubh.in/staging/api/"
+    "https://www.astroshubh.in/api/"
+    static let BASE_URLForImage =
+"https://www.astroshubh.in/"
     static let Connection = "No Internet Connection"
     static var devicetoken = NSData()
     static var DeviceTokenString = NSString()
@@ -81,6 +83,8 @@ public enum MethodName:String {
     case getParnsavli  = "getPrashnavali"
     case getMytras = "getMantra"
     case coupon = "getCoupons"
+    case fbSession = "getFbSessionList"
+
 }
 
 //MARK:- App commons
@@ -92,9 +96,9 @@ var kWindow              = UIWindow(frame: UIScreen.main.bounds)
 let kUserDefault         = UserDefaults.standard
 
 
-let mainColor1 =  UIColor().setRGBColors(R: 253.0, G: 148.0, B: 34.0, alpha: 1.0)
-let mainColor2 =  UIColor().setRGBColors(R: 252.0, G: 99.0, B: 31.0, alpha: 1.0)
-let mainColor3 =  UIColor().setRGBColors(R: 252.0, G: 99.0, B: 31.0, alpha: 1.0)
+let mainColor1 =  UIColor().setRGBColors(R: 246.0, G: 197.0, B: 0.0, alpha: 1.0)
+let mainColor2 =  UIColor().setRGBColors(R: 246.0, G: 197.0, B: 0.0, alpha: 1.0)
+let mainColor3 =  UIColor().setRGBColors(R: 246.0, G: 197.0, B: 0.0, alpha: 1.0)
 let kAppColor  =  UIColor().setRGBColors(R: 39.0, G: 138.0, B: 163.0, alpha: 1.0)
 
 let mainColor5 =  UIColor().setRGBColors(R: 202.0, G: 0, B: 254.0, alpha: 1.0)

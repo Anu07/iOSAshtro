@@ -8,12 +8,14 @@
 
 import UIKit
 import AVFoundation
-
+import PDFKit
+import QuickLook
 class MytrasViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     var audioPlayer : AVPlayer!
-
+    var docController:UIDocumentInteractionController!
+    
     var dataStatus =  Array<Any>()
     var idForMantras :String?
     override func viewDidLoad() {
@@ -80,19 +82,19 @@ extension MytrasViewController:UITableViewDelegate,UITableViewDataSource {
         cell.labeForTime.text = data["created_date"] as? String
         //        cell.imageViewForuser.layer.cornerRadius =  cell.imageViewForuser.frame.height/2
         //        cell.imageViewForuser.clipsToBounds = true
-        cell.imageViewForuser.sd_setImage(with: URL(string: data["mantra_image"] as? String ??
-                                                        ""), placeholderImage:#imageLiteral(resourceName: "astroshubhL"))
-//
-        
+//        cell.imageViewForuser.sd_setImage(with: URL(string: data["mantra_image"] as? String ??
+//                                                        ""), placeholderImage:#imageLiteral(resourceName: "appstore"))
+        //
+        cell.imageViewForuser.image = #imageLiteral(resourceName: "Mantras-1")
         if data["mantra_file"] as? String == ""{
             cell.downloadOption.isHidden = true
             
         } else {
             let array = (data["mantra_file"] as! String ).components(separatedBy: ".")
             if array.contains("pdf"){
-            cell.downloadOption.isHidden = false
-            cell.downloadOption.tag = indexPath.row
-            cell.downloadOption.addTarget(self, action: #selector(downloadFile), for: .touchUpInside)
+                cell.downloadOption.isHidden = false
+                cell.downloadOption.tag = indexPath.row
+                cell.downloadOption.addTarget(self, action: #selector(downloadFilePdf), for: .touchUpInside)
                 
             } else {
                 cell.downloadOption.isHidden = true
@@ -105,10 +107,10 @@ extension MytrasViewController:UITableViewDelegate,UITableViewDataSource {
         } else {
             let array = (data["mantra_file"] as! String ).components(separatedBy: ".")
             if array.contains("mp3") || array.contains("mp4") {
-            cell.playBtn.isHidden = false
-            cell.playBtn.tag = indexPath.row
-            
-            cell.playBtn.addTarget(self, action: #selector(playAudioFromURL), for: .touchUpInside)
+                cell.playBtn.isHidden = false
+                cell.playBtn.tag = indexPath.row
+                
+                cell.playBtn.addTarget(self, action: #selector(playAudioFromURL), for: .touchUpInside)
             } else {
                 cell.playBtn.isHidden = true
             }
@@ -138,11 +140,11 @@ extension MytrasViewController:UITableViewDelegate,UITableViewDataSource {
             audioPlayer.pause()
         }
         
-
-//        playSound(data["mantra_file"]  as? String  ?? "")
-       }
-    @objc   func downloadFile(_ sender:UIButton) {
-        AutoBcmLoadingView.show("Loading......")
+        
+        //        playSound(data["mantra_file"]  as? String  ?? "")
+    }
+    @objc  func downloadFilePdf(_ sender:UIButton) {
+        //        AutoBcmLoadingView.show("Loading......")
         let data = self.dataStatus[sender.tag] as! [String:Any]
         
         let querydownload = data["mantra_file"] as! String
@@ -154,60 +156,99 @@ extension MytrasViewController:UITableViewDelegate,UITableViewDataSource {
     func downloadpdf(pdfURL : String){
         let urlString = pdfURL
         let url = URL(string: urlString)
-        let fileName = String((url!.lastPathComponent)) as NSString
-        // Create destination URL
-        let documentsUrl:URL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let destinationFileUrl = documentsUrl.appendingPathComponent("\(fileName)")
-        //Create URL to the source file you want to download
-        let fileURL = URL(string: urlString)
-        let sessionConfig = URLSessionConfiguration.default
-        let session = URLSession(configuration: sessionConfig)
-        let request = URLRequest(url:fileURL!)
-        let task = session.downloadTask(with: request) { (tempLocalUrl, response, error) in
-            if let tempLocalUrl = tempLocalUrl, error == nil {
-                // Success
-                if let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                    AutoBcmLoadingView.dismiss()
-                    print("Successfully downloaded. Status code: \(statusCode)")
+        
+        if !urlString.isEmpty{
+            checkBookFileExists(withLink: urlString){ [weak self] downloadPath in
+                guard let self = self else{
+                    return
                 }
-                do {
-                    try FileManager.default.copyItem(at: tempLocalUrl, to: destinationFileUrl)
-                    do {
-                        //Show UIActivityViewController to save the downloaded file
-                        let contents  = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-                        for indexx in 0..<contents.count {
-                            if contents[indexx].lastPathComponent == destinationFileUrl.lastPathComponent {
-                                let activityViewController = UIActivityViewController(activityItems: [contents[indexx]], applicationActivities: nil)
-                                self.present(activityViewController, animated: true, completion: nil)
-                            }
-                        }
-                    }
-                    catch (let err) {
-                                   print("error: \(err)")
-                               }
-                           } catch (let writeError) {
-                               print("Error creating a file \(destinationFileUrl) : \(writeError)")
-                           }
-                       } else {
-                           print("Error took place while downloading a file. Error description: \(error?.localizedDescription ?? "")")
-                       }
-                   }
-                   task.resume()
-        //       let url = URL(string: pdfURL)
-        //       FileDownloader.loadFileAsync(url: url!) { (path, error) in
-        //           print("PDF File downloaded to : \(path!)")
-        //          AutoBcmLoadingView.dismiss()
-        //       }
-        
-        
+                //                    play(url: downloadedURL)
+            }
+        }
     }
+    func checkBookFileExists(withLink link: String, completion: @escaping ((_ filePath: URL)->Void)){
+        let urlString = link.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+        if let url  = URL.init(string: urlString ?? ""){
+            let fileManager = FileManager.default
+            if let documentDirectory = try? fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create: false){
+                
+                let filePath = documentDirectory.appendingPathComponent(url.lastPathComponent, isDirectory: false)
+                
+                do {
+                    if try filePath.checkResourceIsReachable() {
+                        print("file exist")
+                        completion(filePath)
+                        self.open_pdf(pdfUrl : filePath)
+                        
+                    } else {
+                        print("file doesnt exist")
+                        downloadFile(withUrl: url, andFilePath: filePath, completion: completion)
+                    }
+                } catch {
+                    print("file doesnt exist")
+                    downloadFile(withUrl: url, andFilePath: filePath, completion: completion)
+                }
+            }else{
+                print("file doesnt exist")
+            }
+        }else{
+            print("file doesnt exist")
+        }
+    }
+    func downloadFile(withUrl url: URL, andFilePath filePath: URL, completion: @escaping ((_ filePath: URL)->Void)){
+        DispatchQueue.global(qos: .background).async {
+            do {
+                let data = try Data.init(contentsOf: url)
+                try data.write(to: filePath, options: .atomic)
+                print("saved at \(filePath.absoluteString)")
+                self.open_pdf(pdfUrl : filePath)
+                DispatchQueue.main.async {
+                    completion(filePath)
+                }
+            } catch {
+                print("an error happened while downloading or saving the file")
+            }
+        }
+    }
+    func open_pdf(pdfUrl : URL) {
+        
+        //        if let fileURL = NSBundle.mainBundle().URLForResource("MyImage", withExtension: "jpg") {
+        // Instantiate the interaction controller
+        
+        //        if (pdfUrl != "") {
+        // Initialize Document Interaction Controller
+        self.docController = UIDocumentInteractionController(url: pdfUrl)
+        
+        // Configure Document Interaction Controller
+        self.docController.delegate = self
+        
+        // Present Open In Menu
+        self.docController.presentOptionsMenu(from: view.frame, in: self.view, animated: true)
+        //presentOpenInMenuFromRect
+        //           }
+        //                }
+        //            let pdfView = PDFViewController()
+        //            pdfView.pdfURL = pdfUrl
+        //            present(pdfView, animated: true, completion: nil)
+        
+        //        let documentPicker = UIDocumentPickerViewController(documentTypes: ["com.apple.iwork.pages.pages", "com.apple.iwork.numbers.numbers", "com.apple.iwork.keynote.key","public.image", "com.apple.application", "public.item","public.data", "public.content", "public.audiovisual-content", "public.movie", "public.audiovisual-content", "public.video", "public.audio", "public.text", "public.data", "public.zip-archive", "com.pkware.zip-archive", "public.composite-content", "public.text"], in: .import)
+        //
+        //            documentPicker.delegate = self
+        //        if #available(iOS 13.0, *) {
+        //            documentPicker.directoryURL = pdfUrl
+        //        } else {
+        //            // Fallback on earlier versions
+        //        }
+        //            present(documentPicker, animated: true, completion: nil)
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let data = self.dataStatus[indexPath.row] as! [String:Any]
         
         if data["id"] as? String == idForMantras {
             return UITableView.automaticDimension
         } else {
-            return 100
+            return UITableView.automaticDimension
         }
     }
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -218,4 +259,14 @@ extension MytrasViewController:UITableViewDelegate,UITableViewDataSource {
         idForMantras = data["id"] as? String
         self.tableView.reloadData()
     }
+}
+
+
+
+extension MytrasViewController:UIDocumentInteractionControllerDelegate{
+    
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
+    }
+    
 }

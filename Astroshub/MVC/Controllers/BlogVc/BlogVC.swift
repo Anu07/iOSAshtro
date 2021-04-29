@@ -102,7 +102,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
         
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
-        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey,"user_id":user_id,"page":page] as [String : Any]
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad","user_id":user_id.count > 0 ? user_id: "CUSGUS","page":page] as [String : Any]
         print(setparameters)
         
         AppHelperModel.requestPOSTURL(MethodName.BLOG.rawValue, params: setparameters as [String : AnyObject],headers: nil,
@@ -271,6 +271,8 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
     //****************************************************
     @IBAction func btn_backAction(_ sender: Any)
     {
+        speechSynthesizer.stopSpeaking(at: .immediate)
+
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -389,15 +391,17 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                 previousSelectedIndexPath = indexPath
 
                 let cell = self.tbl_blog.cellForRow(at: indexPath!) as! BlogCell
-                cell.playButton.setImage(#imageLiteral(resourceName: "menu"), for: .normal)
+                cell.playButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
 
                 if speechSynthesizer.isSpeaking {
 
                     speechSynthesizer.stopSpeaking(at: .immediate)
 
                 } else {
+//                    let content = removeSpecialCharsFromString(text: dict_eventpoll["blog_content"] as! String)
 
-                    let speechUtterance = AVSpeechUtterance(string: dict_eventpoll["blog_content"] as! String)
+                    let speechUtterance = AVSpeechUtterance(string: (dict_eventpoll["blog_content"] as! String).withoutSpecialCharacters)
+                    speechUtterance.voice = AVSpeechSynthesisVoice(language: "hi-IN")
 
                     DispatchQueue.main.async {
                         self.speechSynthesizer.speak(speechUtterance)
@@ -410,17 +414,25 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
                 oldCell.playButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
 
                 let cell = self.tbl_blog.cellForRow(at: indexPath!) as! BlogCell
-                cell.playButton.setImage(#imageLiteral(resourceName: "menu"), for: .normal)
+                cell.playButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
 
                 previousSelectedIndexPath = indexPath
 
                 if speechSynthesizer.isSpeaking {
 
                     speechSynthesizer.stopSpeaking(at: .immediate)
+                    let content = removeSpecialCharsFromString(text: dict_eventpoll["blog_content"] as! String)
+
+                    let speechUtterance = AVSpeechUtterance(string: (dict_eventpoll["blog_content"] as! String).withoutSpecialCharacters)
+                    speechUtterance.voice = AVSpeechSynthesisVoice(language: "hi-IN")
+
+                    self.speechSynthesizer.speak(speechUtterance)
 
                 } else {
+                    let content = removeSpecialCharsFromString(text: dict_eventpoll["blog_content"] as! String)
 
-                    let speechUtterance = AVSpeechUtterance(string: dict_eventpoll["blog_content"] as! String)
+                    let speechUtterance = AVSpeechUtterance(string: (dict_eventpoll["blog_content"] as! String).withoutSpecialCharacters)
+                    speechUtterance.voice = AVSpeechSynthesisVoice(language: "hi-IN")
 
                     DispatchQueue.main.async {
                         self.speechSynthesizer.speak(speechUtterance)
@@ -430,9 +442,13 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
             }
         }
     }
+    func removeSpecialCharsFromString(text: String) -> String {
+        let okayChars = Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890+-=().!_")
+        return text.filter {okayChars.contains($0) }
+    }
     @objc func shareButton(_ sender :UIButton){
         let dict_eventpoll = self.arrBlogs[sender.tag]
-        let text = ""
+        let text = "Hey i am using Astroshubh to get predictions related to marriage, relationship and career."
         let myWebsite = URL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
         let shareAll = [text , myWebsite as Any] as [Any]
         let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
@@ -456,6 +472,7 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
+        speechSynthesizer.stopSpeaking(at: .immediate)
         BlogDetails = self.arrBlogs[indexPath.row]
         tbl_blog.deselectRow(at: indexPath as IndexPath, animated: true)
         let BlogDetails = self.storyboard?.instantiateViewController(withIdentifier: "BlogDetailsVC")
@@ -489,3 +506,8 @@ extension BlogVC: AVSpeechSynthesizerDelegate {
            }
        }
    }
+extension String {
+    var withoutSpecialCharacters: String {
+        return self.components(separatedBy: CharacterSet.symbols).joined(separator: "")
+    }
+}

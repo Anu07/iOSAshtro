@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import CoreLocation
 class WalletNewVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
     @IBOutlet var tbl_timeslot: UITableView!
@@ -28,9 +28,41 @@ class WalletNewVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UI
     override func viewWillAppear(_ animated: Bool)
     {
         super.viewWillAppear(true)
-        self.walletApiCallMethods()
+       
+        if !hasLocationPermission() {
+            let alertController = UIAlertController(title: "Location Permission Required", message: "Please enable location permissions in settings.", preferredStyle: UIAlertController.Style.alert)
+                  
+                  let okAction = UIAlertAction(title: "Settings", style: .default, handler: {(cAlertAction) in
+                      //Redirect to Settings app
+                    UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
+                  })
+                  
+//                  let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+//                  alertController.addAction(cancelAction)
+                  
+                  alertController.addAction(okAction)
+                  
+                  self.present(alertController, animated: true, completion: nil)
+        } else {
+            self.walletApiCallMethods()
+        }
     }
     
+    func hasLocationPermission() -> Bool {
+           var hasPermission = false
+           if CLLocationManager.locationServicesEnabled() {
+               switch CLLocationManager.authorizationStatus() {
+               case .notDetermined, .restricted, .denied:
+                   hasPermission = false
+               case .authorizedAlways, .authorizedWhenInUse:
+                   hasPermission = true
+               }
+           } else {
+               hasPermission = false
+           }
+           
+           return hasPermission
+       }
     
     
     //****************************************************
@@ -82,15 +114,15 @@ class WalletNewVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UI
                                             print("arrTimeList is:- ",self.arrWaletList)
                                             print("return_Response is:- ",self.return_Response1)
                                             
-//                                            self.tbl_timeslot.reloadData()
-//                                            self.tbl_timeslot.isHidden = false
+                                            //                                            self.tbl_timeslot.reloadData()
+                                            //                                            self.tbl_timeslot.isHidden = false
                                             
                                             DispatchQueue.main.asyncAfter(deadline: .now()+0.5) {
                                                 self.tbl_timeslot.reloadData()
                                                 self.tbl_timeslot.isHidden = false
                                             }
                                         }
-                                            
+                                        
                                         else
                                         {
                                             
@@ -99,7 +131,7 @@ class WalletNewVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UI
                                             
                                         }
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
@@ -137,9 +169,6 @@ class WalletNewVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UI
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        
-        
-        
         let cell_User3 = tableView.dequeueReusableCell(withIdentifier: "tablecell", for: indexPath) as! tablecell
         //set the data here
         //cell_User3.cv.tag = indexPath.row;
@@ -152,7 +181,6 @@ class WalletNewVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UI
             cell_User3.consHgtCv.constant = cell_User3.cv.contentSize.height + 400
             //cell_User3.cv.contentSize.height + 100
         }
-        
         cell_User3.cv.tag=3
         cell_User3.cv.reloadData()
         return cell_User3
@@ -162,79 +190,77 @@ class WalletNewVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UI
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        
-        
     }
-    
-    
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        
-        
-        
-        
         return  1
-        
-        
     }
-    
-    
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
-        
-        
         return self.return_Response1.count
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        
-        
-        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! collectionCell
+        
         
         let dict_eventpoll = self.return_Response1[indexPath.row]
         
-        
-        
+        if CurrentLocation == "India" {
+            if dict_eventpoll["offer_amount"] as! String == "%0" {
+                cell.viewOffer.isHidden = true
+                if dict_eventpoll["wallet_amount"] as! String == "1" {
+                    cell.viewOffer.isHidden = false
+                    cell.viewOffer.text = "Get Rs. 100"
+                } else if dict_eventpoll["wallet_amount"] as! String == "50"{
+                    cell.viewOffer.isHidden = false
+                    cell.viewOffer.text = "Get Rs. 150"
+                }
+                else {
+                }
+            } else {
+                cell.viewOffer.isHidden = false
+                cell.viewOffer.text = "\(dict_eventpoll["offer_amount"] as? String ?? "") Off"
+            }
+        }
+        else {
+            if dict_eventpoll["offer_amount"] as! String == "%0" {
+                cell.viewOffer.isHidden = true
+                if dict_eventpoll["wallet_amount"] as! String == "1" {
+                    cell.viewOffer.isHidden = false
+                    cell.viewOffer.text = "Get $ 3"
+                } else {
+                    
+                }
+            } else {
+                
+                cell.viewOffer.isHidden = false
+                cell.viewOffer.text = "\(dict_eventpoll["offer_amount"] as? String ?? "") Off"
+            }
+        }
         let str_IsSelectedDeselected = dict_eventpoll["isSelectedDeselected"] as! String
         print("str_IsSelectedDeselected is:-",str_IsSelectedDeselected)
-        
-        // cell.VIEW1.layer.cornerRadius = 8
-        // cell.VIEW1.layer.borderWidth = 2
-        // cell.VIEW1.layer.borderColor = UIColor(red: 39/255.0, green: 138/255.0, blue: 163/255.0, alpha: 1.0).cgColor
-        
         if str_IsSelectedDeselected == "0"
         {
             cell.VIEW1.layer.cornerRadius = 6
-            cell.VIEW1.layer.borderWidth = 1
-            cell.VIEW1.layer.borderColor = UIColor .black.cgColor
-            // cell.VIEW1.backgroundColor = UIColor .white
             cell.lbl_UserName.textColor = UIColor .black
-            //cell.lbl_Groupmember?.textColor = UIColor .init(red: 243.0/255.0, green: 50.0/255.0, blue: 115.0/255.0, alpha: 1.0)
         }
         else
         {
             cell.VIEW1.backgroundColor = UIColor (red: 31.0/255.0, green: 130.0/255.0, blue: 162.0/255.0, alpha: 1.0)
-            cell.VIEW1.layer.borderWidth = 0
+            //            cell.VIEW1.layer.borderWidth = 0
             cell.VIEW1.layer.cornerRadius = 6
             cell.lbl_UserName.textColor = UIColor .white
             //cell.lbl_Groupmember?.textColor = UIColor .white
         }
-        
         let time = dict_eventpoll["wallet_amount"] as! String
         let currency = dict_eventpoll["currency"] as! String
-        
         dollar = currency
-        
         cell.lbl_UserName.text = "+ " + currency + " " + time
-        
         cell.btn_click.tag = indexPath.row
         cell.btn_click.addTarget(self, action: #selector(btn_selection(_:)), for: .touchUpInside)
-        
-        
         return cell
         
         
@@ -242,28 +268,39 @@ class WalletNewVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UI
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
         return CGSize(width: (collectionView.bounds.size.width)/2.2   , height: 57);
-        
-        //  return CGSize(width: 119, height: 57)
-        
     }
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.row)
         
-        
-        
-        
-        
     }
     @IBAction func btn_selection(_ sender: UIButton)
-        
     {
+        let PaymentInfo = self.storyboard?.instantiateViewController(withIdentifier: "PaymentInfoVC") as! PaymentInfoVC
         let dict_eventpoll = self.return_Response1[sender.tag]
-        OnTabWalletAmount = dict_eventpoll["wallet_amount"] as! String
-        let PaymentInfo = self.storyboard?.instantiateViewController(withIdentifier: "PaymentInfoVC")
-        self.navigationController?.pushViewController(PaymentInfo!, animated: true)
-        
+        if dict_eventpoll["offer_amount"] as! String == "%0" {
+            OnTabWalletAmount = dict_eventpoll["wallet_amount"] as! String
+            if Int(dict_eventpoll["wallet_amount"] as! String ) ?? 0 <= 50 {
+                PaymentInfo.offerPrice = "hide"
+                //PaymentInfo.gstPrice = "0"
+            } else {
+                PaymentInfo.offerPrice = "unhide"
+              //  PaymentInfo.gstPrice = "1"
+            }
+            PaymentInfo.amountAddAfterOffer = dict_eventpoll["wallet_amount"] as! String
+
+        } else {
+            let offerprice = dict_eventpoll["offer_amount"] as! String
+            let offerAmount = dict_eventpoll["wallet_amount"] as! String
+            let offerWithoutPer = offerprice.replacingOccurrences(of: "%", with: "")
+            let valueInINt =  (Double(offerWithoutPer) ?? 0.0)
+            let cal = ((Double(offerAmount) ?? 0.0) * (valueInINt/100.0))
+            OnTabWalletAmount = String((Double(offerAmount) ?? 0.0) - cal)
+            PaymentInfo.amountAddAfterOffer = offerAmount
+            PaymentInfo.offerPrice = "hide"
+        }
+        self.navigationController?.pushViewController(PaymentInfo, animated: true)
     }
     //****************************************************
     // MARK: - Memory CleanUP

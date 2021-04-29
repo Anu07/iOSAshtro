@@ -440,17 +440,17 @@ open class WWCalendarTimeSelector: UIViewController, UITableViewDelegate, UITabl
     open var optionCalendarFontColorDisabledDays = UIColor.lightGray
     open var optionCalendarFontColorToday = UIColor.darkGray
     open var optionCalendarFontColorTodayHighlight = UIColor.white
-    open var optionCalendarBackgroundColorTodayHighlight = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
+    open var optionCalendarBackgroundColorTodayHighlight = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     open var optionCalendarBackgroundColorTodayFlash = UIColor.white
     open var optionCalendarFontColorPastDates = UIColor.darkGray
     open var optionCalendarFontColorPastDatesHighlight = UIColor.white
-    open var optionCalendarBackgroundColorPastDatesHighlight = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
+    open var optionCalendarBackgroundColorPastDatesHighlight = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     open var optionCalendarBackgroundColorPastDatesFlash = UIColor.white
     open var optionCalendarFontColorFutureDates = UIColor.darkGray
     open var optionCalendarFontColorFutureDatesHighlight = UIColor.white
-    open var optionCalendarBackgroundColorFutureDatesHighlight = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
+    open var optionCalendarBackgroundColorFutureDatesHighlight = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     open var optionCalendarBackgroundColorFutureDatesFlash = UIColor.white
-    open var optionCalendarUnderlinedBackgroundColor = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
+    open var optionCalendarUnderlinedBackgroundColor = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     
     open var optionCalendarFontCurrentYear = UIFont.boldSystemFont(ofSize: 18)
     open var optionCalendarFontCurrentYearHighlight = UIFont.boldSystemFont(ofSize: 20)
@@ -469,19 +469,19 @@ open class WWCalendarTimeSelector: UIViewController, UITableViewDelegate, UITabl
     open var optionClockFontAMPMHighlight = UIFont.systemFont(ofSize: 20)
     open var optionClockFontColorAMPM = UIColor.black
     open var optionClockFontColorAMPMHighlight = UIColor.white
-    open var optionClockBackgroundColorAMPMHighlight = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
+    open var optionClockBackgroundColorAMPMHighlight = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     open var optionClockFontHour = UIFont.systemFont(ofSize: 16)
     open var optionClockFontHourHighlight = UIFont.systemFont(ofSize: 18)
     open var optionClockFontColorHour = UIColor.black
     open var optionClockFontColorHourHighlight = UIColor.white
-    open var optionClockBackgroundColorHourHighlight = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
-    open var optionClockBackgroundColorHourHighlightNeedle = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
+    open var optionClockBackgroundColorHourHighlight = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
+    open var optionClockBackgroundColorHourHighlightNeedle = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     open var optionClockFontMinute = UIFont.systemFont(ofSize: 12)
     open var optionClockFontMinuteHighlight = UIFont.systemFont(ofSize: 14)
     open var optionClockFontColorMinute = UIColor.black
     open var optionClockFontColorMinuteHighlight = UIColor.white
-    open var optionClockBackgroundColorMinuteHighlight = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
-    open var optionClockBackgroundColorMinuteHighlightNeedle = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
+    open var optionClockBackgroundColorMinuteHighlight = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
+    open var optionClockBackgroundColorMinuteHighlightNeedle = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     open var optionClockBackgroundColorFace = UIColor(white: 0.9, alpha: 1)
     open var optionClockBackgroundColorCenter = UIColor.black
     
@@ -490,16 +490,16 @@ open class WWCalendarTimeSelector: UIViewController, UITableViewDelegate, UITabl
     open var optionButtonTitleCancel: String = "Cancel"
     open var optionButtonFontCancel = UIFont.systemFont(ofSize: 16)
     open var optionButtonFontDone = UIFont.boldSystemFont(ofSize: 16)
-    open var optionButtonFontColorCancel = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
-    open var optionButtonFontColorDone = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
-    open var optionButtonFontColorCancelHighlight = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0).withAlphaComponent(0.25)
-    open var optionButtonFontColorDoneHighlight = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0).withAlphaComponent(0.25)
+    open var optionButtonFontColorCancel = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
+    open var optionButtonFontColorDone = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
+    open var optionButtonFontColorCancelHighlight = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0).withAlphaComponent(0.25)
+    open var optionButtonFontColorDoneHighlight = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0).withAlphaComponent(0.25)
     open var optionButtonBackgroundColorCancel = UIColor.clear
     open var optionButtonBackgroundColorDone = UIColor.clear
     
     open var optionLabelTextRangeTo: String = "To"
     
-    open var optionTopPanelBackgroundColor = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0)
+    open var optionTopPanelBackgroundColor = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     open var optionTopPanelFont = UIFont.systemFont(ofSize: 16)
     open var optionTopPanelFontColor = UIColor.white
     
@@ -519,7 +519,7 @@ open class WWCalendarTimeSelector: UIViewController, UITableViewDelegate, UITabl
     open var optionSelectorPanelFontColorTimeHighlight = UIColor.white
     open var optionSelectorPanelFontColorMultipleSelection = UIColor.white
     open var optionSelectorPanelFontColorMultipleSelectionHighlight = UIColor.white
-    open var optionSelectorPanelBackgroundColor = UIColor(red: 256/255.0, green: 123/255.0, blue: 24/255.0, alpha: 1.0).withAlphaComponent(0.9)
+    open var optionSelectorPanelBackgroundColor = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0).withAlphaComponent(0.9)
     
     open var optionMainPanelBackgroundColor = UIColor.white
     open var optionBottomPanelBackgroundColor = UIColor.white
@@ -737,7 +737,7 @@ open class WWCalendarTimeSelector: UIViewController, UITableViewDelegate, UITabl
     }
     fileprivate var isSelectingStartRange: Bool = true { didSet { rangeStartLabel.textColor = isSelectingStartRange ? optionSelectorPanelFontColorDateHighlight : optionSelectorPanelFontColorDate; rangeEndLabel.textColor = isSelectingStartRange ? optionSelectorPanelFontColorDate : optionSelectorPanelFontColorDateHighlight } }
     fileprivate var shouldResetRange: Bool = true
-    fileprivate var tintColor : UIColor! = UIColor(red: 31/255.0, green: 130/255.0, blue: 162/255.0, alpha: 1.0)
+    fileprivate var tintColor : UIColor! = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0)
     
     /// Only use this method to instantiate the selector. All customization should be done before presenting the selector to the user.
     /// To receive callbacks from selector, set the `delegate` of selector and implement `WWCalendarTimeSelectorProtocol`.

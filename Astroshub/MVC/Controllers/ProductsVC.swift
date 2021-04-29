@@ -8,7 +8,7 @@
 
 import UIKit
 import SDWebImage
-
+import CoreLocation
 class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UITextFieldDelegate {
     
     @IBOutlet weak var buttonInfo: UIButton!
@@ -22,11 +22,41 @@ class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UI
     var notes = ""
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if !hasLocationPermission() {
+            let alertController = UIAlertController(title: "Location Permission Required", message: "Please enable location permissions in settings.", preferredStyle: UIAlertController.Style.alert)
+                  
+                  let okAction = UIAlertAction(title: "Settings", style: .default, handler: {(cAlertAction) in
+                      //Redirect to Settings app
+                    UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
+                  })
+                  
+//                  let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+//                  alertController.addAction(cancelAction)
+                  
+                  alertController.addAction(okAction)
+                  
+                  self.present(alertController, animated: true, completion: nil)
+        } else {
         self.ProductCategoryApiCallMethods()
+        }
         self.setNote()
         // Do any additional setup after loading the view.
     }
+    func hasLocationPermission() -> Bool {
+           var hasPermission = false
+           if CLLocationManager.locationServicesEnabled() {
+               switch CLLocationManager.authorizationStatus() {
+               case .notDetermined, .restricted, .denied:
+                   hasPermission = false
+               case .authorizedAlways, .authorizedWhenInUse:
+                   hasPermission = true
+               }
+           } else {
+               hasPermission = false
+           }
+           
+           return hasPermission
+       }
     //****************************************************
     // MARK: - Custom Method
     //****************************************************
@@ -184,50 +214,112 @@ class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UI
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProductCell", for: indexPath) as! ProductCell
-        cell_Add.img_user.layer.cornerRadius = cell_Add.img_user.frame.size.height/2
-        cell_Add.img_user.clipsToBounds = true
-        cell_Add.btnEnquiry.layer.cornerRadius = 6.0
-        cell_Add.btnEnquiry.tag = indexPath.row
-        cell_Add.btnEnquiry.addTarget(self, action: #selector(self.btn_Enquiry(_:)), for: .touchUpInside)
-        cell_Add.view1.layer.shadowColor = UIColor.lightGray.cgColor
-        cell_Add.view1.layer.shadowOpacity = 5.0
-        cell_Add.view1.layer.shadowRadius = 5.0
-        cell_Add.view1.layer.shadowOffset = CGSize (width: 1.5, height: 1.5)
-        cell_Add.view1.layer.masksToBounds = false
-        cell_Add.view1.layer.cornerRadius = 5.0
-        cell_Add.img_user.kf.indicatorType = .activity
         let dict_eventpoll = self.arrProductcategory[indexPath.row]
-        let Name = dict_eventpoll["product_name"] as! String
-        let Description = dict_eventpoll["description"] as! String
-        let Image = dict_eventpoll["product_image"] as! String
-        
-        cell_Add.lbl1.text = Name
-        if CurrentLocation == "India" {
-            cell_Add.lbl2.text =  "₹ \(dict_eventpoll["price_inr"] as! String)"
+        if catyegoryIDD == "2" || catyegoryIDD == "3" || catyegoryIDD == "4"{
+            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProductCell", for: indexPath) as! ProductCell
+            cell_Add.img_user.layer.cornerRadius = cell_Add.img_user.frame.size.height/2
+            cell_Add.img_user.clipsToBounds = true
+            cell_Add.btnEnquiry.layer.cornerRadius = 6.0
+            cell_Add.btnEnquiry.tag = indexPath.row
+            cell_Add.btnEnquiry.setTitle("Book Now", for: .normal)
+            cell_Add.btnEnquiry.addTarget(self, action: #selector(self.btn_Enquiry(_:)), for: .touchUpInside)
+            cell_Add.view1.layer.shadowColor = UIColor.lightGray.cgColor
+            cell_Add.view1.layer.shadowOpacity = 5.0
+            cell_Add.view1.layer.shadowRadius = 5.0
+            cell_Add.view1.layer.shadowOffset = CGSize (width: 1.5, height: 1.5)
+            cell_Add.view1.layer.masksToBounds = false
+            cell_Add.view1.layer.cornerRadius = 5.0
+            cell_Add.img_user.kf.indicatorType = .activity
+            let Name = dict_eventpoll["product_name"] as! String
+            let Description = dict_eventpoll["description"] as! String
+            let Image = dict_eventpoll["product_image_url"] as! String
+            cell_Add.lbl1.text = Name
+            if CurrentLocation == "India" {
+                cell_Add.lbl2.text =  "₹ \(dict_eventpoll["price_inr"] as! String)"
+            } else {
+                cell_Add.lbl2.text = "$ \(dict_eventpoll["price_dollar"] as! String)"
+            }
+            cell_Add.lbl3.text = Description.htmlToString
+            cell_Add.labelCategory.text = dict_eventpoll["product_category_name"] as? String
+            let activityIndicator = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.gray)
+            activityIndicator.center = cell_Add.img_user.center
+            activityIndicator.hidesWhenStopped = true
+            cell_Add.img_user.addSubview(activityIndicator)
+            activityIndicator.startAnimating()
+            let iamgeurl = Constants.BASE_URLForImage + Image
+            cell_Add.img_user.sd_setImage(with: URL(string: iamgeurl), completed: { (image: UIImage?, error: Error?, cacheType: SDImageCacheType, imageURL: URL?) in
+                activityIndicator.removeFromSuperview()
+            })
+            return cell_Add
         } else {
-            cell_Add.lbl2.text = "$ \(dict_eventpoll["price_dollar"] as! String)"
+            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProductCellpooja", for: indexPath) as! ProductCell
+            cell_Add.img_user.layer.cornerRadius = cell_Add.img_user.frame.size.height/2
+            cell_Add.img_user.clipsToBounds = true
+            cell_Add.btnEnquiry.layer.cornerRadius = 6.0
+            cell_Add.btnEnquiry.tag = indexPath.row
+            cell_Add.btnEnquiry.addTarget(self, action: #selector(self.callRequest(_:)), for: .touchUpInside)
+            cell_Add.buttonBookNow.tag = indexPath.row
+            cell_Add.buttonBookNow.addTarget(self, action: #selector(self.bookNow(_:)), for: .touchUpInside)
+            cell_Add.view1.layer.shadowColor = UIColor.lightGray.cgColor
+            cell_Add.view1.layer.shadowOpacity = 5.0
+            cell_Add.view1.layer.shadowRadius = 5.0
+            cell_Add.view1.layer.shadowOffset = CGSize (width: 1.5, height: 1.5)
+            cell_Add.view1.layer.masksToBounds = false
+            cell_Add.view1.layer.cornerRadius = 5.0
+            cell_Add.img_user.kf.indicatorType = .activity
+            let Name = dict_eventpoll["product_name"] as! String
+            let Description = dict_eventpoll["description"] as! String
+            let Image = dict_eventpoll["product_image_url"] as! String
             
+            cell_Add.lbl1.text = Name
+            if CurrentLocation == "India" {
+                cell_Add.lbl2.text =  "₹ \(dict_eventpoll["price_inr"] as! String)"
+            } else {
+                cell_Add.lbl2.text = "$ \(dict_eventpoll["price_dollar"] as! String)"
+
+            }
+            
+            if  let specalist = dict_eventpoll["specialist"] as? Array<Any> , specalist.count > 0{
+                print(specalist)
+                cell_Add.btnEnquiry.isHidden = true
+                cell_Add.buttonBookNow.isHidden = true
+            } else {
+                cell_Add.btnEnquiry.isHidden = true
+                cell_Add.buttonBookNow.isHidden = false
+            }
+//            print(specalist)
+            cell_Add.lbl3.text = Description.htmlToString
+//            cell_Add.labelCategory.text = dict_eventpoll["product_category_name"] as? String
+            let activityIndicator = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.gray)
+            activityIndicator.center = cell_Add.img_user.center
+            activityIndicator.hidesWhenStopped = true
+            cell_Add.img_user.addSubview(activityIndicator)
+            activityIndicator.startAnimating()
+            let iamgeurl = Constants.BASE_URLForImage + Image
+            cell_Add.img_user.sd_setImage(with: URL(string: iamgeurl), completed: { (image: UIImage?, error: Error?, cacheType: SDImageCacheType, imageURL: URL?) in
+                activityIndicator.removeFromSuperview()
+            })
+            return cell_Add
         }
-        cell_Add.lbl3.text = Description.htmlToString
-        
-        cell_Add.labelCategory.text = dict_eventpoll["product_category_name"] as? String
-        let activityIndicator = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.gray)
-        activityIndicator.center = cell_Add.img_user.center
-        activityIndicator.hidesWhenStopped = true
-        cell_Add.img_user.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
-        
-        cell_Add.img_user.sd_setImage(with: URL(string: Image), completed: { (image: UIImage?, error: Error?, cacheType: SDImageCacheType, imageURL: URL?) in
-            activityIndicator.removeFromSuperview()
-        })
-        return cell_Add
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         //tbl_productcategory.deselectRow(at: indexPath as IndexPath, animated: true)
         //let EnquiryShop = self.storyboard?.instantiateViewController(withIdentifier: "EnquiryShopVC")
         //self.navigationController?.pushViewController(EnquiryShop!, animated: true)
+        let dict_eventpoll = self.arrProductcategory[indexPath.row]
+        if  let specalist = dict_eventpoll["specialist"] as? Array<Any> {
+            print(specalist)
+            if specalist.count == 0{
+                
+            } else {
+            let EnquiryShop = self.storyboard?.instantiateViewController(withIdentifier: "SpeclistViewController") as! SpeclistViewController
+            EnquiryShop.speclist = specalist
+            self.navigationController?.pushViewController(EnquiryShop, animated: true)
+            }
+        } else {
+          
+        }
     }
     
     @objc func btn_Enquiry(_ sender: UIButton){
@@ -235,6 +327,30 @@ class ProductsVC: UIViewController,UITableViewDelegate, UITableViewDataSource,UI
             let dict_eventpoll = self.arrProductcategory[sender.tag]
             productcatyegoryIDD = dict_eventpoll["productid"] as! String
             let EnquiryShop = self.storyboard?.instantiateViewController(withIdentifier: "EnquiryShopVC") as! EnquiryShopVC
+            EnquiryShop.productid = categoryID
+            EnquiryShop.arrProductcategory = dict_eventpoll
+            self.navigationController?.pushViewController(EnquiryShop, animated: true)
+        }
+    }
+    
+    @objc func callRequest(_ sender: UIButton){
+        if self.PerformActionIfLogin(changeMessage: true) {
+            let dict_eventpoll = self.arrProductcategory[sender.tag]
+            productcatyegoryIDD = dict_eventpoll["productid"] as! String
+            let EnquiryShop = self.storyboard?.instantiateViewController(withIdentifier: "EnquiryShopVC") as! EnquiryShopVC
+            EnquiryShop.arrProductcategory = dict_eventpoll
+            EnquiryShop.productid = categoryID
+            EnquiryShop.bookNowVar = "call"
+            self.navigationController?.pushViewController(EnquiryShop, animated: true)
+        }
+    }
+    @objc func bookNow(_ sender: UIButton){
+        if self.PerformActionIfLogin(changeMessage: true) {
+            let dict_eventpoll = self.arrProductcategory[sender.tag]
+            productcatyegoryIDD = dict_eventpoll["productid"] as! String
+            let EnquiryShop = self.storyboard?.instantiateViewController(withIdentifier: "EnquiryShopVC") as! EnquiryShopVC
+            EnquiryShop.productid = categoryID
+            EnquiryShop.bookNowVar = "book"
             EnquiryShop.arrProductcategory = dict_eventpoll
             self.navigationController?.pushViewController(EnquiryShop, animated: true)
         }
@@ -260,6 +376,7 @@ class ProductCell: UITableViewCell {
     @IBOutlet weak var img_user: UIImageView!
     @IBOutlet weak var btnEnquiry: UIButton!
     
+    @IBOutlet weak var buttonBookNow: UIButton!
     @IBOutlet weak var labelCategory: UILabel!
     
 }

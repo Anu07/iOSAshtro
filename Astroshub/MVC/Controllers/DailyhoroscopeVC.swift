@@ -18,12 +18,13 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
     var return_Response = [[String:Any]]()
     var selectedZodiac = [String:Any]()
     var index_value = 0
+    var ZodiacId = ""
     @IBOutlet var tbl_dashboard: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tbl_dashboard.isHidden = true
-        self.horoscopeApiCallMethods()
+//        self.tbl_dashboard.isHidden = true
+//        self.horoscopeApiCallMethods()
         
         self.tbl_dashboard.delegate = self
         self.tbl_dashboard.dataSource = self
@@ -167,7 +168,7 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
     func numberOfSections(in tableView: UITableView) -> Int
     {
         
-        return 2
+        return 1
         
     }
     
@@ -176,17 +177,17 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
     {
         
         
-        if section==0
-            
-        {
-            return 1
-            
-        }
-            
-        else
-        {
+//        if section==0
+//
+//        {
+//            return 1
+//
+//        }
+//
+//        else
+//        {
             return self.arrhoroscopeDiscription.count
-        }
+//        }
         
         
         
@@ -194,18 +195,18 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
-        if indexPath.section == 0
-        {
-            let VisitedCell = tableView.dequeueReusableCell(withIdentifier: "VisitedCell", for: indexPath) as! VisitedCell
-            
-            VisitedCell.colletionVisited.tag=1
-            VisitedCell.colletionVisited.delegate = self
-            VisitedCell.colletionVisited.dataSource = self
-            VisitedCell.colletionVisited.reloadData()
-            return VisitedCell
-        }
-        else
-        {
+//        if indexPath.section == 0
+//        {
+//            let VisitedCell = tableView.dequeueReusableCell(withIdentifier: "VisitedCell", for: indexPath) as! VisitedCell
+//
+//            VisitedCell.colletionVisited.tag=1
+//            VisitedCell.colletionVisited.delegate = self
+//            VisitedCell.colletionVisited.dataSource = self
+//            VisitedCell.colletionVisited.reloadData()
+//            return VisitedCell
+//        }
+//        else
+//        {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "BlogCell", for: indexPath) as! BlogCell
             
             cell_Add.view_back.layer.shadowColor = UIColor.lightGray.cgColor
@@ -228,7 +229,7 @@ class DailyhoroscopeVC: UIViewController ,UICollectionViewDelegateFlowLayout,UIC
             
             return cell_Add
             
-        }
+//        }
         
         
         

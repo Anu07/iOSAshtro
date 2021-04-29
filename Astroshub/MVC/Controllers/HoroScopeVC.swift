@@ -15,7 +15,8 @@ class HoroscopeCell: UICollectionViewCell {
 }
 
 class HoroScopeVC: UIViewController,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource {
-    
+    var index_value = 0
+
     var horoscopeRes = [[String:Any]]()
     var cornerRadius: CGFloat = 0
     @IBOutlet weak var horoscopeCollectionView: UICollectionView!
@@ -25,11 +26,60 @@ class HoroScopeVC: UIViewController,UICollectionViewDelegateFlowLayout,UICollect
         self.horoscopeCollectionView.delegate = self
         self.horoscopeCollectionView.dataSource = self
         self.horoscopeCollectionView.allowsSelection = true
+        horoscopeApiCallMethods()
     }
     @IBAction func buttonBackAction(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
     
+    
+    
+     func horoscopeApiCallMethods() {
+        
+        let deviceID = UIDevice.current.identifierForVendor!.uuidString
+        print(deviceID)
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"user_api_key":user_apikey.count > 0 ? user_apikey : "7bd679c21b8edcc185d1b6859c2e56ad" ,"user_id":user_id.count > 0 ? user_id: "CUSGUS","zodic_id":""]
+        print(setparameters)
+        //        ActivityIndicator.shared.startLoading()
+        //AutoBcmLoadingView.show("Loading......")
+        AppHelperModel.requestPOSTURL(MethodName.HOROSCOPE.rawValue, params: setparameters as [String : AnyObject],headers: nil,
+                                      success: { (respose) in
+                                        ActivityIndicator.shared.stopLoader()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        let success=tempDict["response"] as!   Bool
+                                        let message=tempDict["msg"] as!   String
+                                        if success == true
+                                        {
+                                            var arrhoroscope = [[String:Any]]()
+                                            
+                                            self.horoscopeRes = [[String:Any]]()
+                                            var arrProducts = [[String:Any]]()
+                                            arrProducts=tempDict["data"] as! [[String:Any]]
+                                            for i in 0..<arrProducts.count
+                                            {
+                                                var dict_Products = arrProducts[i]
+                                                dict_Products["isSelectedDeselected"] = "0"
+                                                dict_Products["id"] = i+1
+                                                self.index_value = i
+                                               arrhoroscope.append(dict_Products)
+                                            }
+                                            
+                                            self.horoscopeRes = arrhoroscope
+                                            self.horoscopeCollectionView.reloadData()
+                                        }
+                                        else
+                                        {
+                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
+                                        }
+                                      }) { (error) in
+            print(error)
+            AutoBcmLoadingView.dismiss()
+        }
+        
+        
+        
+    }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         

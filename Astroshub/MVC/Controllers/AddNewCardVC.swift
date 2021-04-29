@@ -20,7 +20,7 @@ class AddNewCardVC: UIViewController {
     @IBOutlet weak var txtCardNo: UITextField!
     @IBOutlet weak var txtExpiryDate: UITextField!
     @IBOutlet weak var txtCVV: UITextField!
-    
+    var amount = 0
     
     //MARK:- View Lifecycle Methods
     weak var delegateStripePay : DelegateStripePayment?
@@ -99,10 +99,30 @@ class AddNewCardVC: UIViewController {
     
     
     func addCard(withStripeToken stripeToken:String) {
-        
+        let data_IsLogin = UserDefaults.standard.value(forKey: "isUserData") as? Data
+        if let getData = data_IsLogin {
+            let dict_IsLogin = NSKeyedUnarchiver.unarchiveObject(with:getData) as? [String:Any]
+            stripePaymentParams["name"] = dict_IsLogin?["customer_name"] as? String ?? ""
+            stripePaymentParams["email"] = dict_IsLogin?["email"] as? String ?? ""
+            if dict_IsLogin?["customer_address"] as? String == "" {
+                stripePaymentParams["line1"] = "Test Address"
+            } else {
+            stripePaymentParams["line1"] = dict_IsLogin?["customer_address"] as? String ?? "Test Address"
+            }
+            stripePaymentParams["city"] = dict_IsLogin?["user_city"] as? String ?? CurrentLocation
+            let country = dict_IsLogin?["customer_country_name"] as? String ?? CurrentLocation
+            stripePaymentParams["country"] =   CurrentLocation
+            stripePaymentParams["state"] =   dict_IsLogin?["user_state"] as? String ?? CurrentLocation
+        }
         stripePaymentParams["payment_token"] = stripeToken
         stripePaymentParams["user_id"] = user_id
+        stripePaymentParams["user_api_key"] = user_apikey
+        stripePaymentParams["amount"] = amount
+        stripePaymentParams["currency"] = "USD"
+        
+
         print(stripePaymentParams)
+    
         AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL("stripePayment",
                                       params: stripePaymentParams as [String : AnyObject],

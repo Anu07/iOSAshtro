@@ -28,14 +28,17 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
     let propertyArray = [
         "Home",
         "Transaction History",
-        "My Query/Report/Remedy",
-        "Blog",
+        "Pranshnavli",
+        "Latest Offers",
+        "Blogs",
+        
         "History",
         "Free Services",
         "Astroshop Order history",
         "Astrology Knowledge Channel",
         "About Us",
-//        "Refer to Friend",
+        "Facebook Live session",
+       "Refer to Friend",
         "Terms & Condition",
         "Privacy Policy",
         "FAQ",
@@ -46,19 +49,22 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
     ]
     
     let propertyArrayImages = [
-        "home-1",
-        "wallet",
-        "query",
-        "blog",
-        "history",
-        "free service",
-        "history",
-        "tutorial",
-        "about us",
-//        "refer a friend",
-        "term-and-condition",
+        "Home",
+        "TransactionH",
+        "MyQueryReport",
+        "giftbox",
+        "Blogs",
+        
+        "History",
+        "FreeServises",
+        "AstrOrder",
+        "Channel",
+        "AboutUs",
+        "Blogs",
+        "refer a friend",
+        "Terms",
         "PrivacyPolicy",
-        "faq",
+        "FAQ",
         "contact us",
         //"tutorial",
         "logout-1"
@@ -184,7 +190,7 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
     {
         if indexPath.section == 0
         {
-            return 178
+            return 195
         }
         else
         {
@@ -225,6 +231,13 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
                 let image = propertyArrayImages[indexPath.row]
                 SlideMenuCell2.img_picture.image = UIImage(named:image)!
             }
+            
+            if indexPath.row == 2 || indexPath.row == 6 || indexPath.row == 10 {
+                SlideMenuCell2.imageNew.isHidden = false
+            } else {
+                SlideMenuCell2.imageNew.isHidden = true
+
+            }
     // propertyArrayImages
             
             return SlideMenuCell2
@@ -253,51 +266,73 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
                     let WALLET = self.storyboard?.instantiateViewController(withIdentifier: "WalletVC")
                     self.navigationController?.pushViewController(WALLET!, animated: true)
                 }
-            } else if indexPath.row == 2 {
+            }
+//            else if indexPath.row == 2 {
+//                if self.PerformActionIfLogin() {
+//                    let QueryReportListing = self.storyboard?.instantiateViewController(withIdentifier: "QueryReportListingVC")
+//                    self.navigationController?.pushViewController(QueryReportListing!, animated: true)
+//                }
+//            }
+            else if indexPath.row == 2{
+//                if self.PerformActionIfLogin() {
+                    let QueryReportListing = self.storyboard?.instantiateViewController(withIdentifier: "PrashnavaliVC") as! PrashnavaliVC
+                    self.navigationController?.pushViewController(QueryReportListing, animated: true)
+//                }
+            } else if indexPath.row == 3{
                 if self.PerformActionIfLogin() {
-                    let QueryReportListing = self.storyboard?.instantiateViewController(withIdentifier: "QueryReportListingVC")
-                    self.navigationController?.pushViewController(QueryReportListing!, animated: true)
+                let blog = self.storyboard?.instantiateViewController(withIdentifier: "OffersViewController") as! OffersViewController
+                self.navigationController?.pushViewController(blog, animated: true)
                 }
-            } else if indexPath.row == 3 {
+            } else if indexPath.row == 4 {
                 let blog = self.storyboard?.instantiateViewController(withIdentifier: "BlogVC")
                 self.navigationController?.pushViewController(blog!, animated: true)
-            } else if indexPath.row == 4 {
+            } else if indexPath.row == 5{
                 if self.PerformActionIfLogin() {
                     let Historytotal = self.storyboard?.instantiateViewController(withIdentifier: "HistorytotalVC")
                     self.navigationController?.pushViewController(Historytotal!, animated: true)
                 }
-            } else if indexPath.row == 5 {
+            } else if indexPath.row == 6 {
                 let freeservices = self.storyboard?.instantiateViewController(withIdentifier: "FreeServicesVC")
                 self.navigationController?.pushViewController(freeservices!, animated: true)
-            } else if indexPath.row == 6 {
+            } else if indexPath.row == 7{
                 if self.PerformActionIfLogin() {
                     let OrderHistory = self.storyboard?.instantiateViewController(withIdentifier: "OrderHistoryVC")
                     self.navigationController?.pushViewController(OrderHistory!, animated: true)
                 }
-            } else if indexPath.row == 7 {
+            } else if indexPath.row == 8 {
                 let Astrologychannel = self.storyboard?.instantiateViewController(withIdentifier: "AstrologychannelVC")
                 self.navigationController?.pushViewController(Astrologychannel!, animated: true)
-            } else if indexPath.row == 8 {
+            } else if indexPath.row == 9 {
                 let AboutUs = self.storyboard?.instantiateViewController(withIdentifier: "AboutUsVC")
                 self.navigationController?.pushViewController(AboutUs!, animated: true)
             }
-//            else if indexPath.row == 9 {
+            else if indexPath.row == 10 {
+                let AboutUs = self.storyboard?.instantiateViewController(withIdentifier: "FbSessionViewController") as! FbSessionViewController
+                self.navigationController?.pushViewController(AboutUs, animated: true)
+            }
+            else if indexPath.row == 11 {
 //                if self.PerformActionIfLogin() {
 //                    let refer = self.storyboard?.instantiateViewController(withIdentifier: "RefertofriendVC")
 //                    self.navigationController?.pushViewController(refer!, animated: true)
 //                }
-                
-         //   }
-        else if indexPath.row == 9 {
+                let text = "Join me on Astroshubh"
+               // let image = UIImage(named: "3")
+                let myWebsite = NSURL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
+                let shareAll = [text , myWebsite ?? "nil"] as [Any]
+                let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+                activityViewController.popoverPresentationController?.sourceView = self.view
+                self.present(activityViewController, animated: true, completion: nil)
+            }
+        else if indexPath.row == 12{
                 let Terms = self.storyboard?.instantiateViewController(withIdentifier: "TermsandconditionVC")
                 self.navigationController?.pushViewController(Terms!, animated: true)
-            } else if indexPath.row == 10 {
+            } else if indexPath.row == 13{
                 let Privacy = self.storyboard?.instantiateViewController(withIdentifier: "PrivacyVC")
                 self.navigationController?.pushViewController(Privacy!, animated: true)
-            } else if indexPath.row == 11 {
+            } else if indexPath.row == 14 {
                 let FAQ = self.storyboard?.instantiateViewController(withIdentifier: "FrequentlyAskQuestionVC")
                 self.navigationController?.pushViewController(FAQ!, animated: true)
-            } else if indexPath.row == 12 {
+            } else if indexPath.row == 15{
                 let Contact = self.storyboard?.instantiateViewController(withIdentifier: "ContactVC")
                 self.navigationController?.pushViewController(Contact!, animated: true)
 //            } else if indexPath.row == 14 {

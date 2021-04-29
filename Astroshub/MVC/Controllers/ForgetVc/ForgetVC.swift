@@ -21,15 +21,15 @@ class ForgetVC: UIViewController {
         
         
         view_back.layer.cornerRadius = 10
-        let btnlayer = CAGradientLayer()
+//        let btnlayer = CAGradientLayer()
         
-        btnlayer.frame = CGRect(x: 0.0, y: 0.0, width: btn_Submit.frame.size.width, height: btn_Submit.frame.size.height)
-        btnlayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
-        btnlayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        btnlayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        
-        
-        btn_Submit.layer.addSublayer(btnlayer)
+//        btnlayer.frame = CGRect(x: 0.0, y: 0.0, width: btn_Submit.frame.size.width, height: btn_Submit.frame.size.height)
+////        btnlayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
+//        btnlayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+//        btnlayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+//
+//
+//        btn_Submit.layer.addSublayer(btnlayer)
         
         
         //txt_otp.setIcon(UIImage(named: "ic_phone")!)

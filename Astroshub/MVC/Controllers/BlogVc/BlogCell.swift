@@ -10,6 +10,7 @@ import UIKit
 
 class BlogCell: UITableViewCell {
 
+    @IBOutlet weak var playButtonDetail: UIButton!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var view_back: UIView!

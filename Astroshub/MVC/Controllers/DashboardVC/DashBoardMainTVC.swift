@@ -7,9 +7,11 @@
 //
 
 import UIKit
-
+import WOWRibbonView
 class DashBoardMainTVC: UITableViewCell {
 
+    @IBOutlet weak var newView: WOWRibbonView!
+    @IBOutlet weak var imageviewNew: UIImageView!
     @IBOutlet weak var lblHeading: UILabel!
     @IBOutlet weak var imageViewDashBoard: UIImageView!
     override func awakeFromNib() {

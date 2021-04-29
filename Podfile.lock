@@ -203,6 +203,20 @@ PODS:
   - CRNotifications (1.2.1)
   - Fabric (1.10.2)
   - FAPanels (2.0.1)
+  - FBSDKCoreKit (9.0.1):
+    - FBSDKCoreKit/Basics (= 9.0.1)
+    - FBSDKCoreKit/Core (= 9.0.1)
+  - FBSDKCoreKit/Basics (9.0.1)
+  - FBSDKCoreKit/Core (9.0.1):
+    - FBSDKCoreKit/Basics
+  - FBSDKLoginKit (9.0.1):
+    - FBSDKLoginKit/Login (= 9.0.1)
+  - FBSDKLoginKit/Login (9.0.1):
+    - FBSDKCoreKit (~> 9.0.1)
+  - FBSDKShareKit (9.0.1):
+    - FBSDKShareKit/Share (= 9.0.1)
+  - FBSDKShareKit/Share (9.0.1):
+    - FBSDKCoreKit (~> 9.0.1)
   - Firebase/Analytics (6.16.0):
     - Firebase/Core
   - Firebase/Auth (6.16.0):
@@ -408,6 +422,7 @@ PODS:
   - Stripe (19.4.0)
   - SVProgressHUD (2.2.5)
   - SwiftyJSON (5.0.0)
+  - WOWRibbonView (0.1.1)
 
 DEPENDENCIES:
   - ADCountryPicker
@@ -418,6 +433,9 @@ DEPENDENCIES:
   - CRNotifications
   - Fabric
   - FAPanels
+  - FBSDKCoreKit
+  - FBSDKLoginKit
+  - FBSDKShareKit
   - Firebase/Analytics
   - Firebase/Auth
   - Firebase/Core
@@ -444,6 +462,7 @@ DEPENDENCIES:
   - Stripe
   - SVProgressHUD
   - SwiftyJSON
+  - WOWRibbonView
 
 SPEC REPOS:
   trunk:
@@ -458,6 +477,9 @@ SPEC REPOS:
     - CRNotifications
     - Fabric
     - FAPanels
+    - FBSDKCoreKit
+    - FBSDKLoginKit
+    - FBSDKShareKit
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -505,6 +527,7 @@ SPEC REPOS:
     - Stripe
     - SVProgressHUD
     - SwiftyJSON
+    - WOWRibbonView
 
 EXTERNAL SOURCES:
   ObjectMapper:
@@ -524,10 +547,13 @@ SPEC CHECKSUMS:
   Braintree: 7ff6755ba50506e403dc03779ae68c5ccf6b9808
   BraintreeDropIn: 2cf07a9041df45ff671586042dbaf7b5d2767347
   Cosmos: b47fddf2102bb48580cd3025d9ce0a5c658a65da
-  Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
+  Crashlytics: 9220f5bc89e7a618df411b4f639389dbfb0e03d2
   CRNotifications: 2799786cb63e104c75699843d8928afd680182f3
-  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
+  Fabric: ea977e3cd9c20425516d3dafd3bf8c941c51223f
   FAPanels: 050291ef601a1dc00fad888f83e74284cb86dd52
+  FBSDKCoreKit: fada1a6a0076724678993ff05a633848765ff18c
+  FBSDKLoginKit: d5ffe6d808897019ccf16feb6f0a7ab260bc5cd6
+  FBSDKShareKit: 6a85acb92eaf43a0b6dfa2ba6106eb74c7f10d30
   Firebase: 497158b816d0a86fc31babbd05546fcd7e6083ff
   FirebaseABTesting: 0d10f3cdc3fa00f3f175b5b56c1003c8e888299f
   FirebaseAnalytics: cf95d3aab897612783020fbd98401d5366f135ee
@@ -576,7 +602,8 @@ SPEC CHECKSUMS:
   Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
+  WOWRibbonView: 651063fb557d4af568f9fe93cba31bd950463f1c
 
-PODFILE CHECKSUM: e13a5c0a37608e937290f1b4051f1831cb7f3c6f
+PODFILE CHECKSUM: 259f9d4747eb77b381da30368af5ea65ecf3a569
 
 COCOAPODS: 1.9.1

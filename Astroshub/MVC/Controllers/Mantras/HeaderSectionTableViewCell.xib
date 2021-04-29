@@ -45,15 +45,15 @@
                                         <state key="normal" image="play"/>
                                         <state key="selected" image="pause"/>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iFJ-9j-1zB">
-                                        <rect key="frame" x="60" y="7.5" width="35.5" height="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iFJ-9j-1zB">
+                                        <rect key="frame" x="60" y="7.5" width="180" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e1c-rz-mE9">
-                                        <rect key="frame" x="60" y="29.5" width="31" height="14.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <rect key="frame" x="60" y="30.5" width="180" height="13.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -77,7 +77,9 @@
                                     <constraint firstItem="iFJ-9j-1zB" firstAttribute="top" secondItem="n2l-n1-WeU" secondAttribute="top" id="TeP-DN-los"/>
                                     <constraint firstAttribute="trailing" secondItem="Nju-gC-ALi" secondAttribute="trailing" constant="10" id="eZX-Lv-3bn"/>
                                     <constraint firstItem="tgC-Gg-drE" firstAttribute="centerX" secondItem="n2l-n1-WeU" secondAttribute="centerX" id="eeJ-de-nAS"/>
+                                    <constraint firstItem="Nju-gC-ALi" firstAttribute="leading" secondItem="e1c-rz-mE9" secondAttribute="trailing" constant="10" id="iL7-QH-B58"/>
                                     <constraint firstItem="iFJ-9j-1zB" firstAttribute="leading" secondItem="n2l-n1-WeU" secondAttribute="trailing" constant="10" id="prA-kF-mkD"/>
+                                    <constraint firstItem="Nju-gC-ALi" firstAttribute="leading" secondItem="iFJ-9j-1zB" secondAttribute="trailing" constant="10" id="w54-Bv-Fxf"/>
                                     <constraint firstItem="Nju-gC-ALi" firstAttribute="centerY" secondItem="rqc-fu-y7E" secondAttribute="centerY" id="xz3-p7-Tz7"/>
                                 </constraints>
                             </view>
@@ -138,8 +140,8 @@
     </objects>
     <resources>
         <image name="download" width="30" height="30"/>
-        <image name="pause" width="64" height="64"/>
-        <image name="play" width="64" height="64"/>
+        <image name="pause" width="32" height="32"/>
+        <image name="play" width="32" height="32"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

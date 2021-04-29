@@ -136,9 +136,11 @@ extension String {
             
             let options = [NSAttributedString.DocumentReadingOptionKey.documentType:
                     NSAttributedString.DocumentType.html]
+            
             let attributedString = try? NSMutableAttributedString(data: htmlData,
                                                                       options: options,
                                                                       documentAttributes: nil)
+        
             
             return attributedString
         } catch {

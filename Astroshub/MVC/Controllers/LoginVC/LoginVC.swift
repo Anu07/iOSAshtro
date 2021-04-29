@@ -14,14 +14,14 @@ import Crashlytics
 import Firebase
 import Crashlytics
 import ADCountryPicker
-
+import FBSDKCoreKit
 class LoginVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate {
     
     @IBOutlet var tbl_login: UITableView!
     var Email = ""
     var Password = ""
     var City = ""
-    var countryCode = "+91"
+    var countryCode = "+1"
     var visibilityonoff = ""
     var isChecked: Bool = false
     
@@ -43,6 +43,8 @@ class LoginVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITex
         City = userCountrycode
         tbl_login.reloadData()
         self.scrollToBottom()
+        AppEvents.logEvent(AppEvents.Name(rawValue: "Login"))
+
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -192,9 +194,7 @@ class LoginVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITex
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
         let defaults = UserDefaults.standard
-        
         let fcm = defaults.string(forKey: "FcmToken")
-        
         print(fcm ?? "")
         let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"phone":Email,"password":Password,"country_id":countrycodeID,"user_token":fcm ?? ""]
         print(setparameters)
@@ -208,10 +208,8 @@ class LoginVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITex
                                         
                                         let success=tempDict["response"] as!   Bool
                                         let message=tempDict["msg"] as!   String
-                                        
                                         if success == true
                                         {
-                                            
                                             str_ContNo_CounCode = "+91"+self.Email
                                             dictloginnn = [
                                                 "userName":self.Email,
@@ -297,7 +295,28 @@ class LoginVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITex
     }
     
     @objc func guestLogin() {
-        self.navigationController?.popViewController(animated: true)
+        //self.navigationController?.popViewController(animated: true)
+        let months = DateFormatter().monthSymbols
+        let days = DateFormatter().weekdaySymbols
+        
+        let mainVC = SJSwiftSideMenuController()
+        
+        let sideVC_L : SideMenuController = (self.storyboard!.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
+        sideVC_L.menuItems = months as NSArray? ?? NSArray()
+        
+        let sideVC_R : SideMenuController = (self.storyboard!.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
+        sideVC_R.menuItems = days as NSArray? ?? NSArray()
+        
+        
+        let DashboardVC = self.storyboard?.instantiateViewController(withIdentifier: "DashboardVC") as! DashboardVC
+        SJSwiftSideMenuController.setUpNavigation(rootController: DashboardVC, leftMenuController: sideVC_L, rightMenuController: sideVC_R, leftMenuType: .SlideOver, rightMenuType: .SlideView)
+        
+        SJSwiftSideMenuController.enableSwipeGestureWithMenuSide(menuSide: .LEFT)
+        
+        SJSwiftSideMenuController.enableDimbackground = true
+        SJSwiftSideMenuController.leftMenuWidth = 340
+        
+        self.navigationController?.pushViewController(mainVC, animated: true)
     }
     
     
@@ -371,11 +390,11 @@ class LoginVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITex
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cell_Add = tableView.dequeueReusableCell(withIdentifier: "LoginCell", for: indexPath) as! LoginCell
-        cell_Add.btn_Signin.layer.cornerRadius = 10
+        cell_Add.btn_Signin.layer.cornerRadius = 30
         cell_Add.view_login.layer.cornerRadius = 10
-        cell_Add.view_email.layer.cornerRadius = 10
+//        cell_Add.view_email.layer.cornerRadius = 10
         cell_Add.view_email.layer.borderWidth = 1
-        cell_Add.view_email.layer.borderColor = (UIColor .darkGray).cgColor
+        cell_Add.view_email.layer.borderColor = (UIColor .black).cgColor
         cell_Add.btn_Signin.setTitle("Login", for: .normal)
         cell_Add.buttonCountryCode.addTarget(self, action: #selector(countrycodeAction), for: .touchUpInside)
         cell_Add.txtCountryCode.text = self.countryCode
@@ -385,21 +404,8 @@ class LoginVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITex
         cell_Add.btn_terms.tag = indexPath.row
         cell_Add.btn_terms.addTarget(self, action: #selector(self.signupAction), for: .touchUpInside)
         cell_Add.txt_Email.delegate = (self as UITextFieldDelegate)
-        let btnayer = CAGradientLayer()
-        btnayer.frame = CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Signin.frame.size.width, height: cell_Add.btn_Signin.frame.size.height)
-        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
-        btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        let btnLayer2 = CAGradientLayer()
-        btnLayer2.frame = CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Signin.frame.size.width, height: cell_Add.btn_Signin.frame.size.height)
-        btnLayer2.colors = [mainColor1.cgColor, mainColor3.cgColor]
-        btnLayer2.startPoint = CGPoint(x: 0.0, y: 0.5)
-        btnLayer2.endPoint = CGPoint(x: 1.0, y: 0.5)
-//        let buttonla = btnLayer2.copy
-//        print(buttonla)
-        print(btnLayer2)
-        cell_Add.btn_Signin.layer.insertSublayer(btnayer, at: 1)
-        cell_Add.btnGuest.layer.insertSublayer(btnLayer2, at: 1)
+        cell_Add.txt_Email.attributedPlaceholder = NSAttributedString(string:"Enter Mobile No.", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
+
         self.view.layoutIfNeeded()
         return cell_Add
     }

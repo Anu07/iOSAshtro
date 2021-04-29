@@ -188,7 +188,7 @@ class ForgotVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UITex
         cell_Add.btn_Signin.addTarget(self, action: #selector(self.btn_SigninAction(_:)), for: .touchUpInside)
         
         
-         Common.setGradient(frame: CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Signin.frame.size.width, height: cell_Add.btn_Signin.frame.size.height), colors: [mainColor1.cgColor, mainColor3.cgColor], startPoint: CGPoint(x: 0.0, y: 0.5), endPoint: CGPoint(x: 1.0, y: 0.5), targetView: cell_Add.btn_Signin)
+//         Common.setGradient(frame: CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Signin.frame.size.width, height: cell_Add.btn_Signin.frame.size.height), colors: [mainColor1.cgColor, mainColor3.cgColor], startPoint: CGPoint(x: 0.0, y: 0.5), endPoint: CGPoint(x: 1.0, y: 0.5), targetView: cell_Add.btn_Signin)
 
         
         cell_Add.txt_Email.delegate = (self as UITextFieldDelegate)

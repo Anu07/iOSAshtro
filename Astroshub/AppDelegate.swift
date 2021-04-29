@@ -21,25 +21,42 @@ import GooglePlaces
 import CoreLocation
 //import Braintree
 import Stripe
+import FBSDKCoreKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate,CLLocationManagerDelegate {
+    let manager = CLLocationManager()
     
     var window: UIWindow?
     var navigationC: UINavigationController?
-    
+    var totalduration = Int()
+    let user = User([:])
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         sleep(3)
+        
+        ApplicationDelegate.shared.application(
+            application,
+            didFinishLaunchingWithOptions: launchOptions
+        )
         IQKeyboardManager.shared.enable = true
         GMSServices.provideAPIKey("AIzaSyAnbvBjqcrIfKaniwF0eWY0RPCH7mp_M3s")
         GMSPlacesClient.provideAPIKey("AIzaSyAnbvBjqcrIfKaniwF0eWY0RPCH7mp_M3s")
         FirebaseApp.configure()
         //BTAppSwitch.setReturnURLScheme("com.kriscent.testinguser.newuser-app.payments")
-        //Stripe.setDefaultPublishableKey("pk_test_51HJFJ1KWWShMkLmumiGX9V9hWrg8kk611ZJ3NkElwiRI7Kq1LTc3ShJbfAeLMO89Dd4s2q8cvONLcYPtCAY8d0lj00FZzrIQvu")
+        // Stripe.setDefaultPublishableKey("pk_test_51HJFJ1KWWShMkLmumiGX9V9hWrg8kk611ZJ3NkElwiRI7Kq1LTc3ShJbfAeLMO89Dd4s2q8cvONLcYPtCAY8d0lj00FZzrIQvu")
+        
         Stripe.setDefaultPublishableKey("pk_live_51HJFJ1KWWShMkLmub8SKi28vGy8euQlq9DJLfUW3k241VNOQ0avH3rBaW0zXSdllVJpYYGJU9OWK6rVSoWwpSUDi008HJUo2pi")
         self.moveToDashBoardVC()
-        
+        manager.delegate = self
+        manager.requestLocation()
+        manager.requestAlwaysAuthorization()
+        self.manager.requestWhenInUseAuthorization()
+        self.manager.startMonitoringSignificantLocationChanges()
+        if CLLocationManager.locationServicesEnabled() {
+            manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            //                   manager.startUpdatingLocation()
+        }
         // For iOS 10 display notification (sent via APNS)
         UNUserNotificationCenter.current().delegate = self
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -55,40 +72,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
     
     
     func moveToDashBoardVC() {
+        let data_IsLogin = UserDefaults.standard.value(forKey: "isUserData") as? Data
+        if let getData = data_IsLogin {
+            let months = DateFormatter().monthSymbols
+            let days = DateFormatter().weekdaySymbols
+            let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let mainVC = SJSwiftSideMenuController()
+            
+            let sideVC_L : SideMenuController = (mainStoryboardIpad.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
+            sideVC_L.menuItems = months as NSArray? ?? NSArray()
+            
+            let sideVC_R : SideMenuController = (mainStoryboardIpad.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
+            sideVC_R.menuItems = days as NSArray? ?? NSArray()
+            
+            let initialViewControlleripad : UIViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "DashboardVC") as UIViewController
+            
+            SJSwiftSideMenuController.setUpNavigation(rootController: initialViewControlleripad, leftMenuController: sideVC_L, rightMenuController: sideVC_R, leftMenuType: .SlideOver, rightMenuType: .SlideView)
+            
+            SJSwiftSideMenuController.enableSwipeGestureWithMenuSide(menuSide: .LEFT)
+            
+            SJSwiftSideMenuController.enableDimbackground = true
+            SJSwiftSideMenuController.leftMenuWidth = 340
+            
+            let navigationController = UINavigationController(rootViewController: mainVC)
+            self.window = UIWindow(frame: UIScreen.main.bounds)
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
+        } else {
+            let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginVC : UIViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "TutorialScreenViewController") as! TutorialScreenViewController
+            let navigationController = UINavigationController(rootViewController: loginVC)
+            self.window = UIWindow(frame: UIScreen.main.bounds)
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
+        }
         
-        let months = DateFormatter().monthSymbols
-        let days = DateFormatter().weekdaySymbols
-        let mainStoryboardIpad : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let mainVC = SJSwiftSideMenuController()
-        
-        let sideVC_L : SideMenuController = (mainStoryboardIpad.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
-        sideVC_L.menuItems = months as NSArray? ?? NSArray()
-        
-        let sideVC_R : SideMenuController = (mainStoryboardIpad.instantiateViewController(withIdentifier: "SideMenuController") as? SideMenuController)!
-        sideVC_R.menuItems = days as NSArray? ?? NSArray()
-        
-        let initialViewControlleripad : UIViewController = mainStoryboardIpad.instantiateViewController(withIdentifier: "DashboardVC") as UIViewController
-        
-        SJSwiftSideMenuController.setUpNavigation(rootController: initialViewControlleripad, leftMenuController: sideVC_L, rightMenuController: sideVC_R, leftMenuType: .SlideOver, rightMenuType: .SlideView)
-        
-        SJSwiftSideMenuController.enableSwipeGestureWithMenuSide(menuSide: .LEFT)
-        
-        SJSwiftSideMenuController.enableDimbackground = true
-        SJSwiftSideMenuController.leftMenuWidth = 340
-        
-        let navigationController = UINavigationController(rootViewController: mainVC)
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = navigationController
-        self.window?.makeKeyAndVisible()
     }
     
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        //        if url.scheme?.localizedCaseInsensitiveCompare("com.kriscent.testinguser.newuser-app.payments") == .orderedSame {
-        //            return BTAppSwitch.handleOpen(url, options: options)
-        //        }
-        return false
-    }
+//    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+//        //        if url.scheme?.localizedCaseInsensitiveCompare("com.kriscent.testinguser.newuser-app.payments") == .orderedSame {
+//        //            return BTAppSwitch.handleOpen(url, options: options)
+//        //        }
+//        return false
+//    }
     
     func registerAPNSServicesForApplication(_ application: UIApplication,withBlock block: @escaping (_ granted:Bool) -> (Void)) {
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -108,7 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
                 }
                 
                 block(granted)
-        })
+            })
         
     }
     func applicationWillResignActive(_ application: UIApplication) {
@@ -137,6 +164,62 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        return ApplicationDelegate.shared.application(
+            app,
+            open: url,
+            options: options
+        )
+    }
+    func hasLocationPermission() -> Bool {
+        var hasPermission = false
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus() {
+            
+            case .authorizedAlways, .authorizedWhenInUse:
+                hasPermission = true
+            case .notDetermined:
+                hasPermission = true
+            case .restricted:
+                hasPermission = false
+            case .denied:
+                hasPermission = false
+            }
+        } else {
+            hasPermission = false
+        }
+        
+        return hasPermission
+    }//MARK:- Custom Method
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let location = locations.first {
+            print("Found user's location: \(location)")
+            let geocoder = CLGeocoder()
+            geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+                if (error != nil){
+                    print("error in reverseGeocode")
+                }
+                if let placemark = placemarks, placemark.count > 0 {
+                    let placemarkObj = placemark[0]
+                    print(placemarkObj.country!)
+                    if let getCountry = placemarkObj.country {
+                        CurrentLocation = getCountry
+                        print("coutry name is: \(getCountry)")
+                        UserDefaults.standard.set(getCountry, forKey: "country")
+                        if let _ = UserDefaults.standard.value(forKey: "isUserData") as? Data {
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed to find user's location: \(error.localizedDescription)")
+    }
+    
+    
+    
     // [START receive_message]
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
         // If you are receiving a notification message while your app is in the background,
@@ -156,6 +239,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         // Print full message.
         print(userInfo)
     }
+    
+    
+    
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // If you are receiving a notification message while your app is in the background,
@@ -178,8 +264,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate {
         // Print full message.
         print(userInfo)
         
-        
-        
+        //        let userInfo = notification.request.content.userInfo
+        //        if let messageID = userInfo[gcmMessageIDKey] {
+        //            print("Message ID: \(messageID)")
+        //        }
+        print(userInfo)
+        if let title = userInfo["title"] as? String {
+            
+            let datw = userInfo["user_data"] as! String
+            let dict = datw.convertJsonStringToDictionary()
+            print("string > \(datw)")
+            // string > {"name":"zgpeace"}
+            print("dicionary > \(String(describing: dict))")
+            chatStartorEnd = ""
+            if  title == "Chat Ended"{
+                chatStartorEnd = title
+                NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierEnded"), object: nil, userInfo: dict)
+            } else if title == "Astrologer Accepted Chat Request"{
+                chatStartorEnd = title
+                NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: dict)
+                
+            }
+            else if title == "Astrologer Rejected Chat Request"{
+                chatStartorEnd = title
+                NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierRejected"), object: nil, userInfo: dict)
+            } else if title == "Astrologer Rejected Chat Request"{
+                
+            }
+        } 
         completionHandler(UIBackgroundFetchResult.newData)
     }
     
@@ -224,28 +336,32 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-//        if let messageID = userInfo[gcmMessageIDKey] {
-//            print("Message ID: \(messageID)")
-//        }
+        //        if let messageID = userInfo[gcmMessageIDKey] {
+        //            print("Message ID: \(messageID)")
+        //        }
         print(userInfo)
         let title = userInfo["title"] as! String
-
+        
         let datw = userInfo["user_data"] as! String
         let dict = datw.convertJsonStringToDictionary()
         print("string > \(datw)")
         // string > {"name":"zgpeace"}
+        chatStartorEnd = ""
+        
         print("dicionary > \(String(describing: dict))")
-        if  title == "Astrologer Chat End"{
-            
+        if  title == "Chat Ended"{
+            chatStartorEnd = title
+            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierEnded"), object: nil, userInfo: dict)
         } else if title == "Astrologer Accepted Chat Request"{
             chatStartorEnd = title
             NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: dict)
-          
+            
         }
         else if title == "Astrologer Rejected Chat Request"{
             chatStartorEnd = title
             NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierRejected"), object: nil, userInfo: dict)
         }
+        
         if UIApplication.shared.applicationState == .active { // In iOS 10 if app is in foreground do nothing.
             completionHandler([.alert, .badge, .sound])
         } else { // If app is not active you can show banner, sound and badge.
@@ -265,14 +381,21 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         let title = userInfo["title"] as! String
         let datw = userInfo["user_data"] as! String
-
+        
         let dict = datw.convertJsonStringToDictionary()
         print("string > \(datw)")
         // string > {"name":"zgpeace"}
         print("dicionary > \(String(describing: dict))")
         
-        if  title == "Astrologer Chat End"{
-            
+        if  title == "Chat Ended"{
+            //            moveToDashBoardVC()
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginvc = storyboard.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
+            chatStartorEnd = title
+            loginvc.data = dict
+            self.window?.clipsToBounds = true
+            self.window?.rootViewController = loginvc
+            self.window?.makeKeyAndVisible()
         } else if title == "Astrologer Accepted Chat Request"{
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -282,17 +405,13 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             self.window?.clipsToBounds = true
             self.window?.rootViewController = loginvc
             self.window?.makeKeyAndVisible()
+            //            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: dict)
+            
             
         }  else if title == "Astrologer Rejected Chat Request"{
-//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//            let loginvc = storyboard.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
-//            chatStartorEnd = title
-//            loginvc.data = dict
-//            self.window?.clipsToBounds = true
-//            self.window?.rootViewController = loginvc
-//            self.window?.makeKeyAndVisible()
-//            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierRejected"), object: nil, userInfo: dict)
-
+            chatStartorEnd = title
+            
+            
         }
         completionHandler()
     }
@@ -351,49 +470,49 @@ class FileDownloader {
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
             let task = session.dataTask(with: request, completionHandler:
-            {
-                data, response, error in
-                if error == nil
-                {
-                    if let response = response as? HTTPURLResponse
-                    {
-                        if response.statusCode == 200
-                        {
-                            if let data = data
-                            {
-                                if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic)
-                                {
-                                    completion(destinationUrl.path, error)
-                                }
-                                else
-                                {
-                                    completion(destinationUrl.path, error)
-                                }
-                            }
-                            else
-                            {
-                                completion(destinationUrl.path, error)
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    completion(destinationUrl.path, error)
-                }
-            })
+                                            {
+                                                data, response, error in
+                                                if error == nil
+                                                {
+                                                    if let response = response as? HTTPURLResponse
+                                                    {
+                                                        if response.statusCode == 200
+                                                        {
+                                                            if let data = data
+                                                            {
+                                                                if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic)
+                                                                {
+                                                                    completion(destinationUrl.path, error)
+                                                                }
+                                                                else
+                                                                {
+                                                                    completion(destinationUrl.path, error)
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                completion(destinationUrl.path, error)
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    completion(destinationUrl.path, error)
+                                                }
+                                            })
             task.resume()
         }
     }
 }
 extension String {
-
+    
     /// convert JsonString to Dictionary
     func convertJsonStringToDictionary() -> [String: Any]? {
         if let data = data(using: .utf8) {
             return (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any]
         }
-
+        
         return nil
     }
 }

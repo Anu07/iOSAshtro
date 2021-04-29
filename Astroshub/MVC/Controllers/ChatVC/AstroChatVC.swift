@@ -12,6 +12,7 @@ import FirebaseFirestore
 import Firebase
 import SJSwiftSideMenuController
 
+//@available(iOS 13.0, *)
 class AstroChatVC: UIViewController {
     
     @IBOutlet weak var lblTimer: UILabel!
@@ -77,7 +78,6 @@ class AstroChatVC: UIViewController {
         }
         if anotherUserId == "" {
             anotherUserId = OnTabfcmUserIDD
-            
         }
         observeMessage()
         //        self.sendFirstMessage()
@@ -90,58 +90,82 @@ class AstroChatVC: UIViewController {
         //            }
         //        }
         
+        Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(callFirstMessage), userInfo: nil, repeats: false)
+        //            Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(callMessageAfter5Min), userInfo: nil, repeats: false)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object:  nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotificationRejected(notification:)), name: Notification.Name("NotificationIdentifierRejected"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotificationEnded(notification:)), name: Notification.Name("NotificationIdentifierEnded"), object: nil)
+//        let refreshAlert = UIAlertController(title: "Astroshubh", message: "This chat session will be deleted for privacy purposes. Please keep the notes of important messages.", preferredStyle: UIAlertController.Style.alert)
+//        refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+//                                                {
+//                                                    (action: UIAlertAction!) in
+//                                                    refreshAlert .dismiss(animated: true, completion: nil)
+//                                                }))
+//        self.present(refreshAlert, animated: true, completion: nil)
         
-      
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        //observeTyping()
+        moveToLastComment()
+        //self.observeUserMessages()
         
     }
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotificationRejected(notification:)), name: Notification.Name("NotificationIdentifierRejected"), object: nil)
-        if chatStartorEnd == "Astrologer Accepted Chat Request" {
-            chatStartorEnd = ""
-            txtView.isUserInteractionEnabled  = true
-            btnChat.isUserInteractionEnabled = true
-            let dataPrice = data?["price"] as! Array<Any>
-            if AstrologerrPrice == "" {
-                let chatPrice = dataPrice[0] as! [String:Any]
-                if CurrentLocation == "India" {
-                    AstrologerrPrice = chatPrice["astro_price_inr"] as! String
-                } else {
-                    AstrologerrPrice = chatPrice["astro_price_dollar"] as! String
-                }
-            }
-            var callDuration = ""
-            if let getPrice = Double(AstrologerrPrice) {
-                let value = convertMaximumCallDuration(price: getPrice)
-                user.totalSecondsForCall = value.1
-                self.totalduration = user.totalSecondsForCall
-            }
-            astroFirstMessage = true
-            self.sendFirstMessage()
-            self.setStartTime()
-            Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(callFirstMessage), userInfo: nil, repeats: false)
-            Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(callMessageAfter5Min), userInfo: nil, repeats: false)
-        } else if chatStartorEnd == "Astrologer Rejected Chat Request" {
-//            chatStartorEnd = ""
-//            let controller = self.storyboard?.instantiateViewController(withIdentifier: "RateUsVC") as! RateUsVC
-//            controller.modalPresentationStyle = .overCurrentContext
-//            controller.astroId = AstrologerUniID
-//            controller.completionHandler = {
-//                print("hell")
-//                let refreshAlert = UIAlertController(title: "AstroShubh", message: "Your Review is Added Successfully", preferredStyle: UIAlertController.Style.alert)
-//                refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
-//                                                        {
-//                                                            (action: UIAlertAction!) in
-//
-//
-//                                                            self.moveToDashBoardVC()
-//                                                            //                                                      self.navigationController?.popToRootViewController(animated: true)
-//                                                        }))
-//                self.present(refreshAlert, animated: true, completion: nil)
-//            }
-//            self.present(controller, animated: true, completion: nil)
+        moveToLastComment()
         
-    }
+        
+        if chatStartorEnd == "Astrologer Accepted Chat Request" {
+            if self.astroFirstMessage == true {
+                
+            } else  {
+                txtView.isUserInteractionEnabled  = true
+                btnChat.isUserInteractionEnabled = true
+                if AstrologerrPrice == "" {
+                    let dataPrice = data?["price"] as? Array<Any>
+                    let chatPrice = dataPrice?[0] as? [String:Any]
+                    if CurrentLocation == "India" {
+                        AstrologerrPrice = chatPrice?["astro_price_inr"] as? String ?? ""
+                    } else {
+                        AstrologerrPrice = chatPrice?["astro_price_dollar"] as? String ?? ""
+                    }
+                }
+                var callDuration = ""
+                if self.totalduration == 0 {
+                    if let getPrice = Double(AstrologerrPrice) {
+                        let value = convertMaximumCallDuration(price: getPrice)
+                        user.totalSecondsForCall = value.1
+                        self.totalduration = user.totalSecondsForCall
+                    }
+                }
+                astroFirstMessage = true
+                if sendOnce {
+                    self.sendFirstMessage()
+                    self.sendOnce = false
+                    //                let duration = UserDefaults.standard.value(forKey: "duration") as? Int
+                    //                self.totalduration = duration ?? 0
+                    self.initializeTimer()
+                }
+                //            self.sendFirstMessage()
+                self.setStartTime()
+//                //           self.initializeTimer()
+                let refreshAlert = UIAlertController(title: "Astroshubh", message: "This chat session will be deleted  for privacy purposes. Please keep the notes of important messages.", preferredStyle: UIAlertController.Style.alert)
+                refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                                                        {
+                                                            (action: UIAlertAction!) in
+                                                            refreshAlert .dismiss(animated: true, completion: nil)
+                                                        }))
+                present(refreshAlert, animated: true, completion: nil)
+                //            Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(callFirstMessage), userInfo: nil, repeats: false)
+                //            Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(callMessageAfter5Min), userInfo: nil, repeats: false)
+            }
+        } else if chatStartorEnd == "Astrologer Rejected Chat Request" {
+            //            chatStartorEnd = ""
+            callMessageAfter5Min()
+        } else if chatStartorEnd == "Chat Ended" {
+            //            chatStartorEnd = ""
+            self.func_chatEndForAstroSide()
+        }
         else {
             txtView.isUserInteractionEnabled  = false
             btnChat.isUserInteractionEnabled = false
@@ -150,13 +174,14 @@ class AstroChatVC: UIViewController {
         
     }
     func convertMaximumCallDuration(price:Double) -> (String,Int) {
-        let balance = walletBalanceNew
-        if balance < 0 {
+        let balance = UserDefaults.standard.value(forKey: "balance") as? Double
+        //        let balance = walletBalanceNew
+        if balance ?? 0.0 < 0 {
             return ("00:00:00",0)
         } else if price == 0 {
             return ("--:--:--",0)
         }
-        let maximumTimeInMin = balance/price
+        let maximumTimeInMin = balance ?? 0.0/price
         print(maximumTimeInMin)
         print(maximumTimeInMin * 60)
         let maxTimeInSec = Int(maximumTimeInMin * 60)
@@ -171,15 +196,58 @@ class AstroChatVC: UIViewController {
     
     @objc func methodOfReceivedNotification(notification: Notification) {
         if chatStartorEnd == "Astrologer Accepted Chat Request" {
-            txtView.isUserInteractionEnabled  = true
-            btnChat.isUserInteractionEnabled = true
-            astroFirstMessage = true
-            data = notification.userInfo as? [String : Any]
-            anotherUserId = data!["astroFcmId"] as? String
-            self.setStartTime()
-            self.sendFirstMessage()
+            
+            if self.astroFirstMessage == true {
+                
+            } else  {
+                self.txtView.isUserInteractionEnabled  = true
+                self.btnChat.isUserInteractionEnabled = true
+                self.astroFirstMessage = true
+                self.data = notification.userInfo as? [String : Any]
+                self.anotherUserId = data!["astroFcmId"] as? String
+                self.setStartTime()
+                if AstrologerrPrice == "" {
+                    let dataPrice =  self.data?["price"] as? Array<Any>
+                    let chatPrice = dataPrice?[0] as? [String:Any]
+                    if CurrentLocation == "India" {
+                        AstrologerrPrice = chatPrice?["astro_price_inr"] as? String ?? ""
+                    } else {
+                        AstrologerrPrice = chatPrice?["astro_price_dollar"] as? String ?? ""
+                    }
+                }
+                var callDuration = ""
+                if  self.totalduration == 0 {
+                    if let getPrice = Double(AstrologerrPrice) {
+                        let value =  self.convertMaximumCallDuration(price: getPrice)
+                        self.user.totalSecondsForCall = value.1
+                        self.totalduration =  self.user.totalSecondsForCall
+                    }
+                }
+                //            let duration = data?["duration"] as? String
+                //          self.totalduration = Int(duration)
+                
+                if self.sendOnce {
+                    self.sendFirstMessage()
+                    self.sendOnce = false
+                    //                let duration = UserDefaults.standard.value(forKey: "duration") as? Int
+                    //                self.totalduration = duration ?? 0
+                    self.initializeTimer()
+                }
+                //
+                //            chatStartorEnd = ""
+                
+                //
+                let refreshAlert = UIAlertController(title: "Astroshubh", message: "This chat session will be deleted  for privacy purposes. Please keep the notes of important messages.", preferredStyle: UIAlertController.Style.alert)
+                refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                                                        {
+                                                            (action: UIAlertAction!) in
+                                                            refreshAlert .dismiss(animated: true, completion: nil)
+                                                        }))
+                present(refreshAlert, animated: true, completion: nil)
+            }
         } else if chatStartorEnd == "Astrologer Rejected Chat Request" {
             setEndTime()
+            //            chatStartorEnd = ""
         } else {
             txtView.isUserInteractionEnabled  = false
             btnChat.isUserInteractionEnabled = false
@@ -188,28 +256,31 @@ class AstroChatVC: UIViewController {
     
     @objc func methodOfReceivedNotificationRejected(notification: Notification) {
         if chatStartorEnd == "Astrologer Rejected Chat Request" {
-//            setEndTime()
+            //            setEndTime()
             self.moveToDashBoardVC()
+            //            chatStartorEnd = ""
         } else {
-        let controller = self.storyboard?.instantiateViewController(withIdentifier: "RateUsVC") as! RateUsVC
-        controller.modalPresentationStyle = .overCurrentContext
-        controller.astroId = AstrologerUniID
-        controller.completionHandler = {
-            print("hell")
-            let refreshAlert = UIAlertController(title: "AstroShubh", message: "Your Review is Added Successfully", preferredStyle: UIAlertController.Style.alert)
-            refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
-                                                    {
-                                                        (action: UIAlertAction!) in
-                                                        self.moveToDashBoardVC()
-                                                        //                                                      self.navigationController?.popToRootViewController(animated: true)
-                                                    }))
-            self.present(refreshAlert, animated: true, completion: nil)
-        }
-        self.present(controller, animated: true, completion: nil)
+            let controller = self.storyboard?.instantiateViewController(withIdentifier: "RateUsVC") as! RateUsVC
+            controller.modalPresentationStyle = .overCurrentContext
+            controller.astroId = AstrologerUniID
+            controller.strForCloseDisable = "chat"
+            controller.completionHandler = {
+                print("hell")
+                let refreshAlert = UIAlertController(title: "AstroShubh", message: "Your Review is Added Successfully", preferredStyle: UIAlertController.Style.alert)
+                refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
+                                                        {
+                                                            (action: UIAlertAction!) in
+                                                            self.moveToDashBoardVC()
+                                                            //                                                      self.navigationController?.popToRootViewController(animated: true)
+                                                        }))
+                self.present(refreshAlert, animated: true, completion: nil)
+            }
+            self.present(controller, animated: true, completion: nil)
         }
     }
-    
-    
+    @objc func methodOfReceivedNotificationEnded(notification: Notification) {
+        func_chatEndForAstroSide()
+    }
     
     override func viewWillDisappear(_ animated: Bool) {
         IQKeyboardManager.shared.enable = true
@@ -224,7 +295,6 @@ class AstroChatVC: UIViewController {
     
     @objc func callMessageAfter5Min() {
         if self.astroFirstMessage {
-            
             let refreshAlert = UIAlertController(title: "Astroshubh", message: "Oops!! we are extremely sorry. Our astrologer is busy. Please try another astrologer", preferredStyle: UIAlertController.Style.alert)
             refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
                                                     {
@@ -237,13 +307,12 @@ class AstroChatVC: UIViewController {
     }
     
     @objc func callMessageForkundliInProgress() {
-        CommenModel.showDefaltAlret(strMessage: "Our expert is ready to guide you, please wait for two minutes, meanwhile, our astrologer is preparing your chart.As we value our customer's money. We will start deducting money from the wallet after two minutes only", controller: self)
+        CommenModel.showDefaltAlret(strMessage: "Our expert is ready to guide you, please wait for two minutes, meanwhile, our astrologer is preparing your chart.As we value our customer's money. We will start deducting money from the wallet after one minutes only", controller: self)
     }
     
     func observeMessage()
     {
         self.messageArray.removeAll()
-        
         let userMessageRef = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(anotherUserId ?? "")
         let userMessageRef1 = Database.database().reference().child("messages").child(anotherUserId ?? "").child(Auth.auth().currentUser!.uid)
         userMessageRef.observe(.childAdded, with: { (snapshot) in
@@ -255,23 +324,27 @@ class AstroChatVC: UIViewController {
                     return
                 }
                 self.messageArray.append(messageModel(dict: dict))
+                //                self.scrollToBottom()
+                let scrollPoint = CGPoint(x: 0, y: self.tblView.contentSize.height - self.tblView.frame.size.height)
+                self.tblView.setContentOffset(scrollPoint, animated: false)
                 self.tblView.reloadData()
             }, withCancel: nil)
         }, withCancel: nil)
         
-//        userMessageRef1.observe(.childAdded, with: { (snapshot) in
-//            let UserId = snapshot.key
-//            let messagesRef = Database.database().reference().child("messages").child(self.anotherUserId ?? "").child(Auth.auth().currentUser!.uid).child(UserId)
-//            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-//
-//                guard let dict = snapshot.value as? [String: AnyObject] else {
-//                    return
-//                }
-//                self.messageArray.append(messageModel(dict: dict))
-//                self.tblView.reloadData()
-//            }, withCancel: nil)
-//        }, withCancel: nil)
-//
+        
+        //        userMessageRef1.observe(.childAdded, with: { (snapshot) in
+        //            let UserId = snapshot.key
+        //            let messagesRef = Database.database().reference().child("messages").child(self.anotherUserId ?? "").child(Auth.auth().currentUser!.uid).child(UserId)
+        //            messagesRef.observeSingleEvent(of: .value, with: { (snapshot) in
+        //
+        //                guard let dict = snapshot.value as? [String: AnyObject] else {
+        //                    return
+        //                }
+        //                self.messageArray.append(messageModel(dict: dict))
+        //                self.tblView.reloadData()
+        //            }, withCancel: nil)
+        //        }, withCancel: nil)
+        //
         
     }
     
@@ -289,6 +362,7 @@ class AstroChatVC: UIViewController {
     
     @objc func updateTimer()
     {
+        
         self.totalduration -= 1
         self.duration += 1
         if self.totalduration == 0
@@ -307,7 +381,7 @@ class AstroChatVC: UIViewController {
             return
         }
         //This will decrement(count down)the seconds.
-        self.lblTimer.text = self.convertSecToHours(min: totalduration) //This will update the label.
+        self.lblTimer.text = "\(self.convertSecToHours(min: totalduration))" //This will update the label.
     }
     
     func convertSecToHours(min:Int) -> String {
@@ -316,7 +390,6 @@ class AstroChatVC: UIViewController {
         let sec = String(format: "%02", min%60)
         return "\(hours):\(minutes):\(sec)"
     }
-    
     
     private func prepareAndActivateListner() {
         guard let threadUnwrapped = thread else { return }
@@ -398,20 +471,18 @@ class AstroChatVC: UIViewController {
     
     func func_chatEnd() {
         let dateFormatter : DateFormatter = DateFormatter()
-        //  dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         dateFormatter.dateFormat = "hh:mm a"
         let date = Date()
         let dateString = dateFormatter.string(from: date)
-        // let interval = date.timeIntervalSince1970
         
         let setparameters = ["app_type":"ios",
                              "app_version":kAppVersion,
                              "user_id":user_id ,
                              "user_api_key":user_apikey,
                              "astrologer_id":AstrologerUniID,
-                             "endtime": self.endTime,
-                             "starttime":self.startTime,
-                             "chat_id": data!["uniqeid"] as? String ?? "",
+                             "endtime": self.endTime ,
+                             "starttime":self.startTime ,
+                             "chat_id": data?["uniqeid"] as? String ?? ChatuNIQid,
                              "duration": self.duration,
                              "busy_status":0,
                              "location":CurrentLocation,"end_type": "0"] as [String : Any]
@@ -428,8 +499,11 @@ class AstroChatVC: UIViewController {
                                         
                                         if success == true
                                         {
+                                            UserDefaults.standard.setValue(nil, forKey: "duration")
                                             let data =  tempDict["data"] as! [String:Any]
-                                            let randomcoupon  = data["random_coupon"]
+                                            self.timer?.invalidate()
+                                            self.timer = nil
+                                            chatStartorEnd = ""
                                             let controller = self.storyboard?.instantiateViewController(withIdentifier: "RateUsVC") as! RateUsVC
                                             controller.modalPresentationStyle = .overCurrentContext
                                             controller.astroId = AstrologerUniID
@@ -439,8 +513,49 @@ class AstroChatVC: UIViewController {
                                                 refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
                                                                                         {
                                                                                             (action: UIAlertAction!) in
-                                                                                            self.moveToDashBoardVC()
-                                                                                            //                                                      self.navigationController?.popToRootViewController(animated: true)
+                                                                                            if let radom = data["random_coupon"] as? String {
+                                                                                                let scratch = self.storyboard?.instantiateViewController(withIdentifier: "ScratchCardViewController") as! ScratchCardViewController
+                                                                                                scratch.modalPresentationStyle = .overCurrentContext
+                                                                                                scratch.randomcoupon = [:]
+                                                                                                self.present(scratch, animated: true, completion: nil)
+                                                                                            }
+                                                                                            if let randomcoupon  = data["random_coupon"] as? [String:Any]{
+                                                                                                
+                                                                                                
+                                                                                                if randomcoupon.count == 0 {
+                                                                                                    //                                                                                                    self.moveToDashBoardVC()
+                                                                                                    
+                                                                                                    let scratch = self.storyboard?.instantiateViewController(withIdentifier: "ScratchCardViewController") as! ScratchCardViewController
+                                                                                                    scratch.modalPresentationStyle = .overCurrentContext
+                                                                                                    scratch.randomcoupon = [:]
+                                                                                                    self.present(scratch, animated: true, completion: nil)
+                                                                                                    
+                                                                                                }
+                                                                                                else {
+                                                                                                    let scratch = self.storyboard?.instantiateViewController(withIdentifier: "ScratchCardViewController") as! ScratchCardViewController
+                                                                                                    scratch.modalPresentationStyle = .overCurrentContext
+                                                                                                    scratch.randomcoupon = randomcoupon
+                                                                                                    self.present(scratch, animated: true, completion: nil)
+                                                                                                    
+                                                                                                } }
+                                                                                            else
+                                                                                            {
+                                                                                                if let randomcoupon  = data["random_coupon"] as? String {
+                                                                                                    if    randomcoupon == ""
+                                                                                                    {
+                                                                                                        
+                                                                                                        let scratch = self.storyboard?.instantiateViewController(withIdentifier: "ScratchCardViewController") as! ScratchCardViewController
+                                                                                                        scratch.modalPresentationStyle = .overCurrentContext
+                                                                                                        scratch.randomcoupon = [:]
+                                                                                                        self.present(scratch, animated: true, completion: nil)
+                                                                                                    }
+                                                                                                    
+                                                                                                } else {
+                                                                                                    self.moveToDashBoardVC()
+                                                                                                }
+                                                                                            }
+                                                                                            //                                                                                         }   self.moveToDashBoardVC()
+                                                                                            //                                                    self.navigationController?.popToRootViewController(animated: true)
                                                                                         }))
                                                 self.present(refreshAlert, animated: true, completion: nil)
                                             }
@@ -455,7 +570,7 @@ class AstroChatVC: UIViewController {
                                                                                     {
                                                                                         (action: UIAlertAction!) in
                                                                                         //end chat api
-                                                                                        self.moveToDashBoardVC()
+                                                                                        //                                                                                        self.moveToDashBoardVC()
                                                                                         //                                                    self.navigationController?.popToRootViewController(animated: true)
                                                                                         
                                                                                     }))
@@ -471,13 +586,81 @@ class AstroChatVC: UIViewController {
                                                     {
                                                         (action: UIAlertAction!) in
                                                         //end chat api
-                                                        self.moveToDashBoardVC()
+                                                        //                                                        self.moveToDashBoardVC()
                                                         //                    self.navigationController?.popToRootViewController(animated: true)
                                                         
                                                     }))
             self.present(refreshAlert, animated: true, completion: nil)
         }
     }
+    
+    func func_chatEndForAstroSide() {
+        let dateFormatter : DateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm a"
+        let date = Date()
+        let dateString = dateFormatter.string(from: date)
+        
+        let setparameters = ["app_type":"ios",
+                             "app_version":kAppVersion,
+                             "user_id":user_id ,
+                             "user_api_key":user_apikey,
+                             "astrologer_id":AstrologerUniID,
+                             "endtime": self.endTime ,
+                             "starttime":self.startTime ,
+                             "chat_id": data?["uniqeid"] as? String ?? ChatuNIQid,
+                             "duration": self.duration,
+                             "busy_status":0,
+                             "location":CurrentLocation,"end_type": "0"] as [String : Any]
+        
+        print(setparameters)
+        AutoBcmLoadingView.show("Loading......")
+        AppHelperModel.requestPOSTURL("chatEnd", params: setparameters as [String : AnyObject],headers: nil,
+                                      success: { (respose) in
+                                        AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        let success=tempDict["response"] as!   Bool
+                                        let message=tempDict["msg"] as!   String
+                                        
+                                        if success == true
+                                        {
+                                            UserDefaults.standard.setValue(nil, forKey: "duration")
+                                            
+                                            self.timer?.invalidate()
+                                            self.timer = nil
+                                            chatStartorEnd = ""
+                                            self.moveToDashBoardVC()
+                                            
+                                        } else {
+                                            let refreshAlert = UIAlertController(title: "Astroshubh", message: "Something went wrong.", preferredStyle: UIAlertController.Style.alert)
+                                            refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                                                                                    {
+                                                                                        (action: UIAlertAction!) in
+                                                                                        //end chat api
+                                                                                        //                                                                                        self.moveToDashBoardVC()
+                                                                                        //                                                    self.navigationController?.popToRootViewController(animated: true)
+                                                                                        
+                                                                                    }))
+                                            self.present(refreshAlert, animated: true, completion: nil)
+                                        }
+                                        
+                                        
+                                      }) { (error) in
+            print(error)
+            AutoBcmLoadingView.dismiss()
+            let refreshAlert = UIAlertController(title: "Astroshubh", message: "Something went wrong.", preferredStyle: UIAlertController.Style.alert)
+            refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                                                    {
+                                                        (action: UIAlertAction!) in
+                                                        //end chat api
+                                                        //                                                        self.moveToDashBoardVC()
+                                                        //                    self.navigationController?.popToRootViewController(animated: true)
+                                                        
+                                                    }))
+            self.present(refreshAlert, animated: true, completion: nil)
+        }
+    }
+    
     
     func moveToDashBoardVC() {
         
@@ -511,23 +694,30 @@ class AstroChatVC: UIViewController {
     // MARK: IBActions
     
     @IBAction func actionBack(_ sender: UIButton) {
-        let refreshAlert = UIAlertController(title: "Astroshubh", message: "Are You Sure to end the chat? ", preferredStyle: UIAlertController.Style.alert)
-        refreshAlert.addAction(UIAlertAction(title: "Confirm", style: .default, handler:
-                                                {
-                                                    (action: UIAlertAction!) in
-                                                    self.setEndTime();                                           self.func_chatEnd()
-                                                }))
-        refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler:
-                                                {
-                                                    (action: UIAlertAction!) in
-                                                    refreshAlert .dismiss(animated: true, completion: nil)
-                                                }))
-        present(refreshAlert, animated: true, completion: nil)
+        if chatStartorEnd == "Astrologer Accepted Chat Request" {
+            
+            
+            let refreshAlert = UIAlertController(title: "Astroshubh", message: "Are You Sure to end the chat? ", preferredStyle: UIAlertController.Style.alert)
+            refreshAlert.addAction(UIAlertAction(title: "Confirm", style: .default, handler:
+                                                    {
+                                                        (action: UIAlertAction!) in
+                                                        self.setEndTime();                                           self.func_chatEnd()
+                                                    }))
+            refreshAlert.addAction(UIAlertAction(title: "Cancel", style: .default, handler:
+                                                    {
+                                                        (action: UIAlertAction!) in
+                                                        refreshAlert .dismiss(animated: true, completion: nil)
+                                                    }))
+            present(refreshAlert, animated: true, completion: nil)
+        } else {
+            moveToDashBoardVC()
+        }
     }
     
     func sendFirstMessage() {
-        let firstmessage =  "Name : " + (self.data?["user_name"] as! String) + "\n" + "Gender : " + (self.data?["user_gender"] as! String) + "\n" + "Date of Birth : " + (self.data?["user_dob"] as! String) + "\n" + "Date of Time : " +  (self.data?["user_dob"] as! String) + "\n" + "Pob : " +  (self.data?["user_pob"] as! String) + "\n" + "Problem : " +  (self.data?["problem_area"] as! String) + "\n" + "Location : " +  (self.data?["user_pob"] as! String)
+        let firstmessage =  "Name : " + ((self.data?["user_name"] as? String) ?? firstMessageData.name) + "\n" + "Gender : " + ((self.data?["user_gender"] as? String) ?? firstMessageData.gender ) + "\n" + "Date of Birth : " + ((self.data?["user_dob"] as? String) ?? firstMessageData.dob ) + "\n" + "Date of Time : " +  ((self.data?["user_dob"] as? String) ?? firstMessageData.dot ) + "\n" + "Pob : " +  ((self.data?["user_pob"] as? String) ?? firstMessageData.dot )  + "\n" + "Problem : " +  ((self.data?["problem_area"] as? String) ?? firstMessageData.problem ) + "\n" + "Location : " +  ((self.data?["user_pob"] as? String) ?? firstMessageData.location )
         self.sendOnce = false
+        
         
         let ref = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(anotherUserId ?? "")
         let childRef = ref.childByAutoId()
@@ -537,11 +727,11 @@ class AstroChatVC: UIViewController {
         let values: [String : Any] = ["from":Auth.auth().currentUser!.uid as AnyObject,"message": firstmessage,"seen":"false", "time":ServerValue.timestamp(),"type":"text"]
         
         childRef.updateChildValues(values)
-        
+        self.moveToLastComment()
         childRef.observe(.childAdded) { (snapshot) in
             
             print(snapshot)
-            //                            self.moveToLastComment()
+            self.moveToLastComment()
             
         }
         
@@ -549,32 +739,44 @@ class AstroChatVC: UIViewController {
     }
     
     @IBAction func action(_ sender: Any) {
+        
+        
         if sendOnce {
             self.sendFirstMessage()
             self.sendOnce = false
         }
-        
-        let ref = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(anotherUserId ?? "")
-        let childRef = ref.childByAutoId()
-        //        let toId = anotherUserId
-        
-        let timeStamp = Int(truncating: NSNumber(value: Date().timeIntervalSince1970))
-        let values: [String : Any] = ["from":Auth.auth().currentUser!.uid as AnyObject,"message": txtView.text!,"seen":"false", "time":ServerValue.timestamp(),"type":"text"]
-        childRef.updateChildValues(values)
-        
-        childRef.observe(.childAdded) { (snapshot) in
+        if txtView.text == ""{
             
-            print(snapshot)
-            //                            self.moveToLastComment()
+        } else{
+            let ref = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(anotherUserId ?? "")
+            let childRef = ref.childByAutoId()
+            //        let toId = anotherUserId
             
+            let timeStamp = Int(truncating: NSNumber(value: Date().timeIntervalSince1970))
+            let values: [String : Any] = ["from":Auth.auth().currentUser!.uid as AnyObject,"message": txtView.text!,"seen":"false", "time":ServerValue.timestamp(),"type":"text"]
+            childRef.updateChildValues(values)
+            self.txtView.text = ""
+            childRef.observe(.childAdded) { (snapshot) in
+                print(snapshot)
+                self.scrollToBottom()
+            }
         }
-        
-        
-        
-        
-        
-        
-        
+    }
+    
+    func moveToLastComment() {
+        if self.tblView.contentSize.height > self.tblView.frame.height {
+            // First figure out how many sections there are
+            let lastSectionIndex = self.tblView!.numberOfSections - 1
+            
+            // Then grab the number of rows in the last section
+            let lastRowIndex = self.tblView!.numberOfRows(inSection: lastSectionIndex) - 1
+            
+            // Now just construct the index path
+            let pathToLastRow = NSIndexPath(row: lastRowIndex, section: lastSectionIndex)
+            
+            // Make the last row visible
+            self.tblView?.scrollToRow(at: pathToLastRow as IndexPath, at: UITableView.ScrollPosition.bottom, animated: true)
+        }
     }
 }
 
@@ -594,31 +796,49 @@ extension AstroChatVC: UITableViewDataSource {
         let timestamp = messageArray[indexPath.row].time
         let date = NSDate(timeIntervalSince1970:TimeInterval(Float(timestamp)!))
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mm a"
-        dateFormatter.timeZone = NSTimeZone(name: "en_US") as TimeZone?
+        dateFormatter.dateFormat = "MMM,dd HH:mm"
+        dateFormatter.timeZone = NSTimeZone.local
+        
+        //        dateFormatter.timeZone = NSTimeZone(name: "en_US") as TimeZone?
         let dateString = dateFormatter.string(from: date as Date)
         print(date)
         print("formatted date is =  \(dateString)")
+        
+        let str = convertTimestamp(serverTimestamp: Double(timestamp) ?? 0.0)
+        print(str)
+        
         if message == anotherUserId{
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecievedTVC", for: indexPath) as! RecievedTVC
-            cell.lblTime.text =  dateString
+            cell.lblTime.text =  str
             cell.labelForReceiver.text = messageArray[indexPath.row].message
             return cell
         } else {
             if astroFirstMessage {
                 astroFirstMessage = false
-                self.initializeTimer()
+                //                let duration = UserDefaults.standard.value(forKey: "duration") as? Int
+                //                self.totalduration = duration ?? 0
+                //                self.initializeTimer()
+                
                 self.setStartTime()
                 Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(callMessageForkundliInProgress), userInfo: nil, repeats: false)
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: "SentTVC", for: indexPath) as! SentTVC
             cell.labelForMsg.text = messageArray[indexPath.row].message
-            cell.lblTime.text =  dateString
+            cell.lblTime.text =  str
             return cell
         }
     }
-    
+    func convertTimestamp(serverTimestamp: Double) -> String {
+        let x = serverTimestamp / 1000
+        let date = NSDate(timeIntervalSince1970: x)
+        let formatter = DateFormatter()
+        //            formatter.dateStyle = .long
+        //            formatter.timeStyle = .medium
+        formatter.dateFormat = "MMM,dd HH:mm"
+        
+        return formatter.string(from: date as Date)
+    }
 }
 
 // MARK: - Tableview Delegate
@@ -676,7 +896,9 @@ extension UIDataSourceTranslating {
         if allMessages.count == 0 {
             return
         }
-        tblView.scrollToRow(at: IndexPath(row: allMessages.count - 1, section: 0), at: .bottom, animated: true)
+        tblView.scrollToRow(at: IndexPath(row: allMessages.count, section: 0), at: .bottom, animated: true)
+        //        let indexPath = IndexPath(row: self.allMessages.count-1, section: 0)
+        //          self.tblView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         
     }
     

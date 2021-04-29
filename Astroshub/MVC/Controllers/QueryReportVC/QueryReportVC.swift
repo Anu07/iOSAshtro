@@ -12,9 +12,14 @@ import FirebaseAuth
 import FirebaseDatabase
 import Firebase
 import Razorpay
+import CoreLocation
+enum enumForScreen {
+    case voice
+    case remedy
+}
 
-
-private var KEY_ID = "rzp_live_1idxRp4tPV0Llx"    //"rzp_test_pDqqc1wovvXUCn" // @"rzp_test_1DP5mmOlF5G5ag";
+private var KEY_ID = "rzp_live_1idxRp4tPV0Llx"
+//    "rzp_live_1idxRp4tPV0Llx"    //"rzp_test_pDqqc1wovvXUCn" // @"rzp_test_1DP5mmOlF5G5ag";
 private let SUCCESS_TITLE = "Yay!"
 private let SUCCESS_MESSAGE = "Your payment was successful. The payment ID is %@"
 private let FAILURE_TITLE = "Uh-Oh!"
@@ -28,10 +33,12 @@ private let OK_BUTTON_TITLE = "OK"
 class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate, WWCalendarTimeSelectorProtocol,UITextViewDelegate, RazorpayPaymentCompletionProtocol {
     
     
-    
+    @IBOutlet weak var viewNote: UIView!
     @IBOutlet weak var labelFoQueryNote: UILabel!
     
     
+    @IBOutlet weak var buttonRazopay: ZFRippleButton!
+    @IBOutlet weak var buttonStripe: ZFRippleButton!
     @IBOutlet var viewblur: UIView!
     @IBOutlet var viewpopup: UIView!
     
@@ -46,6 +53,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         // self.view.window?.rootViewController?.present(alertController, animated: true, completion: nil)
     }
     
+    var particilarTabStr:enumForScreen?
     @IBOutlet weak var btn_Done: ZFRippleButton!
     @IBOutlet weak var btn_Done1: ZFRippleButton!
     @IBOutlet weak var view_top: UIView!
@@ -88,18 +96,63 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         let _ = self.PerformActionIfLogin()
-        lbl1.isHidden = false
-        lbl2.isHidden = true
-        label3.isHidden = true
-        kabel4.isHidden = true
-
-        view_Report.isHidden = true
+       
         viewblur.isHidden = true
         viewpopup.isHidden = true
         
-        QueryReportFormshow = "query"
+        switch particilarTabStr {
+        case .voice:
+            view_Report.isHidden = true
+            lbl1.isHidden = true
+            lbl2.isHidden = true
+            label3.isHidden = true
+            kabel4.isHidden = false
+            QueryReportFormshow = "voice"
+            tbl_profile.isHidden = false
+            ProfileuserName = ""
+           Mobilenumber = ""
+           self.postdob = ""
+           self.Timmeee = ""
+           self.Placebirth = ""
+           self.Email = ""
+           Enquiry = ""
+          labelFoQueryNote.text = "You will receive 4-5 minutes audio answer in 24 hours"
+
+            tbl_profile.reloadData()
+        case .remedy:
+            view_Report.isHidden = true
+            lbl1.isHidden = true
+            lbl2.isHidden = true
+            label3.isHidden = false
+            kabel4.isHidden = true
+            tbl_profile.isHidden = false
+            QueryReportFormshow = "remedy"
+            ProfileuserName = ""
+           Mobilenumber = ""
+           self.postdob = ""
+           self.Timmeee = ""
+           self.Placebirth = ""
+           self.Email = ""
+           Enquiry = ""
+            tbl_profile.reloadData()
+            labelFoQueryNote.text = "You will receive your answer maximum within 24 hours"
+
+        default:
+            lbl1.isHidden = false
+            lbl2.isHidden = true
+            label3.isHidden = true
+            kabel4.isHidden = true
+            view_Report.isHidden = true
+            QueryReportFormshow = "query"
+            tbl_profile.isHidden = false
+
+            tbl_profile.reloadData()
+          
+            labelFoQueryNote.text = "You will receive your answer maximum within 24 hours"
+
+        }
         
-        
+
         if setCustomerdob != ""
         {
             self.date_Selectdate = self.formattedDateFromString(dateString: setCustomerdob, withFormat: "dd MMM yyyy")!
@@ -119,9 +172,23 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         Email1=setCustomeremail
         Mobilenumber1=setCustomerphone
         
-        
-        tbl_profile.reloadData()
-        self.func_QueryName()
+      
+        if !hasLocationPermission() {
+            let alertController = UIAlertController(title: "Location Permission Required", message: "Please enable location permissions in settings.", preferredStyle: UIAlertController.Style.alert)
+                  
+                  let okAction = UIAlertAction(title: "Settings", style: .default, handler: {(cAlertAction) in
+                      //Redirect to Settings app
+                    UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
+                  })
+                  
+//                  let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+//                  alertController.addAction(cancelAction)
+                  
+                  alertController.addAction(okAction)
+                  
+                  self.present(alertController, animated: true, completion: nil)
+        }
+       
         
         // Do any additional setup after loading the view.
     }
@@ -130,79 +197,25 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden = true
-        
-        guard let userID = Auth.auth().currentUser?.uid else { return }
-        print(userID)
-        
-        
-        
-        let uid = Auth.auth().currentUser?.uid
-        ref = Database.database().reference()
-        
-        // Generating the chat id
-        let refChats = ref!.child("chats")
-        let refChat = refChats.childByAutoId()
-        
-        // Accessing the "chatIds branch" from a user based on
-        // his id
-        let currentUserId = uid
-        let refUsers = ref!.child("users")
-        let refUser = refUsers.child(currentUserId!)
-        let refUserChatIds = refUser.child("chatIds")
-        
-        // Setting the new Chat Id key created before
-        // on the "chatIds branch"
-        let chatIdKey = refChat.key
-        let refUserChatId = refUserChatIds.child(chatIdKey!)
-        refUserChatIds.setValue(chatIdKey)
-        
-        let dictMovieRefAvengers: [String: String] = ["name": "Avengers", "senderID": "", "receiverID": "", "AstroID": "", "message": ""]
-        
-        // Saving the values in movie1 node
-        refUserChatId.setValue(dictMovieRefAvengers) {
-            (error:Error?, ref:DatabaseReference) in
-            if let error = error {
-                print("Data could not be saved: \(error).")
-            } else {
-                print("Data saved successfully!")
-            }
-        }
-        
-        
-        // let uid = Auth.auth().currentUser?.uid
-        
-        Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value,  with: {
-            (snapshot) in
-            print("1")
-            if let dictionary = snapshot.value as? [String: AnyObject] {
-                print("2")
-                self.navigationItem.title = dictionary["name"] as? String
-            }
-        }, withCancel: nil)
-        
-        
-        let btnayer = CAGradientLayer()
-        btnayer.frame = CGRect(x: 0.0, y: 0.0, width: btn_Done.frame.size.width, height: btn_Done.frame.size.height)
-        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
-        btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        btn_Done.layer.insertSublayer(btnayer, at: 1)
-        
-        
-        let btnayer1 = CAGradientLayer()
-        btnayer1.frame = CGRect(x: 0.0, y: 0.0, width: btn_Done1.frame.size.width, height: btn_Done1.frame.size.height)
-        btnayer1.colors = [mainColor1.cgColor, mainColor3.cgColor]
-        btnayer1.startPoint = CGPoint(x: 0.0, y: 0.5)
-        btnayer1.endPoint = CGPoint(x: 1.0, y: 0.5)
-        btn_Done1.layer.insertSublayer(btnayer1, at: 1)
-        
-        // self.Locationnn = userCountry
-        // tbl_profile.reloadData()
-        
+        self.func_QueryName()
         
     }
     
-    
+    func hasLocationPermission() -> Bool {
+           var hasPermission = false
+           if CLLocationManager.locationServicesEnabled() {
+               switch CLLocationManager.authorizationStatus() {
+               case .notDetermined, .restricted, .denied:
+                   hasPermission = false
+               case .authorizedAlways, .authorizedWhenInUse:
+                   hasPermission = true
+               }
+           } else {
+               hasPermission = false
+           }
+           
+           return hasPermission
+       }
     func onPaymentSuccess(_ payment_id: String)
     {
         // self.func_rechargeamount()
@@ -373,7 +386,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     {
         if (textView.tag==5)
         {
-            if textView.text == "Enter Your Query & Requirement"
+            if textView.text == "Enter Your Query & Requirement" || textView.text == "Enter Your Problem"
             {
                 textView.text = ""
                 textView.textColor = UIColor.darkGray
@@ -455,7 +468,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                                                 self.countryIdArray.append(iddddd)
                                             }
                                             
-                                            self.tbl_report.reloadData()
+//                                            self.tbl_report.reloadData()
                                             
                                             
                                         }
@@ -595,14 +608,11 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     {
         for controller in self.navigationController!.viewControllers as Array
         {
-            
             if controller.isKind(of: DashboardVC.self)
             {
                 _ =  self.navigationController!.popToViewController(controller, animated: true)
                 break
-            }
-            else
-            {
+            } else {
                 // Fallback on earlier versions
             }
         }
@@ -613,17 +623,12 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     //****************************************************
     func numberOfSections(in tableView: UITableView) -> Int
     {
-        
         if tableView == tbl_profile
         {
             return 4
-        }
-        else
-        {
+        } else {
             return 3
         }
-        
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -639,9 +644,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
             } else {
                 return 150
             }
-        }
-        else
-        {
+        } else {
             if indexPath.section == 0 {
                 return 285
             } else if indexPath.section == 1 {
@@ -662,37 +665,22 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
             {
                 return 1
                 
-            }
-            else if section == 1
-            {
+            } else if section == 1 {
+                return 1
+                
+            } else {
                 return 1
                 
             }
-            else
-                
-            {
-                return 1
-                
-            }
-        }
-        else
-        {
+        } else {
             if section == 0
             {
                 return 1
-                
-            }
-            else
-                
-            {
+            } else {
                 return 1
                 
             }
         }
-        
-        
-        
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -702,66 +690,70 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
             if indexPath.section == 0
             {
                 let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCell1", for: indexPath) as! ProfileCell1
-                
-                
                 cell_Add.txt_namee.delegate = (self as UITextFieldDelegate)
                 cell_Add.txt_Email.delegate = (self as UITextFieldDelegate)
                 cell_Add.txt_Mobile.delegate = (self as UITextFieldDelegate)
-                
-                
-                
                 cell_Add.txt_namee.text = ProfileuserName
                 cell_Add.txt_Email.text = Email
                 cell_Add.txt_Mobile.text = Mobilenumber
-                
                 return cell_Add
-            }
-            else if indexPath.section == 1
-            {
+            } else if indexPath.section == 1 {
                 let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCell3", for: indexPath) as! ProfileCell3
-                
                 cell_Add.btn_DOB.tag = indexPath.row
                 cell_Add.btn_DOB.addTarget(self, action: #selector(self.btn_DobAction(_:)), for: .touchUpInside)
-                
                 cell_Add.btn_birthtime.tag = indexPath.row
                 cell_Add.btn_birthtime.addTarget(self, action: #selector(self.btn_birthAction(_:)), for: .touchUpInside)
                 
-                
-                
-                if  self.date_Selectdate != ""
-                {
-                    
+           
+                if self.date_Selectdate != ""{
                     cell_Add.btn_DOB.setTitleColor(.black, for: .normal)
                     cell_Add.btn_DOB.setTitle(self.date_Selectdate,for: .normal)
+                }else{
+                    cell_Add.btn_DOB.setTitleColor(.lightGray, for: .normal)
+                    cell_Add.btn_DOB.setTitle("DOB",for: .normal)
                 }
-                
-                if self.Timmeee != ""
-                {
+              //  Select Birth Time
+                if self.Timmeee != "" {
                     cell_Add.btn_birthtime.setTitleColor(.black, for: .normal)
                     cell_Add.btn_birthtime.setTitle(self.Timmeee,for: .normal)
+                } else {
+                    cell_Add.btn_birthtime.setTitleColor(.lightGray, for: .normal)
+                    cell_Add.btn_birthtime.setTitle("Select Birth Time",for: .normal)
                 }
-                
-                
+                   
                 
                 return cell_Add
-            }
-            else if indexPath.section == 2
+            } else if indexPath.section == 2
             {
                 let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCell4", for: indexPath) as! ProfileCell4
                 
                 cell_Add.txtPlace.delegate = (self as UITextFieldDelegate)
                 cell_Add.textQuery.delegate = (self as UITextViewDelegate)
                 // cell_Add.txtQuery.delegate = (self as UITextFieldDelegate)
-                if QueryReportFormshow == "remedy" {
-                    cell_Add.labelForQuery.text = ""
+                if self.Placebirth != "" {
+                    cell_Add.txtPlace.text = Placebirth
                 } else {
-                    
+                    cell_Add.txtPlace.placeholder = "Place of Birth"
+
+                }
+                if QueryReportFormshow == "remedy" {
+                    cell_Add.labelForQuery.text = "Ask Remedy for your Problem"
+                    cell_Add.textQuery.text = "Enter Your Remedy & Requirement"
+                } else {
+                    cell_Add.labelForQuery.text = "Your Query & Requirement"
+                    cell_Add.textQuery.text = "Enter Your Problem"
                 }
                 return cell_Add
             } else {
                 let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCellTwoButtons", for: indexPath) as! ProfileCellTwoButtons
                 cell_Add.buttonDone.addTarget(self, action: #selector(buttonDoneAction), for: .touchUpInside)
                 cell_Add.buttonSample.addTarget(self, action: #selector(buttonSampleAction), for: .touchUpInside)
+                if QueryReportFormshow == "remedy" {
+                    cell_Add.buttonSample.setTitle("Sample Remedy", for: .normal)
+                } else {
+                    cell_Add.buttonSample.setTitle("Sample Query", for: .normal)
+
+                }
                 return cell_Add
             }
         }
@@ -775,10 +767,6 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 cell_Add.txt_namee.delegate = (self as UITextFieldDelegate)
                 cell_Add.txt_Email.delegate = (self as UITextFieldDelegate)
                 cell_Add.txt_Mobile.delegate = (self as UITextFieldDelegate)
-                
-                
-                
-                
                 cell_Add.txt_namee.text = ProfileuserName1
                 cell_Add.txt_Email.text = Email1
                 cell_Add.txt_Mobile.text = Mobilenumber1
@@ -797,7 +785,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 cell_Add.mainDropDown.optionArray = self.countryNameArray
                 cell_Add.mainDropDown.optionIds = self.countryIdArray
                 cell_Add.mainDropDown.checkMarkEnabled = false
-                
+                cell_Add.mainDropDown.endEditing(true)
                 // cell_Add.mainDropDown.text = CurrentLocation
                 
                 cell_Add.mainDropDown.didSelect{(selectedText , index , id) in
@@ -896,8 +884,16 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         lbl2.isHidden = true
         label3.isHidden = true
         kabel4.isHidden = true
+        tbl_profile.isHidden = false
         QueryReportFormshow = "query"
-        
+        labelFoQueryNote.text = "You will receive your answer maximum within 24 hours"
+        viewNote.isHidden = false
+        self.postdob = ""
+        self.Timmeee = ""
+        self.Placebirth = ""
+         self.date_Selectdate = ""
+        tbl_profile.reloadData()
+
     }
     
     @IBAction func buttonVoiceQuery(_ sender: UIButton) {
@@ -906,7 +902,16 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         lbl2.isHidden = true
         label3.isHidden = true
         kabel4.isHidden = false
-        QueryReportFormshow = "Voice"
+        tbl_profile.isHidden = false
+        labelFoQueryNote.text = "You will receive 4-5 minutes audio answer in 24 hours"
+        viewNote.isHidden = false
+        self.postdob = ""
+        self.Timmeee = ""
+        self.Placebirth = ""
+         self.date_Selectdate = ""
+        QueryReportFormshow = "voice"
+        tbl_profile.reloadData()
+
     }
     
     @IBAction func btn_ReportAction(_ sender: Any)
@@ -915,10 +920,13 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         lbl2.isHidden = false
         label3.isHidden = true
         kabel4.isHidden = true
+        tbl_profile.isHidden = true
+        viewNote.isHidden = true
 
         view_Report.isHidden = false
-        
         QueryReportFormshow = "report"
+
+        tbl_report.reloadData()
     }
     
     @IBAction func btnRemedy(_ sender: UIButton) {
@@ -927,8 +935,21 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         lbl2.isHidden = true
         label3.isHidden = false
         kabel4.isHidden = true
+        tbl_profile.isHidden = false
+        viewNote.isHidden = false
+
+//        ProfileuserName = ""
+//       Mobilenumber = ""
+       self.postdob = ""
+       self.Timmeee = ""
+       self.Placebirth = ""
+        self.date_Selectdate = ""
+//       self.Email = ""
+       Enquiry = ""
+        labelFoQueryNote.text = "You will receive your answer maximum within 24 hours"
 
         QueryReportFormshow = "remedy"
+        tbl_profile.reloadData()
     }
     
     @IBAction func btn_doneAction(_ sender: Any)
@@ -937,7 +958,11 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         {
             self.viewblur.isHidden = false
             self.viewpopup.isHidden = false
-
+            if CurrentLocation == "India" {
+                self.buttonStripe.isHidden = true
+            } else {
+                self.buttonRazopay.isHidden = true
+            }
         }
     }
     
@@ -947,12 +972,22 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 if Validate.shared.validatequeryform(vc: self) {
                     self.viewblur.isHidden = false
                     self.viewpopup.isHidden = false
+                    if CurrentLocation == "India" {
+                        self.buttonStripe.isHidden = true
+                    } else {
+                        self.buttonRazopay.isHidden = true
+                    }
                 }
             } else {
                 if Validate.shared.validateReporform(vc: self)
                 {
                     self.viewblur.isHidden = false
                     self.viewpopup.isHidden = false
+                    if CurrentLocation == "India" {
+                        self.buttonStripe.isHidden = true
+                    } else {
+                        self.buttonRazopay.isHidden = true
+                    }
                 }
             }
         }
@@ -962,10 +997,16 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         if view_Report.isHidden { // show sample query
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "MangaldoshVC") as! MangaldoshVC
             controller.isReport = false
+            if  QueryReportFormshow == "remedy"{
+                controller.remedy = "remedy"
+            } else {
+                controller.remedy = "query"
+            }
             self.navigationController?.pushViewController(controller, animated: true)
         } else { // show sample report
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "MangaldoshVC") as! MangaldoshVC
             controller.isReport = true
+            controller.remedy = "report"
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }
@@ -976,6 +1017,11 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
             
             self.viewblur.isHidden = false
             self.viewpopup.isHidden = false
+            if CurrentLocation == "India" {
+                self.buttonStripe.isHidden = true
+            } else {
+                self.buttonRazopay.isHidden = true
+            }
             
         }
     }
@@ -984,16 +1030,58 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     @IBAction func btn_paypalAction(_ sender: Any) {
         let allowed = self.checkPaymentGatewayAlert(isStripe:true)
         let currency = (CurrentLocation == "India" ? "INR" : "USD").lowercased()
-        var amt = QueryReportFormshow == "query" ? "6" : "18"
+        var amt = ""
         if QueryReportFormshow == "remedy"{
-            amt = "6"
+            amt = (CurrentLocation == "India" ? "\(FormRemedyPrice)" : "\(FormRemedydollarPrice)")
+        }
+        if QueryReportFormshow == "query" {
+            amt = "\(FormQueryPrice)"
+        }
+        if QueryReportFormshow == "voice"{
+            amt = "\(FormVoiceQueryPrice)"
+        }
+        if QueryReportFormshow == "report"{
+            amt = "\(FormReportPrice)"
         }
         if allowed{
-            guard let addNewCardVC = self.storyboard?.instantiateViewController(withIdentifier: "AddNewCardVC") as? AddNewCardVC else { return }
-            addNewCardVC.stripePaymentParams = ["amount": amt,
-                                                "currency": currency]
-            addNewCardVC.delegateStripePay = self
-            self.navigationController?.pushViewController(addNewCardVC, animated: true)
+            
+            
+            
+            guard let addNewCardVC = self.storyboard?.instantiateViewController(withIdentifier: "PaymentFoerignViewController") as? PaymentFoerignViewController else { return }
+                        addNewCardVC.stripePaymentParams = ["amount": amt,
+                                                            "currency": currency]
+                        addNewCardVC.delegateStripePay = self
+                        addNewCardVC.amount = Int(amt) ?? 0
+                        addNewCardVC.completionHandler =   { text in
+                        
+                        if text["isSuccess"] as? Bool == true{
+                            self.showAlert(withTitle: SUCCESS_TITLE, andMessage: SUCCESS_MESSAGE)
+                            if QueryReportFormshow == "query" {
+                                self.func_QueryForm("0")
+                            }
+                            if QueryReportFormshow == "report"{
+                                self.func_ReportForm()
+                            }
+                            if QueryReportFormshow == "voice"{
+                                self.func_QueryForm("1")
+                            }
+                            if QueryReportFormshow == "remedy"{
+                                self.func_RemedyForm()
+                            }
+                        } else {
+                            self.showAlert(withTitle: "ERROR", andMessage: text["msg"] as? String )
+                        }
+                            return text
+                    }
+                        self.navigationController?.pushViewController(addNewCardVC, animated: true)
+            
+//            guard let addNewCardVC = self.storyboard?.instantiateViewController(withIdentifier: "AddNewCardVC") as? AddNewCardVC else { return }
+//            addNewCardVC.stripePaymentParams = ["amount": amt,
+//                                                "currency": currency]
+//            addNewCardVC.delegateStripePay = self
+//            addNewCardVC.amount = Int(amt) ?? 0
+//
+//            self.navigationController?.pushViewController(addNewCardVC, animated: true)
         }
         
     }
@@ -1028,7 +1116,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                         "email": setCustomeremail
                     ],
                     "theme": [
-                        "color": "#FF7B18"
+                        "color": "#F6C500"
                     ]
                 ]
                 //                  razorpay?.open(options)
@@ -1059,7 +1147,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                         "email": setCustomeremail
                     ],
                     "theme": [
-                        "color": "#FF7B18"
+                        "color": "#F6C500"
                     ]
                 ]
                 //                  razorpay?.open(options)
@@ -1075,14 +1163,14 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                 {
                     mYCURRNECY = "USD"
                 }
-                FormReportPrice = CurrentLocation == "India" ? 700 : FormReportPrice
+                FormReportPrice = CurrentLocation == "India" ? FormReportPrice : FormReportPrice
                 let rezorp = Double(FormReportPrice) * 100.0
                 let finalGSTAddedPrice = (rezorp * multiplier).round(to: 2)
                 
                 let options: [String:Any] = [
                     "amount" : finalGSTAddedPrice,
                     "currency" :  mYCURRNECY,
-                    "description": "( ₹700 + 18% GST included)",
+                    "description": "( ₹\(FormReportPrice) + 18% GST included)",
                     "image": "http://kriscenttechnohub.com/demo/astroshubh/admin/assets/images/astroshubh_full-log.png",
                     "name": setCustomername,
                     "prefill": [
@@ -1090,7 +1178,37 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                         "email": setCustomeremail
                     ],
                     "theme": [
-                        "color": "#FF7B18"
+                        "color": "#F6C500"
+                    ]
+                ]
+                //                  razorpay?.open(options)
+                razorpay?.open(options, displayController: self)
+            }
+            if QueryReportFormshow == "voice"
+            {
+                if CurrentLocation == "India"
+                {
+                    mYCURRNECY = "INR"
+                }
+                else
+                {
+                    mYCURRNECY = "USD"
+                }
+                let rezorp = Double(FormVoiceQueryPrice) * 100.0
+                let finalGSTAddedPrice = (rezorp * multiplier).round(to: 2)
+                
+                let options: [String:Any] = [
+                    "amount" : finalGSTAddedPrice,
+                    "currency" :  mYCURRNECY,
+                    "description": "( ₹\(FormVoiceQueryPrice) + 18% GST included)",
+                    "image": "http://kriscenttechnohub.com/demo/astroshubh/admin/assets/images/astroshubh_full-log.png",
+                    "name": setCustomername,
+                    "prefill": [
+                        "contact": setCustomerphone,
+                        "email": setCustomeremail
+                    ],
+                    "theme": [
+                        "color": "#F6C500"
                     ]
                 ]
                 //                  razorpay?.open(options)

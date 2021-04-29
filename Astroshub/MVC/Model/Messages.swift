@@ -64,6 +64,8 @@ enum Messages : String {
    
     case ENQUIRY_EMPTY         = "Please enter Enquiry Message."
     case MESSAGE_EMPTY         = "Please enter Message."
+    case weight_EMPTY         = "Please enter Weight."
+
 }
 
 

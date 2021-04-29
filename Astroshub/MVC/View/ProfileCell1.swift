@@ -12,6 +12,10 @@ class ProfileCell1: UITableViewCell {
     
     @IBOutlet weak var textFieldForcategory: UITextField!
     
+    @IBOutlet weak var labelForCostCal: UILabel!
+    @IBOutlet weak var viewForWeight: UIView!
+    @IBOutlet weak var viewForSupplement: UIView!
+    @IBOutlet weak var labelForOpt: UILabel!
     @IBOutlet weak var labelForcal: UILabel!
     @IBOutlet weak var textFieldWeight: UITextField!
     @IBOutlet weak var view_adhaar: UIView!

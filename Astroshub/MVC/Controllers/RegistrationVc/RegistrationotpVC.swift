@@ -25,7 +25,7 @@ class RegistrationotpVC: UIViewController ,UITableViewDataSource, UITableViewDel
     @IBOutlet weak var view_back: UIView!
     @IBOutlet var tbl_login: UITableView!
     var Email = ""
-    var countryCode = "+91"
+    var countryCode = "+1"
     var arrstatecity = [[String:Any]]()
     
     override func viewDidLoad() {
@@ -408,13 +408,13 @@ class RegistrationotpVC: UIViewController ,UITableViewDataSource, UITableViewDel
         
         
         let cell_Add = tableView.dequeueReusableCell(withIdentifier: "LoginCell", for: indexPath) as! LoginCell
-        cell_Add.btn_Signin.layer.cornerRadius = 10
+        cell_Add.btn_Signin.layer.cornerRadius = 30
         // cell_Add.btn_createaccount.layer.cornerRadius = 6
         
         cell_Add.view_login.layer.cornerRadius = 10
-        cell_Add.view_email.layer.cornerRadius = 10
+//        cell_Add.view_email.layer.cornerRadius = 10
         cell_Add.view_email.layer.borderWidth = 1
-        cell_Add.view_email.layer.borderColor = (UIColor .darkGray).cgColor
+        cell_Add.view_email.layer.borderColor = (UIColor .black).cgColor
         cell_Add.buttonCountryCode.addTarget(self, action: #selector(countrycodeAction), for: .touchUpInside)
         
         cell_Add.btn_Signin.setTitle("Submit", for: .normal)
@@ -424,14 +424,14 @@ class RegistrationotpVC: UIViewController ,UITableViewDataSource, UITableViewDel
         cell_Add.btn_Signin.tag = indexPath.row
         cell_Add.btn_Signin.addTarget(self, action: #selector(self.btn_SigninAction(_:)), for: .touchUpInside)
         cell_Add.txt_Email.delegate = (self as UITextFieldDelegate)
-       
+        cell_Add.txt_Email.attributedPlaceholder = NSAttributedString(string:"Enter Mobile No.", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         
         
         let btnayer = CAGradientLayer()
         
         
         btnayer.frame = CGRect(x: 0.0, y: 0.0, width: cell_Add.btn_Signin.frame.size.width, height: cell_Add.btn_Signin.frame.size.height)
-        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
+//        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
         btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         

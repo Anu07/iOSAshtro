@@ -13,30 +13,50 @@ class MangaldoshVC: UIViewController {
     @IBOutlet weak var webView: WKWebView!
     @IBOutlet weak var buttonBack: UIButton!
     var isReport = true
-    
+    var remedy = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webView.navigationDelegate = self
         var fileName = ""
         if isReport {
             self.buttonBack.setTitle("  Sample Report", for: .normal)
-            fileName = "sample_reports"
+            fileName = "RELATIONSHIP-REPORT-FOR-ASTRO-SHUBH"
         } else {
-            fileName = "sample_query"
+            if remedy == "remedy"{
+                fileName = "Remedy-Report"
+                self.buttonBack.setTitle("  Sample Remedy", for: .normal)
+            }else{
+            fileName = "Query"
             self.buttonBack.setTitle("  Sample Query", for: .normal)
+            }
         }
-
-       if let pdfUrl = Bundle.main.url(forResource: "\(fileName)", withExtension: "pdf", subdirectory: nil, localization: nil) {
-           do {
-               let data = try Data(contentsOf: pdfUrl)
-            ActivityIndicator.shared.startLoading()
-            webView.load(data, mimeType: "application/pdf", characterEncodingName: "", baseURL: pdfUrl.deletingLastPathComponent())
-           }
-           catch {
-               print("failed to open pdf")
-           }
-           return
-       }
+//        if remedy == "remedy"{
+//       if let pdfUrl = Bundle.main.url(forResource: "\(fileName)", withExtension: "docx", subdirectory: nil, localization: nil) {
+//           do {
+//               let data = try Data(contentsOf: pdfUrl)
+//            ActivityIndicator.shared.startLoading()
+//            webView.load(data, mimeType: "application/pdf", characterEncodingName: "", baseURL: pdfUrl.deletingLastPathComponent())
+//           }
+//           catch {
+//               print("failed to open pdf")
+//           }
+//
+//           return
+//       }
+//        } else {
+            if let pdfUrl = Bundle.main.url(forResource: "\(fileName)", withExtension: "pdf", subdirectory: nil, localization: nil) {
+                do {
+                    let data = try Data(contentsOf: pdfUrl)
+                 ActivityIndicator.shared.startLoading()
+                 webView.load(data, mimeType: "application/pdf", characterEncodingName: "", baseURL: pdfUrl.deletingLastPathComponent())
+                }
+                catch {
+                    print("failed to open pdf")
+                }
+           
+                return
+            }
+//        }
     }
     
 

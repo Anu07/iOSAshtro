@@ -11,12 +11,14 @@ import Cosmos
 
 class RateUsVC: UIViewController, UITextViewDelegate {
     
+    @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var viewStar: CosmosView!
     @IBOutlet weak var viewTxtView: UIView!
     @IBOutlet weak var txtView: UITextView!
     var astroId = ""
     var navigation: UINavigationController?
     var completionHandler : (()->())?
+    var strForCloseDisable = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         self.viewTxtView.layer.cornerRadius = 5
@@ -25,7 +27,11 @@ class RateUsVC: UIViewController, UITextViewDelegate {
         self.txtView.text = "Enter Review"
         self.txtView.textColor = UIColor.lightGray
         self.txtView.delegate = self
-        
+        if strForCloseDisable == "Astro"{
+            closeButton.isHidden = false
+        } else{
+            closeButton.isHidden = true
+        }
     }
     
     func rateAstroApi() {
@@ -75,7 +81,9 @@ class RateUsVC: UIViewController, UITextViewDelegate {
     }
     
     @IBAction func buttonClose(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        if strForCloseDisable == "Astro"{
+       self.dismiss(animated: true, completion: nil)
+        }
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {

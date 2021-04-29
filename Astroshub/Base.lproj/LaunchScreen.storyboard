@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,18 +16,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="newsplash1" translatesAutoresizingMaskIntoConstraints="NO" id="Pon-z9-OLr">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bckground" translatesAutoresizingMaskIntoConstraints="NO" id="Pon-z9-OLr">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="appstore" translatesAutoresizingMaskIntoConstraints="NO" id="IyH-dH-131">
+                                <rect key="frame" x="87" y="341" width="240" height="224"/>
+                            </imageView>
                         </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="Pon-z9-OLr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="2N3-Jf-bWl"/>
+                            <constraint firstItem="IyH-dH-131" firstAttribute="height" secondItem="Pon-z9-OLr" secondAttribute="height" multiplier="0.25" id="CxU-Qq-WUo"/>
                             <constraint firstItem="Pon-z9-OLr" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="DQu-ib-aCQ"/>
+                            <constraint firstItem="IyH-dH-131" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Zs9-63-rYq"/>
+                            <constraint firstItem="IyH-dH-131" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="fxI-sX-nYe"/>
+                            <constraint firstItem="IyH-dH-131" firstAttribute="width" secondItem="Pon-z9-OLr" secondAttribute="width" multiplier="0.57971" id="mTF-sU-o7c"/>
                             <constraint firstAttribute="bottom" secondItem="Pon-z9-OLr" secondAttribute="bottom" id="nlM-kn-mKn"/>
                             <constraint firstItem="Pon-z9-OLr" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="vhA-j3-xZr"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -36,6 +43,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="newsplash1" width="375" height="812"/>
+        <image name="appstore" width="1024" height="1024"/>
+        <image name="bckground" width="375" height="667"/>
     </resources>
 </document>

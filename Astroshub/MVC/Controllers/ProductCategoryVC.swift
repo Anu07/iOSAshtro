@@ -8,7 +8,7 @@
 
 import UIKit
 import SDWebImage
-
+import CoreLocation
 class ProductCategoryVC: UIViewController , UITextFieldDelegate,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UICollectionViewDataSource {
 
     @IBOutlet var tbl_productcategory: UITableView!
@@ -17,9 +17,43 @@ class ProductCategoryVC: UIViewController , UITextFieldDelegate,UICollectionView
     var arrProductcategory = [[String:Any]]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.ProductCategoryApiCallMethods()
+     
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        if !hasLocationPermission() {
+            let alertController = UIAlertController(title: "Location Permission Required", message: "Please enable location permissions in settings.", preferredStyle: UIAlertController.Style.alert)
+                  
+                  let okAction = UIAlertAction(title: "Settings", style: .default, handler: {(cAlertAction) in
+                      //Redirect to Settings app
+                    UIApplication.shared.open(URL(string:UIApplication.openSettingsURLString)!)
+                  })
+                  
+//                  let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+//                  alertController.addAction(cancelAction)
+                  
+                  alertController.addAction(okAction)
+                  
+                  self.present(alertController, animated: true, completion: nil)
+        } else {
+        self.ProductCategoryApiCallMethods()
+        }
+    }
+    func hasLocationPermission() -> Bool {
+           var hasPermission = false
+           if CLLocationManager.locationServicesEnabled() {
+               switch CLLocationManager.authorizationStatus() {
+               case .notDetermined, .restricted, .denied:
+                   hasPermission = false
+               case .authorizedAlways, .authorizedWhenInUse:
+                   hasPermission = true
+               }
+           } else {
+               hasPermission = false
+           }
+           
+           return hasPermission
+       }
     //****************************************************
     // MARK: - Custom Method
     //****************************************************
@@ -181,8 +215,9 @@ class ProductCategoryVC: UIViewController , UITextFieldDelegate,UICollectionView
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! collectionCell
         let dict_eventpoll = self.arrProductcategory[indexPath.row]
         let name = dict_eventpoll["name"] as! String
-        let image = dict_eventpoll["image"] as! String
-        cell.imgall.sd_setImage(with: URL(string: image), placeholderImage: UIImage(named: "Placeholder.png"))
+        let image = dict_eventpoll["image_url"] as! String
+        let iamgeurl = Constants.BASE_URLForImage + image
+        cell.imgall.sd_setImage(with: URL(string: iamgeurl), placeholderImage: UIImage(named: "Placeholder.png"))
         cell.lbltitle.text =  name
         return cell
     }
@@ -193,6 +228,7 @@ class ProductCategoryVC: UIViewController , UITextFieldDelegate,UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let dict_eventpoll = self.arrProductcategory[indexPath.row]
+       
          catyegoryIDD = dict_eventpoll["id"] as! String
         let Products = self.storyboard?.instantiateViewController(withIdentifier: "ProductsVC") as! ProductsVC
         Products.categoryID = catyegoryIDD
@@ -205,14 +241,10 @@ class ProductCategoryVC: UIViewController , UITextFieldDelegate,UICollectionView
 
 }
 class ProductCategoryCell: UITableViewCell {
-    
-    
     @IBOutlet weak var view1: UIView!
     @IBOutlet weak var lbl1: UILabel!
     @IBOutlet weak var lbl2: UILabel!
     @IBOutlet weak var lbl3: UILabel!
     @IBOutlet weak var img_user: UIImageView!
-    
-
     // Initialization code
 }

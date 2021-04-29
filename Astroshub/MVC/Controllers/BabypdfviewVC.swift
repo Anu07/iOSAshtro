@@ -10,19 +10,17 @@ import UIKit
 import WebKit
 
 class BabypdfviewVC: UIViewController , WKNavigationDelegate {
-    
     @IBOutlet weak var wkWebView: WKWebView!
     @IBOutlet weak var btntop: UIButton!
     var value = 0
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.wkWebView.navigationDelegate = self
         AutoBcmLoadingView.show("Loading......")
         switch value {
         case 0:
-            self.btntop.setTitle("  Panchang", for: .normal)
-            let url = URL (string: "https://www.astroshubh.in/panchang.php")
+            self.btntop.setTitle("  Chart Making", for: .normal)
+            let url = URL (string: "https://www.astroshubh.in/chart_making.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
         case 1:
@@ -40,20 +38,19 @@ class BabypdfviewVC: UIViewController , WKNavigationDelegate {
             let url = URL (string: "https://www.astroshubh.in/babyname.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
+//        case 4:
+//            self.btntop.setTitle("  Festival", for: .normal)
+//            let url = URL (string: "https://www.astroshubh.in/staging/home/festival")
+//            let requestObj = URLRequest(url: url!)
+//            self.wkWebView.load(requestObj)
         case 4:
-            self.btntop.setTitle("  Festival", for: .normal)
-            let url = URL (string: "https://www.astroshubh.in/festivals.php")
-            let requestObj = URLRequest(url: url!)
-            self.wkWebView.load(requestObj)
-        case 5:
             self.btntop.setTitle("  Daily Horoscope", for: .normal)
             let url = URL (string: "https://www.astroshubh.in/daily_horoscope.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
-            
-        case 8:
-            self.btntop.setTitle("  Chart Making", for: .normal)
-            let url = URL (string: "https://www.astroshubh.in/staging/chart_making.php")
+        case 6:
+            self.btntop.setTitle("  Panchang", for: .normal)
+            let url = URL (string: "https://www.astroshubh.in/panchang.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
         default:

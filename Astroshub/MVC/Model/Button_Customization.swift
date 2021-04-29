@@ -431,19 +431,19 @@ extension UIColor
 {
     class func funcGradientLayerEx() -> (gradientColorFirst:UIColor , gradientColorSecond:UIColor)
     {
-        let colorFirst = UIColor (red: 0.0/255.0, green: 195.0/255.0, blue: 161.0/255.0, alpha: 1.0)
-        let colorSecond = UIColor (red: 0.0/255.0, green: 112.0/255.0, blue: 228.0/255.0, alpha: 1.0)
+        let colorFirst = UIColor (red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+        let colorSecond = UIColor (red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
         return (colorFirst,colorSecond)
     }
     class func funcGradientLayerEx1() -> (gradientColorFirst:UIColor , gradientColorSecond:UIColor)
     {
-        let colorFirst = UIColor (red: 0.0/255.0, green: 200.0/255.0, blue: 129.0/255.0, alpha: 1.0)
-        let colorSecond = UIColor (red: 0.0/255.0, green: 156.0/255.0, blue: 119.0/255.0, alpha: 1.0)
+        let colorFirst = UIColor (red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+        let colorSecond = UIColor (red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
         return (colorFirst,colorSecond)
     }
     class func funcColorEmptyText() -> UIColor
     {
-        return UIColor (red: 255.0/255.0, green: 68.0/255.0, blue: 68.0/255.0, alpha: 1.0)
+        return UIColor(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
     }
 }
 

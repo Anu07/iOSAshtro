@@ -28,6 +28,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
     var Price = ""
     var Locationnn = ""
     var couponCode = ""
+    var duration = ""
 
     var dobandtimeclick = ""
     var countryArray = NSArray()
@@ -104,7 +105,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
         
         let btnayer = CAGradientLayer()
         btnayer.frame = CGRect(x: 0.0, y: 0.0, width: btn_Done.frame.size.width, height: btn_Done.frame.size.height)
-        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
+//        btnayer.colors = [mainColor1.cgColor, mainColor3.cgColor]
         btnayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         btnayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         
@@ -176,8 +177,8 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
     
     func callToAstrologerAPI() {
         if let getNumber = self.user?.phone {
-            let params = ["num":getNumber]
-            AppHelperModel.requestPOSTURL("CallingAPI \(getNumber)", params: nil, headers: nil,
+            let params = ["num":getNumber ,"userid": self.user?.userId]
+            AppHelperModel.requestPOSTURL("CallingAPI \(getNumber) \(self.user?.userId ?? "") ", params: nil, headers: nil,
                                           success: { (respose) in
                                             print(respose)
                                             
@@ -257,7 +258,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
                              "problem_area":self.ProblemArea,
                              "price":AstrologerrPrice,
                              "location":self.Locationnn,
-                             "busy_status":1,"coupon_id":couponCode] as [String : Any]
+                             "busy_status":1,"coupon_id":couponCode,"duration":duration] as [String : Any]
         
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
@@ -294,8 +295,11 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
                                             if let getUser = self.user {
                                                 let ChatForm = self.storyboard?.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
                                                 ChatForm.totalduration = getUser.totalSecondsForCall
+                                                let defaults = UserDefaults.standard
+                                                defaults.set(getUser.totalSecondsForCall, forKey: "duration")
                                                 ChatForm.thread = ChatHelper.thread(with: getUser, orFrom: [])
                                                 ChatForm.firstMessageData = firstMessageObj
+//                                                ChatForm.data = dict_Data1["chatarr"] as! [String : Any]
                                                 self.navigationController?.pushViewController(ChatForm, animated: true)
                                             }
                                             //                                            let ChatHistory = self.storyboard?.instantiateViewController(withIdentifier: "ChatHistoryVC")
@@ -331,7 +335,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
                              "problem_area":self.ProblemArea,
                              "price":AstrologerrPrice,
                              "location":self.Locationnn,
-                             "busy_status":1] as [String : Any]
+                             "busy_status":1,"coupon_id":couponCode] as [String : Any]
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL("callStartForm", params: setparameters as [String : AnyObject],headers: nil,
@@ -344,11 +348,11 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
                                         
                                         if success == true
                                         {
-                                            let controller = self.storyboard?.instantiateViewController(withIdentifier: "FirstMinuteVC") as! FirstMinuteVC
-                                            controller.modalPresentationStyle = .overCurrentContext
-                                            controller.navigation = self.navigationController
-                                            self.present(controller, animated: true, completion: nil)
-                                            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
+//                                            let controller = self.storyboard?.instantiateViewController(withIdentifier: "FirstMinuteVC") as! FirstMinuteVC
+//                                            controller.modalPresentationStyle = .overCurrentContext
+//                                            controller.navigation = self.navigationController
+//                                            self.present(controller, animated: true, completion: nil)
+                                           CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                             
                                         }
                                         else
@@ -419,7 +423,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
             if malefemale == "Male"
             {
                 cell_Add.btn_MALE.layer.cornerRadius = 8
-                cell_Add.btn_MALE.layer.backgroundColor = UIColor(red: 252/255.0, green: 99/255.0, blue: 31/255.0, alpha: 1.0).cgColor
+                cell_Add.btn_MALE.layer.backgroundColor = UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0).cgColor
                 cell_Add.btn_MALE.setTitleColor(.white, for: .normal)
                 // cell_Add.btn_FEMALE.setTitleColor(UIColor(red: 31/255.0, green: 130/255.0, blue: 162/255.0, alpha: 1.0), for: .normal)
                 cell_Add.btn_FEMALE.setTitleColor(.black, for: .normal)
@@ -429,7 +433,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
             else if malefemale == "Female"
             {
                 cell_Add.btn_FEMALE.layer.cornerRadius = 8
-                cell_Add.btn_FEMALE.layer.backgroundColor = UIColor(red: 252/255.0, green: 99/255.0, blue: 31/255.0, alpha: 1.0).cgColor
+                cell_Add.btn_FEMALE.layer.backgroundColor =  UIColor(red: 246/255.0, green: 197/255.0, blue: 0.0/255.0, alpha: 1.0).cgColor
                 cell_Add.btn_FEMALE.setTitleColor(.white, for: .normal)
                 
                 cell_Add.btn_MALE.layer.cornerRadius = 0
@@ -513,6 +517,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
         let indexPath = self.tbl_profile.indexPathForRow(at: point)
         let cell = self.tbl_profile.cellForRow(at: indexPath!) as! ProfileCell4
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "OffersViewController") as! OffersViewController
+        vc.screenCome = .chat
         vc.completionHandler = { text in
             cell.textFieldPromoCode.text = text["coupon_code"] as? String
             print("text = \(text)")

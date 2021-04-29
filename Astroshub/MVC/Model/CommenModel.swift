@@ -25,7 +25,8 @@ class CommenModel: NSObject {
         let alertMessage = UIAlertController(title:"Astroshubh", message: strMessage, preferredStyle: UIAlertController.Style.alert)
         
         alertMessage.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-            NotificationCenter.default.post(name: Notification.Name("OkTapped"), object: nil)
+           NotificationCenter.default.post(name: Notification.Name("OkTapped"), object: nil)
+//            controller.navigationController?.popToRootViewController(animated: true)
         }))
         controller.present(alertMessage, animated: true, completion: nil)
     }

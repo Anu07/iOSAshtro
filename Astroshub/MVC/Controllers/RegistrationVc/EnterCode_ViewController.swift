@@ -107,7 +107,7 @@ class EnterCode_ViewController: UIViewController
                     strOTP = arr_KeyBoard.joined(separator: "")
                     print("strOTP is:-",strOTP)
                     lbl_First.text = ""
-                    lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                    lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                     lbl_Second.backgroundColor=UIColor .clear
                     lbl_Third.backgroundColor=UIColor .clear
                     lbl_Fourth.backgroundColor=UIColor .clear
@@ -131,7 +131,7 @@ class EnterCode_ViewController: UIViewController
                     print("strOTP is:-",strOTP)
                     lbl_First.text = ""
                     lbl_First.backgroundColor=UIColor .clear
-                    lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                    lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                     lbl_Third.backgroundColor=UIColor .clear
                     lbl_Fourth.backgroundColor=UIColor .clear
                     lbl_Fifth.backgroundColor=UIColor .clear
@@ -155,7 +155,7 @@ class EnterCode_ViewController: UIViewController
                     print("strOTP is:-",strOTP)
                     lbl_First.backgroundColor=UIColor .clear
                     lbl_Second.backgroundColor=UIColor .clear
-                    lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                    lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                     lbl_Fourth.backgroundColor=UIColor .clear
                     lbl_Fifth.backgroundColor=UIColor .clear
                     lbl_Six.backgroundColor=UIColor .clear
@@ -178,7 +178,7 @@ class EnterCode_ViewController: UIViewController
                     lbl_First.backgroundColor=UIColor .clear
                     lbl_Second.backgroundColor=UIColor .clear
                     lbl_Third.backgroundColor=UIColor .clear
-                    lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                    lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                     lbl_Fifth.backgroundColor=UIColor .clear
                     lbl_Six.backgroundColor=UIColor .clear
                     
@@ -201,7 +201,7 @@ class EnterCode_ViewController: UIViewController
                     lbl_Second.backgroundColor=UIColor .clear
                     lbl_Third.backgroundColor=UIColor .clear
                     lbl_Fourth.backgroundColor=UIColor .clear
-                    lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                    lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                     lbl_Six.backgroundColor=UIColor .clear
                     
                     
@@ -261,7 +261,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.text = "\(sender.tag)"
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -281,7 +281,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -299,7 +299,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.text = "\(sender.tag)"
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -317,7 +317,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         
@@ -336,7 +336,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -354,7 +354,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -375,7 +375,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.text = "\(sender.tag)"
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -394,7 +394,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -413,7 +413,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -432,7 +432,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         break
@@ -450,7 +450,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -468,7 +468,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -489,7 +489,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.text = "\(sender.tag)"
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -507,7 +507,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -526,7 +526,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -545,7 +545,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         
@@ -564,7 +564,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -582,7 +582,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -603,7 +603,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.text = "\(sender.tag)"
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -622,7 +622,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -641,7 +641,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -660,7 +660,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         
@@ -679,7 +679,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -697,7 +697,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -718,7 +718,7 @@ class EnterCode_ViewController: UIViewController
                         arr_KeyBoard[index] = "\(sender.tag)"
                         lbl_First.text = "\(sender.tag)"
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -740,7 +740,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -760,7 +760,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -778,7 +778,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         
@@ -798,7 +798,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -816,7 +816,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -837,7 +837,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.text = "\(sender.tag)"
                         
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -858,7 +858,7 @@ class EnterCode_ViewController: UIViewController
                         
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -878,7 +878,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -897,7 +897,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         
@@ -916,7 +916,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -934,7 +934,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -955,7 +955,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.text = "\(sender.tag)"
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -974,7 +974,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -993,7 +993,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -1012,7 +1012,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         
@@ -1031,7 +1031,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -1049,7 +1049,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -1069,7 +1069,7 @@ class EnterCode_ViewController: UIViewController
                         arr_KeyBoard[index] = "\(sender.tag)"
                         
                         lbl_First.text = "\(sender.tag)"
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -1088,7 +1088,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -1107,7 +1107,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -1126,7 +1126,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         break
@@ -1144,7 +1144,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -1162,7 +1162,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -1183,7 +1183,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.text = "\(sender.tag)"
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -1202,7 +1202,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -1221,7 +1221,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -1239,7 +1239,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         break
@@ -1257,7 +1257,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         
                         break
@@ -1275,7 +1275,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         
                         break
                     }
@@ -1295,7 +1295,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.text = "\(sender.tag)"
                         
-                        lbl_First.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_First.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
@@ -1316,7 +1316,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.text = "\(sender.tag)"
                         
                         lbl_First.backgroundColor=UIColor .clear
-                        lbl_Second.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Second.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
@@ -1337,7 +1337,7 @@ class EnterCode_ViewController: UIViewController
                         
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
-                        lbl_Third.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Third.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
@@ -1358,7 +1358,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_First.backgroundColor=UIColor .clear
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
-                        lbl_Fourth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fourth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Fifth.backgroundColor=UIColor .clear
                         lbl_Six.backgroundColor=UIColor .clear
                         self.btn_Submit(UIButton())
@@ -1378,7 +1378,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Second.backgroundColor=UIColor .clear
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
-                        lbl_Fifth.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Fifth.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         lbl_Six.backgroundColor=UIColor .clear
                         self.btn_Submit(UIButton())
                         break
@@ -1396,7 +1396,7 @@ class EnterCode_ViewController: UIViewController
                         lbl_Third.backgroundColor=UIColor .clear
                         lbl_Fourth.backgroundColor=UIColor .clear
                         lbl_Fifth.backgroundColor=UIColor .clear
-                        lbl_Six.backgroundColor=UIColor .init(red: 253.0/255.0, green: 165.0/255.0, blue: 47.0/255.0, alpha: 1.0)
+                        lbl_Six.backgroundColor=UIColor .init(red: 246.0/255.0, green: 197.0/255.0, blue: 0.0/255.0, alpha: 1.0)
                         self.btn_Submit(UIButton())
                         break
                     }
@@ -1618,8 +1618,8 @@ class EnterCode_ViewController: UIViewController
                                             sideVC_R.menuItems = days as NSArray? ?? NSArray()
                                             
                                             
-                                            let DashboardVC = self.storyboard?.instantiateViewController(withIdentifier: "DashboardVC")
-                                            SJSwiftSideMenuController.setUpNavigation(rootController: DashboardVC!, leftMenuController: sideVC_L, rightMenuController: sideVC_R, leftMenuType: .SlideOver, rightMenuType: .SlideView)
+                                            let DashboardVC = self.storyboard?.instantiateViewController(withIdentifier: "DashboardVC") as! DashboardVC
+                                            SJSwiftSideMenuController.setUpNavigation(rootController: DashboardVC, leftMenuController: sideVC_L, rightMenuController: sideVC_R, leftMenuType: .SlideOver, rightMenuType: .SlideView)
                                             
                                             SJSwiftSideMenuController.enableSwipeGestureWithMenuSide(menuSide: .LEFT)
                                             
