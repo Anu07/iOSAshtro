@@ -25,7 +25,9 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
     var arrRating4 = [[String:Any]]()
     var arrRating5 = [[String:Any]]()
     
-    
+    var userId:String?
+    var astroApiKey:String?
+
     var valueeee1 = Float()
     var valueeee2 = Float()
     var valueeee3 = Float()
@@ -38,14 +40,138 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(AstrologerFullData1)
+        self.func_GetProfiledata()
+        // Do any additional setup after loading the view.
+    }
+    
+    @IBAction func buttonNotify(_ sender: UIButton) {
+        NotifyCallMethods(AstrologerFullData1["astrologers_uni_id"] as? String ?? "")
+        
+    }
+    //****************************************************
+    // MARK: - Custom Method
+    //****************************************************
+    func NotifyCallMethods(_ astroId:String) {
+        
+        
+        let deviceID = UIDevice.current.identifierForVendor!.uuidString
+        print(deviceID)
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,
+                             "app_version":MethodName.APPVERSION.rawValue,
+                             "user_api_key":user_apikey,
+                             "user_id":user_id,"astrologer_id":astroId,"request_type":chatcallingFormmm == "Chat" ? "chat" : "call"] as [String : Any]
+        print(setparameters)
+        AutoBcmLoadingView.show("Loading......")
+        AppHelperModel.requestPOSTURL("astroNotifyMe", params: setparameters as [String : AnyObject],headers: nil,
+                                      success: { (respose) in
+                                        AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        
+                                        let success=tempDict["response"] as!   Bool
+                                        let message=tempDict["msg"] as!   String
+                                        
+                                        if success == true
+                                        {
+//                                            self.buttonForNotify.setImage(#imageLiteral(resourceName: "notification"), for: .normal)
+                                            
+                                            if chatcallingFormmm == "Chat" {
+                                            
+
+                                                if self.AstrologerFullData1["chat_notify_status"] as? String == "" {
+                                                    self.AstrologerFullData1["chat_notify_status"] = "0"
+                                                    self.buttonForNotify.setImage(#imageLiteral(resourceName: "notification (2)"), for: .normal)
+
+                                                }
+                                                else {
+                                                    self.buttonForNotify.setImage(#imageLiteral(resourceName: "notificationWhite"), for: .normal)
+                                                    self.AstrologerFullData1["chat_notify_status"] = ""
+
+                                                }
+                                                
+                                            } else {
+ 
+                                                if  self.AstrologerFullData1["call_notify_status"] as? String == "" {
+                                                    self.buttonForNotify.setImage(#imageLiteral(resourceName: "notification (2)"), for: .normal)
+                                                    self.AstrologerFullData1["call_notify_status"] = "0"
+                                            } else {
+                                                //                buttonForNotify.isSelected = true
+                                                self.buttonForNotify.setImage(#imageLiteral(resourceName: "notificationWhite"), for: .normal)
+                                                self.AstrologerFullData1["call_notify_status"] = ""
+
+                                                
+                                            }
+                                             
+                                            }
+                                            let refreshAlert = UIAlertController(title: "AstroShubh", message:     "You will receive a notification when astrologer comes online."
+, preferredStyle: UIAlertController.Style.alert)
+                                            refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
+                                                                                    {
+                                                                                        (action: UIAlertAction!) in
+                                                                                        self.dismiss(animated: true, completion: nil)
+                                                                                        
+                                                                                    }))
+                                            self.present(refreshAlert, animated: true, completion: nil)
+                                            self.completionHandler!(self.AstrologerFullData1)
+                                        }
+                                        
+                                      }) { (error) in
+            AutoBcmLoadingView.dismiss()
+        }
+        
+        
+        
+    }
+    @IBAction func buttonForShare(_ sender: UIButton) {
+        let text =  "Chat with India' best astrologer \(AstrologerFullData1["astrologers_name"] as! String) and get accurate predictions"
+        let myWebsite = URL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
+        let shareAll = [text , myWebsite as Any] as [Any]
+        let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+    //****************************************************
+    // MARK: - API Methods
+    //****************************************************
+    func func_GetProfiledata() {
+        
+        let deviceID = UIDevice.current.identifierForVendor!.uuidString
+        print(deviceID)
+        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"astrologer_id":userId ?? "" ,"astrologer_api_key":astroApiKey ?? ""] as [String : Any]
+        
+        print(setparameters)
+        AutoBcmLoadingView.show("Loading......")
+        AppHelperModel.requestPOSTURL(MethodName.GETPROFILEDATA.rawValue, params: setparameters as [String : AnyObject],headers: nil,
+                                      success: { (respose) in
+                                        AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        let success=tempDict["response"] as!   Bool
+                                        let message=tempDict["msg"] as!   String
+                                        if success == true
+                                        {
+                                           print(success)
+                                            personaldetailss = tempDict["data"] as! [String:Any]
+                                            print("personaldetailss is:- ",personaldetailss)
+//                                            self.AstrologerFullData1 = personaldetailss
+                                            self.allData()
+                                        } else {
+                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
+                                        }
+                                      }) { (error) in
+            print(error)
+            AutoBcmLoadingView.dismiss()
+        }
+    }
+    
+    func allData() {
         arrReviews = [[String:Any]]()
         self.placeHolderImg = chatcallingFormmm == "Chat" ? "astrochat" : "astrotalk"
-        self.AstrocatArray = AstrologerFullData1["category_arr"] as! [[String:Any]]
+        self.AstrocatArray = personaldetailss["category_arr"] as! [[String:Any]]
         
-        self.arrReviews = AstrologerFullData1["reviews"] as! [[String:Any]]
+        self.arrReviews = personaldetailss["reviewRating"] as! [[String:Any]]
         if chatcallingFormmm == "Chat" {
-            let chatStatus = AstrologerFullData1["astro_chat_status"] as? String ?? ""
+            let chatStatus = personaldetailss["astro_chat_status"] as? String ?? ""
             if chatStatus == "1"{
                 buttonForNotify.setImage(#imageLiteral(resourceName: "notification (2)"), for: .normal)
                 buttonForNotify.isEnabled = false
@@ -61,7 +187,7 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
                 buttonForNotify.setImage(#imageLiteral(resourceName: "notification (2)"), for: .normal) }
             }
         } else {
-            let chatStatus = AstrologerFullData1["astro_call_status"] as? String ?? ""
+            let chatStatus = personaldetailss["astro_call_status"] as? String ?? ""
             if chatStatus == "1"{
                 buttonForNotify.setImage(#imageLiteral(resourceName: "notification (2)"), for: .normal)
                 buttonForNotify.isEnabled = false
@@ -76,7 +202,6 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
         } else {
             //                buttonForNotify.isSelected = true
             buttonForNotify.setImage(#imageLiteral(resourceName: "notification (2)"), for: .normal)
-            
         }
             }
         }
@@ -177,154 +302,9 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
         
         valueeee5 = Float(devide5)
         print(valueeee5)
-        
-        
-        
+   
         self.tbl_profile.reloadData()
-        //view_top.layer.cornerRadius = 5.0
-        
-//        self.func_GetProfiledata()
-        
-        // Do any additional setup after loading the view.
     }
-    
-    @IBAction func buttonNotify(_ sender: UIButton) {
-        NotifyCallMethods(AstrologerFullData1["astrologers_uni_id"] as? String ?? "")
-        
-    }
-    //****************************************************
-    // MARK: - Custom Method
-    //****************************************************
-    func NotifyCallMethods(_ astroId:String) {
-        
-        
-        let deviceID = UIDevice.current.identifierForVendor!.uuidString
-        print(deviceID)
-        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,
-                             "app_version":MethodName.APPVERSION.rawValue,
-                             "user_api_key":user_apikey,
-                             "user_id":user_id,"astrologer_id":astroId,"request_type":chatcallingFormmm == "Chat" ? "chat" : "call"] as [String : Any]
-        print(setparameters)
-        AutoBcmLoadingView.show("Loading......")
-        AppHelperModel.requestPOSTURL("astroNotifyMe", params: setparameters as [String : AnyObject],headers: nil,
-                                      success: { (respose) in
-                                        AutoBcmLoadingView.dismiss()
-                                        let tempDict = respose as! NSDictionary
-                                        print(tempDict)
-                                        
-                                        let success=tempDict["response"] as!   Bool
-                                        let message=tempDict["msg"] as!   String
-                                        
-                                        if success == true
-                                        {
-//                                            self.buttonForNotify.setImage(#imageLiteral(resourceName: "notification"), for: .normal)
-                                            
-                                            if chatcallingFormmm == "Chat" {
-                                            
-
-                                                if self.AstrologerFullData1["chat_notify_status"] as? String == "" {
-                                                    self.AstrologerFullData1["chat_notify_status"] = "0"
-                                                    self.buttonForNotify.setImage(#imageLiteral(resourceName: "notification (2)"), for: .normal)
-
-                                                }
-                                                else {
-                                                    self.buttonForNotify.setImage(#imageLiteral(resourceName: "notificationWhite"), for: .normal)
-                                                    self.AstrologerFullData1["chat_notify_status"] = ""
-
-                                                }
-                                                
-                                            } else {
- 
-                                                if  self.AstrologerFullData1["call_notify_status"] as? String == "" {
-                                                    self.buttonForNotify.setImage(#imageLiteral(resourceName: "notification (2)"), for: .normal)
-                                                    self.AstrologerFullData1["call_notify_status"] = "0"
-                                            } else {
-                                                //                buttonForNotify.isSelected = true
-                                                self.buttonForNotify.setImage(#imageLiteral(resourceName: "notificationWhite"), for: .normal)
-                                                self.AstrologerFullData1["call_notify_status"] = ""
-
-                                                
-                                            }
-                                             
-                                            }
-                                            let refreshAlert = UIAlertController(title: "AstroShubh", message:     "You will receive a notification when astrologer comes online."
-, preferredStyle: UIAlertController.Style.alert)
-                                            refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
-                                                                                    {
-                                                                                        (action: UIAlertAction!) in
-                                                                                        self.dismiss(animated: true, completion: nil)
-                                                                                        
-                                                                                    }))
-                                            self.present(refreshAlert, animated: true, completion: nil)
-                                            self.completionHandler!(self.AstrologerFullData1)
-                                        }
-                                        
-                                      }) { (error) in
-            AutoBcmLoadingView.dismiss()
-        }
-        
-        
-        
-    }
-    @IBAction func buttonForShare(_ sender: UIButton) {
-        let text =  "Chat with India' best astrologer \(AstrologerFullData1["astrologers_name"] as! String) and get accurate predictions"
-        let myWebsite = URL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
-        let shareAll = [text , myWebsite as Any] as [Any]
-        let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view
-        self.present(activityViewController, animated: true, completion: nil)
-    }
-    //****************************************************
-    // MARK: - API Methods
-    //****************************************************
-    func func_GetProfiledata() {
-        
-        let deviceID = UIDevice.current.identifierForVendor!.uuidString
-        print(deviceID)
-        let setparameters = ["app_type":MethodName.APPTYPE.rawValue,"app_version":MethodName.APPVERSION.rawValue,"astrologer_id":user_id ,"astrologer_api_key":user_apikey]
-        
-        print(setparameters)
-        AutoBcmLoadingView.show("Loading......")
-        AppHelperModel.requestPOSTURL(MethodName.GETPROFILEDATA.rawValue, params: setparameters as [String : AnyObject],headers: nil,
-                                      success: { (respose) in
-                                        AutoBcmLoadingView.dismiss()
-                                        let tempDict = respose as! NSDictionary
-                                        print(tempDict)
-                                        let success=tempDict["response"] as!   Bool
-                                        let message=tempDict["msg"] as!   String
-                                        
-                                        if success == true
-                                        {
-                                            
-                                           print(success)
-//                                            personaldetailss = tempDict["data"] as! [String:Any]
-//                                            print("personaldetailss is:- ",personaldetailss)
-//
-//                                            //  self.AstrocatArray = personaldetailss["astrologer_category"] as! NSArray
-//
-//                                            self.tbl_profile.reloadData()
-                                            
-                                            
-                                            
-                                            
-                                        }
-                                        
-                                        else
-                                        {
-                                            
-                                            
-                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
-                                            
-                                        }
-                                        
-                                        
-                                      }) { (error) in
-            print(error)
-            AutoBcmLoadingView.dismiss()
-        }
-    }
-    
-    
     //****************************************************
     // MARK: - Action Method
     //****************************************************
@@ -344,43 +324,21 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
     //****************************************************
     func numberOfSections(in tableView: UITableView) -> Int
     {
-        return 6
+        return personaldetailss.count == 0 ? 0 : 7
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        
-        if section == 0
-        {
+        switch section {
+        case 0,1,2,3,4:
             return 1
-        }
-        else  if section == 1
-        {
-            return 1
-        }
-        else  if section == 2
-        {
-            return 1
-        }
-        else  if section == 3
-        {
-            return 1
-        }
-        else  if section == 4
-        {
+        case 5:
             return  arrReviews.count
-        }
-        else
-        {
+        default:
             return 0
         }
-        
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 4 {
-            return  UITableView.automaticDimension
-        } else {
             return UITableView.automaticDimension
-        }
        
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -390,6 +348,81 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
         {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as! ProfileCell
             cell_Add.img_profile.layer.cornerRadius = cell_Add.img_profile.frame.size.height/2
+//            if AstrologerFullData1.count != 0
+//            {
+//                let Image = AstrologerFullData1["astrologers_image_url"] as! String
+//                let name = AstrologerFullData1["astrologers_name"] as? String ?? ""
+//                let exp = AstrologerFullData1["astrologers_experience"] as? String ?? ""
+//                let capStr = name.capitalized
+//                let arrastroprice = (personaldetailss["astro_price"] as? [[String:Any]])!
+//                let astro_price_inrchat = (arrastroprice[0]["astro_price_inr"]  as? String)!
+//                let astro_price_dollarchat = (arrastroprice[0]["astro_price_dollar"]  as? String)!
+//                let astro_price_inrcall = (arrastroprice[1]["astro_price_inr"]  as? String)!
+//                let astro_price_dollarcall = (arrastroprice[1]["astro_price_dollar"]  as? String)!
+//                let chatStatus = AstrologerFullData1["astro_chat_status"] as? String ?? ""
+//                let talk = AstrologerFullData1["astro_call_status"] as? String ?? ""
+//
+//                if CurrentLocation == "India"
+//                {
+//                    cell_Add.lbl_onlinetime.text =  astro_price_inrcall + " " + rupee + " / minute"
+//                    cell_Add.lblPrice.text =  astro_price_inrchat + " " + rupee + " / minute"
+//                }
+//                else
+//                {
+//                    cell_Add.lbl_onlinetime.text =  astro_price_dollarcall + " $/ minute"
+//                    cell_Add.lblPrice.text =  astro_price_dollarchat + " $/ minute"
+//                }
+//
+//                if chatcallingFormmm == "Chat" {
+//                if chatStatus == "1" {
+//                    cell_Add.circlImage.layer.borderColor = #colorLiteral(red: 0.06656374782, green: 0.6171005368, blue: 0.03814116493, alpha: 1)
+//                    cell_Add.circlImage.layer.borderWidth = 3.0
+//                } else  if chatStatus == "2"  {
+//                    cell_Add.circlImage.layer.borderColor = #colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1)
+//                    cell_Add.circlImage.layer.borderWidth = 3.0
+//                    cell_Add.lbl_onlinetime.text = AstrologerFullData1["astrologers_available_time"] as? String
+//                } else {
+//                    cell_Add.circlImage.layer.borderColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+//                    cell_Add.circlImage.layer.borderWidth = 3.0
+//                    cell_Add.lbl_onlinetime.text = AstrologerFullData1["astrologers_available_time"] as? String
+//                 }
+//                    if CurrentLocation == "India"{
+//                        cell_Add.lblPrice.text =  "\(rupee) \(AstrologerFullData1["astro_price_inrchat"] as? String ?? "")/minute"
+//                    } else {
+//                        cell_Add.lblPrice.text = "$ \(AstrologerFullData1["astro_price_dollarchat"] as? String ?? "")/minute"
+//                    }
+//                } else {
+//                    if talk == "1"{
+//                        cell_Add.circlImage.layer.borderColor = #colorLiteral(red: 0.06656374782, green: 0.6171005368, blue: 0.03814116493, alpha: 1)
+//                        cell_Add.circlImage.layer.borderWidth = 3.0
+//                    } else  if  talk == "2" {
+//                        cell_Add.circlImage.layer.borderColor = #colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1)
+//                        cell_Add.circlImage.layer.borderWidth = 3.0
+//                        cell_Add.lbl_onlinetime.text = AstrologerFullData1["astrologers_available_time"] as? String
+//                    } else {
+//                        cell_Add.circlImage.layer.borderColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+//                        cell_Add.circlImage.layer.borderWidth = 3.0
+//                        cell_Add.lbl_onlinetime.text = AstrologerFullData1["astrologers_available_time"] as? String
+//                    }
+//                    if CurrentLocation == "India"{
+//                    cell_Add.lblPrice.text = "\(rupee) \(AstrologerFullData1["astro_price_inrcall"] as? String ?? "")/minute"
+//
+//                    } else {
+//                        cell_Add.lblPrice.text = "$ \(AstrologerFullData1["astro_price_dollarcall"] as? String ?? "")/minute"
+//                    }
+//                }
+//
+//                cell_Add.circlImage.layer.cornerRadius = cell_Add.circlImage.frame.height/2
+//                cell_Add.circlImage.clipsToBounds = true
+//                cell_Add.img_profile.sd_setImage(with: URL(string: Image), placeholderImage: #imageLiteral(resourceName: "appstore"))
+//                cell_Add.lbl_name.text = capStr
+//                cell_Add.lbl_exp.text = exp + " Years"
+//                cell_Add.tagList.removeAllTags()
+//                cell_Add.tagList.addTags(categoryArray)
+//                cell_Add.tagList.alignment = .center
+//
+//            }
+            
             if AstrologerFullData1.count != 0
             {
                 let Image = AstrologerFullData1["astrologers_image_url"] as! String
@@ -433,46 +466,15 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
                     }
                     if CurrentLocation == "India"{
                     cell_Add.lblPrice.text = "\(rupee) \(AstrologerFullData1["call_price_Inr"] as? String ?? "")/minute"
-                 
+
                     } else {
                         cell_Add.lblPrice.text = "$ \(AstrologerFullData1["call_price_dollar"] as? String ?? "")/minute"
                     }
                 }
-//                if chatcallingFormmm == "Chat"
-//                {
-//                    let time = AstrologerFullData1["astro_online_chat_time"] as! String
-//                    let date = AstrologerFullData1["astro_online_chat_date"] as! String
-//
-//                    if time == ""
-//                    {
-//                        cell_Add.lbl_onlinetime.text = "Online"
-//                    }
-//                    else
-//                    {
-//                        cell_Add.lbl_onlinetime.text = date + " ," + time
-//
-//                    }
-//
-//
-//                }
-//                if chatcallingFormmm == "Calling"
-//                {
-//                    let time = AstrologerFullData1["astro_call_online_time"] as! String
-//                    let date = AstrologerFullData1["astro_call_online_date"] as! String
-//                    if time == ""
-//                    {
-//                        cell_Add.lbl_onlinetime.text = "Online"
-//                    }
-//                    else
-//                    {
-//                        cell_Add.lbl_onlinetime.text = date + " ," + time
-//
-//                    }
-//                }
-//
+
                 cell_Add.circlImage.layer.cornerRadius = cell_Add.circlImage.frame.height/2
                 cell_Add.circlImage.clipsToBounds = true
-                
+
                 cell_Add.img_profile.sd_setImage(with: URL(string: Image), placeholderImage: #imageLiteral(resourceName: "userdefault"))
                 cell_Add.lbl_name.text = capStr
                 cell_Add.lbl_exp.text = exp + " Years"
@@ -482,10 +484,27 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
             }
             return cell_Add
         }
+        
         else if indexPath.section == 1
         {
+            let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ImagesTableViewCell", for: indexPath) as! ImagesTableViewCell
+            cell_Add.labelForCallMin.text = "\(personaldetailss["call_minutes"] ?? "0") mins"
+            cell_Add.labelForChatMin.text = "\(personaldetailss["chat_minutes"] ?? "0") mins"
+            cell_Add.arrFOrimage =  personaldetailss["astro_gallery"] as? [[String:Any]] ?? []
+            let valueoFimages = personaldetailss["astro_gallery"] as? [[String:Any]] ?? []
+            let width  = (cell_Add.collectionView.frame.width-10)/3
+            if valueoFimages.count == 0 {
+                cell_Add.heightConstraintForcollevtion.constant = 0
+            } else {
+                cell_Add.heightConstraintForcollevtion.constant = width
+            }
+            cell_Add.collectionView.reloadData()
+            return cell_Add
+        }
+        else if indexPath.section == 2
+        {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "AbountUsCell1", for: indexPath) as! AbountUsCell1
-            let biography = AstrologerFullData1["astrologers_long_biography"] as? String ?? ""
+            let biography = personaldetailss["astrologers_long_biography"] as? String ?? ""
             cell_Add.textVieww.attributedText = biography.htmlToAttributedString
             return cell_Add
         }
@@ -496,12 +515,12 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
         //            cell_Add.lbl_Packagetitle.attributedText =  biography.htmlToAttributedString
         //            return cell_Add
         //        }
-        else if indexPath.section == 2
+        else if indexPath.section == 3
         {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ReviewsCell", for: indexPath) as! ReviewsCell
             return cell_Add
         }
-        else if indexPath.section == 3
+        else if indexPath.section == 4
         {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ReviewsPageCell", for: indexPath) as! ReviewsPageCell
             cell_Add.taskProgress1.trackTintColor = UIColor.clear
@@ -544,8 +563,8 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
             cell_Add.label3.text = "\(Progress3 * 100) %"
             cell_Add.label4.text = "\(Progress2 * 100) %"
             cell_Add.label5.text = "\(Progress1 * 100) %"
-            let rating = AstrologerFullData1["rating"] as! String
-            let avrageRating = AstrologerFullData1["avrageRating"] as! String
+            let rating = AstrologerFullData1["rating"] as? String ?? ""
+            let avrageRating = personaldetailss["avrageRating"] as? String ?? ""
             let reviewrating = Double(avrageRating)
             cell_Add.lbl_totalreviews.text = rating + " " + "Total"
             cell_Add.totalReviews.text = "\(arrReviews.count)" + " " + "Reviews"
@@ -557,7 +576,7 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
             cell_Add.buttonReview.addTarget(self, action: #selector(ratingButton), for: .touchUpInside)
             return cell_Add
         }
-        else if indexPath.section == 4
+        else if indexPath.section == 5
         {
             let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ReviewsPageListCell", for: indexPath) as! ReviewsPageListCell
             cell_Add.img_User.layer.cornerRadius = cell_Add.img_User.frame.size.height/2
@@ -590,12 +609,17 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
             cell_Add.lbl_description.text = description
             cell_Add.floatingView.editable = false
             cell_Add.floatingView.rating = Double(rating1) ?? 0.0
+                if (dict_eventpoll["comment_reply"] as? String ?? "").count == 0 {
+                       cell_Add.viewForReply.isHidden = true
+                } else {
+                    cell_Add.viewForReply.isHidden = false
+                    cell_Add.labelForReply.text = dict_eventpoll["comment_reply"] as? String ?? ""
+                    cell_Add.labelForAstroName.text = (AstrologerFullData1["astrologers_name"] as? String ?? "").capitalized
+                }
             
             }
             return cell_Add
         }
-        
-        
        return UITableViewCell()
         
     }
@@ -714,6 +738,7 @@ class ReviewsPageListCell: UITableViewCell {
     @IBOutlet weak var floatingView: FloatRatingView!
     @IBOutlet weak var img_User: UIImageView!
     @IBOutlet weak var img_1: UIImageView!
+    @IBOutlet weak var viewForReply: UIView!
     @IBOutlet weak var img_2: UIImageView!
     @IBOutlet weak var img_3: UIImageView!
     @IBOutlet weak var img_4: UIImageView!
@@ -725,6 +750,8 @@ class ReviewsPageListCell: UITableViewCell {
     @IBOutlet weak var view_back1: UIView!
     @IBOutlet weak var lbl_circlename: UILabel!
     
+    @IBOutlet weak var labelForReply: UILabel!
+    @IBOutlet weak var labelForAstroName: UILabel!
 }
 //extension String {
 //    func capitalizingFirstLetter() -> String {

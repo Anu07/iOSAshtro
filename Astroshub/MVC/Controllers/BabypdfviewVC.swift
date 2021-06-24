@@ -53,6 +53,11 @@ class BabypdfviewVC: UIViewController , WKNavigationDelegate {
             let url = URL (string: "https://www.astroshubh.in/panchang.php")
             let requestObj = URLRequest(url: url!)
             self.wkWebView.load(requestObj)
+        case 7:
+            self.btntop.setTitle("  Sade Sati", for: .normal)
+            let url = URL (string: "https://www.astroshubh.in/sadesati/action")
+            let requestObj = URLRequest(url: url!)
+            self.wkWebView.load(requestObj)
         default:
             print("hello")
         }

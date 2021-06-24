@@ -18,7 +18,7 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
         "Numerology",
         "Baby Name Analysis",
 //        "Festival 2021",
-        "Daily Horoscope","Mantras","Panchang"
+        "Daily Horoscope","Mantras","Panchang","Sade Sati"
     ]
     let propertyArrayImages = [
         "birthchart",
@@ -26,7 +26,7 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
         "asset-4",
         "birth-name-analysis",
 //        "festival2021",
-        "horoscope","mantras","panchang"
+        "horoscope","mantras","panchang","sa-2"
     ]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,18 +59,13 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         
-        
         let cell_User3 = tableView.dequeueReusableCell(withIdentifier: "tablecell", for: indexPath) as! tablecell
-        //set the data here
-        //cell_User3.cv.tag = indexPath.row;
-        
         cell_User3.cv.delegate = self
         cell_User3.cv.dataSource = self
         
         DispatchQueue.main.asyncAfter(deadline: .now()+0.2)
         {
             cell_User3.consHgtCv.constant = cell_User3.cv.contentSize.height + 10
-            // cell_User3.cv.contentSize.height + 200
         }
         
         cell_User3.cv.reloadData()
@@ -109,14 +104,6 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
-        
-        //        https://astroshubh.in/babyname.php
-        //        https://astroshubh.in/fastivel.php
-        //        https://astroshubh.in/kundali_matching.php
-        //        https://astroshubh.in/panchang.php
-        //        https://astroshubh.in/tearms.php
-        //        https://astroshubh.in/numerology.php
-        
         if indexPath.item == 5{
             let controller = self.storyboard?.instantiateViewController(withIdentifier: "MytrasViewController") as! MytrasViewController
             self.navigationController?.pushViewController(controller, animated: true)
@@ -125,50 +112,7 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
             controller.value = indexPath.row
             self.navigationController?.pushViewController(controller, animated: true)
         }
-        //        if  indexPath.row == 0
-        //        {
-        //            let Panchang = self.storyboard?.instantiateViewController(withIdentifier: "PanchangVC")
-        //            self.navigationController?.pushViewController(Panchang!, animated: true)
-        //
-        //            guard let url = URL(string: "http://kriscenttechnohub.com/demo/astroshubh/admin/panchang.php") else { return }
-        //            UIApplication.shared.open(url)
-        //
-        //        }
-        //        else if  indexPath.row == 1
-        //        {
-        //            let KundaliMatching = self.storyboard?.instantiateViewController(withIdentifier: "KundaliMatchingVC")
-        //            self.navigationController?.pushViewController(KundaliMatching!, animated: true)
-        //
-        //            guard let url = URL(string: "http://kriscenttechnohub.com/demo/astroshubh/admin/kundali_matching.php") else { return }
-        //            UIApplication.shared.open(url)
-        //        }
-        //        else if  indexPath.row == 2
-        //        {
-        //            FreeservicesPdf = "numerology"
-        //           let Babypdfview = self.storyboard?.instantiateViewController(withIdentifier: "BabypdfviewVC")
-        //           self.navigationController?.pushViewController(Babypdfview!, animated: true)
-        //
-        //            guard let url = URL(string: "http://kriscenttechnohub.com/demo/astroshubh/admin/numerology.php") else { return }
-        //            UIApplication.shared.open(url)
-        //        }
-        //        else if  indexPath.row == 3
-        //        {
-        //            FreeservicesPdf = "baby"
-        ////            let Babypdfview = self.storyboard?.instantiateViewController(withIdentifier: "BabypdfviewVC")
-        ////            self.navigationController?.pushViewController(Babypdfview!, animated: true)
-        //
-        //            guard let url = URL(string: "http://kriscenttechnohub.com/demo/astroshubh/admin/babyname.php") else { return }
-        //            UIApplication.shared.open(url)
-        //        }
-        //        else if  indexPath.row == 4
-        //        {
-        //            FreeservicesPdf = "festival"
-        ////            let Babypdfview = self.storyboard?.instantiateViewController(withIdentifier: "BabypdfviewVC")
-        ////            self.navigationController?.pushViewController(Babypdfview!, animated: true)
-        //
-        //            guard let url = URL(string: "http://kriscenttechnohub.com/demo/astroshubh/admin/fastivel.php") else { return }
-        //            UIApplication.shared.open(url)
-        //        }
+       
     }
     //****************************************************
     // MARK: - Action Method
@@ -179,13 +123,6 @@ class FreeServicesVC: UIViewController ,UICollectionViewDelegateFlowLayout,UICol
         self.navigationController?.popViewController(animated: true)
     }
     
-    
-    
-    
-    //****************************************************
-    // MARK: - Memory CleanUP
-    //****************************************************
-    
-    
+
     
 }

@@ -79,6 +79,9 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     var Mobilenumber1 = ""
     var Reportname = ""
     var ReportID = Int()
+    
+    var languagename = ""
+    var languageID = Int()
     var Message = ""
     var Placebirth = ""
     var Enquiry = ""
@@ -90,6 +93,9 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     var dobandtimeclick = ""
     var countryArray = NSArray()
     var countryNameArray = [String]()
+    var languageNameArray = ["English","Hindi"]
+    var languageNameID = [0,1]
+
     var countryIdArray = [Int]()
     var ref:DatabaseReference?
     var databaseHandle:DatabaseHandle?
@@ -498,7 +504,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                              "email":self.Email,
                              "query":Enquiry,
                              "location":CurrentLocation,
-                             "paymentid":PaymentID,"query_type":type] as [String : Any]
+                             "paymentid":PaymentID,"query_type":type,"language_preferred":languagename] as [String : Any]
         
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
@@ -539,7 +545,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                              "email":self.Email,
                              "query":Enquiry,
                              "location":CurrentLocation,
-                             "paymentid":PaymentID,"amount_report":(CurrentLocation == "India" ? FormRemedyPrice : FormRemedydollarPrice)] as [String : Any]
+                             "paymentid":PaymentID,"amount_report":(CurrentLocation == "India" ? FormRemedyPrice : FormRemedydollarPrice),"language_preferred":languagename] as [String : Any]
         
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
@@ -569,7 +575,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     }
     
     func func_ReportForm() {
-        let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id ,"name": ProfileuserName1,"phone":self.Mobilenumber1,"email":self.Email1,"query_name":self.ReportID,"query":Message,"location":CurrentLocation,"paymentid":PaymentID] as [String : Any]
+        let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id ,"name": ProfileuserName1,"phone":self.Mobilenumber1,"email":self.Email1,"query_name":self.ReportID,"query":Message,"location":CurrentLocation,"paymentid":PaymentID,"language_preferred":languagename] as [String : Any]
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL("getReportAstrologer", params: setparameters as [String : AnyObject],headers: nil,
@@ -625,9 +631,9 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
     {
         if tableView == tbl_profile
         {
-            return 4
+            return 5
         } else {
-            return 3
+            return 4
         }
     }
     
@@ -744,7 +750,29 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                     cell_Add.textQuery.text = "Enter Your Problem"
                 }
                 return cell_Add
-            } else {
+            } else if indexPath.section == 3 {
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCell2", for: indexPath) as! ProfileCell4
+                cell_Add.mainDropDown.optionArray = self.languageNameArray
+                cell_Add.mainDropDown.optionIds = self.languageNameID
+                cell_Add.mainDropDown.checkMarkEnabled = false
+                cell_Add.mainDropDown.endEditing(true)
+                // cell_Add.mainDropDown.text = CurrentLocation
+                
+                cell_Add.mainDropDown.didSelect{(selectedText , index , id) in
+                    
+                    let txtddddd = selectedText
+                    let txtIdddddddd = id
+                    print(txtddddd)
+                    print(txtIdddddddd)
+                    self.languageID = id
+                    self.languagename = selectedText
+                    
+                }
+
+                
+                return cell_Add
+            }
+            else {
                 let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCellTwoButtons", for: indexPath) as! ProfileCellTwoButtons
                 cell_Add.buttonDone.addTarget(self, action: #selector(buttonDoneAction), for: .touchUpInside)
                 cell_Add.buttonSample.addTarget(self, action: #selector(buttonSampleAction), for: .touchUpInside)
@@ -799,6 +827,28 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
                     
                 }
                 
+                
+                return cell_Add
+            }
+            else if indexPath.section == 2 {
+                let cell_Add = tableView.dequeueReusableCell(withIdentifier: "ProfileCell2", for: indexPath) as! ProfileCell4
+                cell_Add.mainDropDown.optionArray = self.languageNameArray
+                cell_Add.mainDropDown.optionIds = self.languageNameID
+                cell_Add.mainDropDown.checkMarkEnabled = false
+                cell_Add.mainDropDown.endEditing(true)
+                // cell_Add.mainDropDown.text = CurrentLocation
+                
+                cell_Add.mainDropDown.didSelect{(selectedText , index , id) in
+                    
+                    let txtddddd = selectedText
+                    let txtIdddddddd = id
+                    print(txtddddd)
+                    print(txtIdddddddd)
+                    self.languageID = id
+                    self.languagename = selectedText
+                    
+                }
+
                 
                 return cell_Add
             }
@@ -892,6 +942,8 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         self.Timmeee = ""
         self.Placebirth = ""
          self.date_Selectdate = ""
+        languagename = ""
+        languageID = 0
         tbl_profile.reloadData()
 
     }
@@ -909,6 +961,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         self.Timmeee = ""
         self.Placebirth = ""
          self.date_Selectdate = ""
+      
         QueryReportFormshow = "voice"
         tbl_profile.reloadData()
 
@@ -946,6 +999,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
         self.date_Selectdate = ""
 //       self.Email = ""
        Enquiry = ""
+   
         labelFoQueryNote.text = "You will receive your answer maximum within 24 hours"
 
         QueryReportFormshow = "remedy"

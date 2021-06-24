@@ -330,7 +330,6 @@ PODS:
     - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 6.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - Gemini (1.4.0)
   - GoogleAppMeasurement (6.2.2):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -408,7 +407,6 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
-  - NohanaImagePicker (0.9.0)
   - ObjectMapper (4.2.0)
   - PGEZTransition (1.1.2)
   - PromisesObjC (1.2.8)
@@ -444,7 +442,6 @@ DEPENDENCIES:
   - Firebase/Performance
   - Firebase/Storage
   - FirebaseMessaging
-  - Gemini
   - GoogleMaps
   - GooglePlacePicker
   - GooglePlaces
@@ -452,7 +449,6 @@ DEPENDENCIES:
   - IQKeyboardManagerSwift
   - Kingfisher
   - MessageKit
-  - NohanaImagePicker
   - ObjectMapper (from `https://github.com/tristanhimmelman/ObjectMapper.git`, branch `master`)
   - PGEZTransition
   - razorpay-pod (~> 1.1.1)
@@ -497,7 +493,6 @@ SPEC REPOS:
     - FirebasePerformance
     - FirebaseRemoteConfig
     - FirebaseStorage
-    - Gemini
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
@@ -516,7 +511,6 @@ SPEC REPOS:
     - leveldb-library
     - MessageKit
     - nanopb
-    - NohanaImagePicker
     - PGEZTransition
     - PromisesObjC
     - Protobuf
@@ -571,7 +565,6 @@ SPEC CHECKSUMS:
   FirebasePerformance: 18ac5d515f0da0a96cde94b7fc5b1514b235e2d9
   FirebaseRemoteConfig: c11d74d8b1ff8463b587fc8899d92ee089f9a691
   FirebaseStorage: 6c5263796af3b1be82ed173598aade47535fe125
-  Gemini: 4ad915cca8805577fe3021e02feeca2b77dcdbfc
   GoogleAppMeasurement: d0560d915abf15e692e8538ba1d58442217b6aff
   GoogleDataTransport: 0048df6388dab1c254799f2a30365b1dffe20422
   GoogleDataTransportCCTSupport: f880d70972efa2ed1be4e9173a0f4c5f3dc2d176
@@ -590,7 +583,6 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MessageKit: 3beb578737a5aa2bba25cc27c7b6d6faa09af5a7
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  NohanaImagePicker: b39fa5623cabab69597ea6f6a2d6729b9895cd2b
   ObjectMapper: 5a6c9f063ef67e7fc0d7eb8958919e3121396a96
   PGEZTransition: 97fcec2efcef7c1f82de47b3ecddc2b48a178ce3
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
@@ -604,6 +596,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   WOWRibbonView: 651063fb557d4af568f9fe93cba31bd950463f1c
 
-PODFILE CHECKSUM: 259f9d4747eb77b381da30368af5ea65ecf3a569
+PODFILE CHECKSUM: d15188fa711ae51ab245a60bf6c70b5294a8ad5e
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.1

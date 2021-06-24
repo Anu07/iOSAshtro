@@ -7,7 +7,6 @@ target 'Astroshub' do
   pod 'IQKeyboardManagerSwift'
   pod 'CRNotifications'
   #AnimationForCollectionView
-  pod 'Gemini'
   
   #Side menu
   pod 'FAPanels'
@@ -24,7 +23,7 @@ target 'Astroshub' do
   pod 'PGEZTransition'
   pod 'SJSwiftSideMenuController'
   pod 'FAPanels'
-  pod 'NohanaImagePicker'
+  
   pod 'Firebase/Analytics'
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
@@ -38,10 +37,11 @@ target 'Astroshub' do
   pod 'Crashlytics'
   pod 'iOSDropDown'
   pod 'Kingfisher'
-  pod 'GoogleMaps'
+  
   pod 'razorpay-pod', '~> 1.1.1'
   pod 'GooglePlaces'
   pod 'GooglePlacePicker'
+  pod 'GoogleMaps'
   pod 'BraintreeDropIn'
   pod 'Stripe'
   pod 'Cosmos', '~> 20.0'

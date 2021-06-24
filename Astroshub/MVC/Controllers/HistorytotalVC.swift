@@ -581,8 +581,14 @@ class HistorytotalVC: UIViewController ,UITableViewDelegate,UITableViewDataSourc
             cell_Add.lbl6.text = (dict_eventpoll["price"] as! String)
             cell_Add.btnRefundRequest.layer.cornerRadius = 10.0
             cell_Add.btnRefundRequest.clipsToBounds = true
+            
+            cell_Add.seeChat.layer.cornerRadius = 10.0
+            cell_Add.seeChat.clipsToBounds = true
             cell_Add.btnRefundRequest.tag = indexPath.row
             cell_Add.btnRefundRequest.addTarget(self, action: #selector(self.btn_RefundApi(_:)), for: .touchUpInside)
+            
+            cell_Add.seeChat.tag = indexPath.row
+            cell_Add.seeChat.addTarget(self, action: #selector(self.btn_seechat(_:)), for: .touchUpInside)
             let array = (dict_eventpoll["order_date"] as! String).components(separatedBy: "(")
 print(array)
 //            let strForDate = (dict_eventpoll["order_date"] as! String).replacingCharacters(in: "()", with: "")
@@ -698,6 +704,17 @@ let str =  convertDateFormatter.string(from: oldDate!)
             else { return "In \(day) days" }
         }
     }
+    @objc func btn_seechat(_ sender: UIButton)
+    {
+        let dict_eventpoll = self.arrChat[sender.tag]
+        guard let chat = self.storyboard?.instantiateViewController(withIdentifier: "ChatHistoryViewController")
+        as? ChatHistoryViewController else {
+            return
+        }
+        chat.astroId = dict_eventpoll["astrologer_id"] as? String ?? ""
+        self.navigationController?.show(chat, sender: self)
+    }
+    
     @objc func btn_RefundApi(_ sender: UIButton)
     {
         let dict_eventpoll = self.arrChat[sender.tag]
@@ -710,15 +727,6 @@ let str =  convertDateFormatter.string(from: oldDate!)
         func_RefundChat(dict_eventpoll["uniqeid"] as? String ?? "", title: dict_eventpoll["AstroName"] as? String ?? "", message: dict_eventpoll["AstroName"] as? String ?? "", type: "call")
     }
     func func_RefundChat(_ uniqueId:String, title:String, message:String,type:String) {
-        //        map.put("app_version", "" + Config.App_Version);
-        //                map.put("app_type", "" + Config.App_Type);
-        //                map.put("user_id", sessionManager.getPreferences(getActivity(), Config.User_uni_id));
-        //                map.put("user_api_key", sessionManager.getPreferences(getActivity(), Config.User_api_key));
-        //                map.put("refund_unique_id", "" + chat_id);
-        //                map.put("title", "" + title);
-        //                map.put("message", "" + message);
-        //                map.put("type", "call");
-        
         let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id,"refund_unique_id":uniqueId,"title":title,"message":message,"type":type]
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
@@ -735,18 +743,6 @@ let str =  convertDateFormatter.string(from: oldDate!)
                                             
                                             CommenModel.showDefaltAlret(strMessage:message, controller: self)
 
-//                                            self.arrCall = [[String:Any]]()
-//                                            //CommenModel.showDefaltAlret(strMessage:message, controller: self)
-//                                            
-//                                            // let dict_Data = tempDict["data"] as! [String:Any]
-//                                            // print("dict_Data is:- ",dict_Data)
-//                                            if let arrqry = tempDict["data"] as? [[String:Any]]
-//                                            {
-//                                                self.arrCall = arrqry
-//                                            }
-//                                            print("arrBlogs is:- ",self.arrCall)
-//                                            
-//                                            self.tbl_calllist.reloadData()
                                             
                                         }
                                         
@@ -908,6 +904,7 @@ class ChatListingCellN: UITableViewCell {
     @IBOutlet weak var lbl7: UILabel!
     @IBOutlet weak var lbl8: UILabel!
     
+    @IBOutlet weak var seeChat: UIButton!
     @IBOutlet weak var btnRefundRequest: UIButton!
     
     

@@ -161,7 +161,7 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                              "page":page,
                              "location":CurrentLocation] as [String : Any]
         print(setparameters)
-//        AutoBcmLoadingView.show("Loading......")
+        AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL(MethodName.GETASTROLOGERS.rawValue, params: setparameters as [String : AnyObject],headers: nil,
                                       success: { (respose) in
                                         AutoBcmLoadingView.dismiss()
@@ -443,9 +443,9 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 } else {
                     AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as! String
                 }
-                if OnTabfcmUserIDD == "" {
-                    return
-                }
+//                if OnTabfcmUserIDD == "" {
+//                    return
+//                }
                 user.name = AstrologerNameee
                 user.userId = dict_eventpoll["astrologers_uni_id"] as? String ?? ""
                 user.firebaseToken = dict_eventpoll["user_fcm_token"] as? String ?? ""
@@ -500,9 +500,9 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 } else {
                     AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as! String
                 }
-                if OnTabfcmUserIDD == "" {
-                    return
-                }
+//                if OnTabfcmUserIDD == "" {
+//                    return
+//                }
                 user.name = AstrologerNameee
                 user.userId = dict_eventpoll["astrologers_uni_id"] as? String ?? ""
                 user.firebaseToken = dict_eventpoll["user_fcm_token"] as? String ?? ""
@@ -573,6 +573,8 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         chatcallingFormmm = "Chat"
         let dict_eventpoll = self.arrTalk[sender.tag]
         let NewProfile = self.storyboard?.instantiateViewController(withIdentifier: "NewProfileVC") as?  NewProfileVC
+        NewProfile?.astroApiKey = dict_eventpoll["user_api_key"] as? String
+        NewProfile?.userId = dict_eventpoll["astrologers_uni_id"] as? String
         NewProfile?.AstrologerFullData1 = dict_eventpoll
         NewProfile?.completionHandler = { text in
             self.arrTalk[sender.tag]["chat_notify_status"] = text["chat_notify_status"]

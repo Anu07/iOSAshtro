@@ -64,7 +64,9 @@ public enum MethodName:String {
     case GETPROFILEDATA               = "getAstrologerProfileData"
     case USEREGISTRATION              = "userRegistration_new"
     case BLOG                         = "blog"
-    case GETASTROLOGERS               = "getAstrologers"
+    case GETASTROLOGERS               = "getAllAstrologers"
+
+//    case GETASTROLOGERS               = "getAstrologers"
     case GETUSERPROFILEDATA           = "getUserProfileData"
     case GETZODIACSIGN                = "getZodiacSign"
     

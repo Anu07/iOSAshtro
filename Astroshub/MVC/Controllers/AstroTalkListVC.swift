@@ -319,10 +319,6 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         let capStr = name.capitalized
         
         // let m = name.firstCharacterUpperCase()
-        
-        let rating2 = Int(rating1!)
-        
-        print(rating2)
         cell_Add.lbl_total.text = "\(rating1 ?? 0.0) (\(Rating))"
         cell_Add.img_User.sd_setImage(with: URL(string: imagee), placeholderImage: #imageLiteral(resourceName: "userdefault"))
         cell_Add.lbl_Username.text = capStr
@@ -544,6 +540,8 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
 //        AstrologerFullData = dict_eventpoll
         let NewProfile = self.storyboard?.instantiateViewController(withIdentifier: "NewProfileVC") as? NewProfileVC
         NewProfile?.AstrologerFullData1 = dict_eventpoll
+        NewProfile?.userId = dict_eventpoll["astrologers_uni_id"] as? String
+        NewProfile?.astroApiKey = dict_eventpoll["user_api_key"] as? String
 
         NewProfile?.completionHandler = { text in
             self.arrTalk[sender.tag]["call_notify_status"] = text["chat_notify_status"]

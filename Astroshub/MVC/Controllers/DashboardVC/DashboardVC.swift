@@ -169,7 +169,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
         self.manager.startMonitoringSignificantLocationChanges()
                 if CLLocationManager.locationServicesEnabled() {
                     manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-//                 manager.startUpdatingLocation()
+                 manager.startUpdatingLocation()
                }
         
 //        if !hasLocationPermission() {
@@ -662,14 +662,14 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                 viewscroll.addSubview(imageview)
             }
             
-            let totalPossibleOffset = CGFloat(arrbannerImages.count - 1) * self.view.bounds.size.width
+            let totalPossibleOffset = CGFloat(arrbannerImages.count - 1) * (self.view.bounds.size.width - 20)
             if offSet == totalPossibleOffset
             {
                 offSet = 0 // come back to the first image after the last image
             } else if arrbannerImages.count == 1 {
                 offSet = 0
             } else {
-                offSet += self.view.bounds.size.width
+                offSet += (self.view.bounds.size.width - 20)
             }
             DispatchQueue.main.async()
             {

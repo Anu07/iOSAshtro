@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 import Kingfisher
 import AVFoundation
-class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate{
+class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UITextViewDelegate{
     @IBOutlet weak var view_top: UIView!
     @IBOutlet var tbl_blog: UITableView!
     var arrBlogs = [[String:Any]]()
@@ -351,8 +351,10 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
         cell_Add.playButton.tag = indexPath.row
         cell_Add.playButton.addTarget(self, action: #selector(playButton), for: .touchUpInside)
         //  let partOne = NSMutableAttributedString(string: "Description : ", attributes: description.htmlToAttributedString)
-        
-        cell_Add.lbl_blogdescription.attributedText =  description.htmlToAttributedString
+        cell_Add.textView.delegate = self
+        cell_Add.textView.isSelectable = true
+        cell_Add.textView.isUserInteractionEnabled = true
+        cell_Add.textView.attributedText =  description.htmlToAttributedString
         //cell_Add.lbl_blogdescription.text  = "Description : " + description
         if like == 0
         {
@@ -485,10 +487,14 @@ class BlogVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UIText
     //****************************************************
     
     
-    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    //        return UITableView.automaticDimension
-    //    }
-    //
+        func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+            return UITableView.automaticDimension
+        }
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        
+        UIApplication.shared.open(URL.absoluteURL)
+        return false
+    }
     
 }
 extension BlogVC: AVSpeechSynthesizerDelegate {

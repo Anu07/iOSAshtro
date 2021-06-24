@@ -10,7 +10,7 @@ import UIKit
 import SDWebImage
 import Kingfisher
 import AVFoundation
-class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate{
+class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UITextViewDelegate{
     @IBOutlet weak var view_top: UIView!
     @IBOutlet var tbl_blog: UITableView!
     
@@ -145,7 +145,10 @@ class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate
         
         cell_Add.lbl_blogtitle.text  = title
         //cell_Add.lbl_blogdescription.text  = "Description : " + description
-        cell_Add.lbl_blogdescription.attributedText =  description.htmlToAttributedString
+        cell_Add.textView.attributedText =  description.htmlToAttributedString
+        cell_Add.textView.delegate = self
+        cell_Add.textView.isSelectable = true
+        cell_Add.textView.isUserInteractionEnabled = true
         cell_Add.lbl_views.text  = "Views : " + views
         cell_Add.playButtonDetail.tag = indexPath.row
         cell_Add.playButtonDetail.addTarget(self, action: #selector(playButton), for: .touchUpInside)
@@ -189,9 +192,13 @@ class BlogDetailsVC: UIViewController ,UITableViewDataSource,UITableViewDelegate
         //self.navigationController?.pushViewController(ZoomImage!, animated: true)
     }
     
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        
+        UIApplication.shared.open(URL.absoluteURL)
+        return false
+    }
     
-    
-    
+   
     
     //****************************************************
     // MARK: - Memory CleanUP
