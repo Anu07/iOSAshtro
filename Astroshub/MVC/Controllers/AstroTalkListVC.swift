@@ -334,7 +334,11 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         } else  if talkstatus == "2" {
             cell_Add.btnCall.setTitle("Busy",for: .normal)
             cell_Add.btnCall.backgroundColor = #colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1)
-        } else {
+        } else  if talkstatus == "3" {
+            cell_Add.btnCall.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+            cell_Add.btnCall.setTitle("On Break",for: .normal)
+        }
+        else {
             cell_Add.btnCall.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
             cell_Add.btnCall.setTitle("Offline",for: .normal)
         }

@@ -359,6 +359,10 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
             {
                 cell_Add.btnChat.setTitle("Busy",for: .normal)
                 cell_Add.btnChat.backgroundColor = #colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1)
+            } else  if chatStatus == "3"
+            {
+                cell_Add.btnChat.setTitle("On Break",for: .normal)
+                cell_Add.btnChat.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
             }
             else
             {
