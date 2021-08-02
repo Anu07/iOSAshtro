@@ -62,7 +62,8 @@ public enum MethodName:String {
     case UPDATECALLSTATUS             = "updateCallStatus"
     case UPDATECHATSTATUS             = "updateChatStatus"
     case GETPROFILEDATA               = "getAstrologerProfileData"
-    case USEREGISTRATION              = "userRegistration_new"
+    case USEREGISTRATION              = "userRegistration_update"
+//            "userRegistration_new"
     case BLOG                         = "blog"
     case GETASTROLOGERS               = "getAllAstrologers"
 

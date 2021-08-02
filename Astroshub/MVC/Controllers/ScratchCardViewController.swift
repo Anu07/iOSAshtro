@@ -21,7 +21,6 @@ class ScratchCardViewController: UIViewController {
         // Do any additional setup after loading the view.
         if randomcoupon.count == 0{
             labelForGift.text = "Better luck next time"
-
         } else {
         labelForGift.text = randomcoupon["coupon_code"] as? String
         }

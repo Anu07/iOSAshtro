@@ -146,7 +146,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate,CLLocati
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        
+        application.beginBackgroundTask{}
         Messaging.messaging().delegate = (self as MessagingDelegate)
     }
     
@@ -280,14 +280,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate,CLLocati
             if  title == "Chat Ended"{
                 chatStartorEnd = title
                 NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierEnded"), object: nil, userInfo: dict)
+//                UserDefaults.standard.setValue("", forKey: "ChatResume")
+//                UserDefaults.standard.setValue(false, forKey: "ChatBool")
             } else if title == "Astrologer Accepted Chat Request"{
                 chatStartorEnd = title
                 NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: dict)
-                
+            
             }
-            else if title == "Astrologer Rejected Chat Request"{
+            else if title == "Astrologer Rejected Chat Request" || title == "Chat Request Rejected"{
                 chatStartorEnd = title
                 NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierRejected"), object: nil, userInfo: dict)
+//                UserDefaults.standard.setValue("", forKey: "ChatResume")
+//                UserDefaults.standard.setValue(false, forKey: "ChatBool")
             } else if title == "Astrologer Rejected Chat Request"{
                 
             }
@@ -352,14 +356,18 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         if  title == "Chat Ended"{
             chatStartorEnd = title
             NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierEnded"), object: nil, userInfo: dict)
+//            UserDefaults.standard.setValue("", forKey: "ChatResume")
+//            UserDefaults.standard.setValue(false, forKey: "ChatBool")
         } else if title == "Astrologer Accepted Chat Request"{
             chatStartorEnd = title
             NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: dict)
-            
+            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierForBubble"), object: nil, userInfo: dict)
         }
-        else if title == "Astrologer Rejected Chat Request"{
+        else if title == "Astrologer Rejected Chat Request" || title == "Chat Request Rejected" {
             chatStartorEnd = title
             NotificationCenter.default.post(name: Notification.Name("NotificationIdentifierRejected"), object: nil, userInfo: dict)
+//            UserDefaults.standard.setValue("", forKey: "ChatResume")
+//            UserDefaults.standard.setValue(false, forKey: "ChatBool")
         }
         
         if UIApplication.shared.applicationState == .active { // In iOS 10 if app is in foreground do nothing.
@@ -389,6 +397,8 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
         
         if  title == "Chat Ended"{
             //            moveToDashBoardVC()
+//            UserDefaults.standard.setValue("", forKey: "ChatResume")
+//            UserDefaults.standard.setValue(false, forKey: "ChatBool")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let loginvc = storyboard.instantiateViewController(withIdentifier: "AstroChatVC") as! AstroChatVC
             chatStartorEnd = title
@@ -396,6 +406,7 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             self.window?.clipsToBounds = true
             self.window?.rootViewController = loginvc
             self.window?.makeKeyAndVisible()
+            
         } else if title == "Astrologer Accepted Chat Request"{
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -408,9 +419,10 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
             //            NotificationCenter.default.post(name: Notification.Name("NotificationIdentifier"), object: nil, userInfo: dict)
             
             
-        }  else if title == "Astrologer Rejected Chat Request"{
+        }  else if title == "Astrologer Rejected Chat Request" || title == "Chat Request Rejected" {
             chatStartorEnd = title
-            
+//            UserDefaults.standard.setValue("", forKey: "ChatResume")
+//            UserDefaults.standard.setValue(false, forKey: "ChatBool")
             
         }
         completionHandler()

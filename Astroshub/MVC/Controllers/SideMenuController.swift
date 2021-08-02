@@ -38,7 +38,7 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
         "Astrology Knowledge Channel",
         "About Us",
         "Facebook Live session",
-       "Refer to Friend",
+       "Refer & Earn",
         "Terms & Condition",
         "Privacy Policy",
         "FAQ",
@@ -305,34 +305,42 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
             } else if indexPath.row == 9 {
                 let AboutUs = self.storyboard?.instantiateViewController(withIdentifier: "AboutUsVC")
                 self.navigationController?.pushViewController(AboutUs!, animated: true)
-            }
-            else if indexPath.row == 10 {
+            } else if indexPath.row == 10 {
                 let AboutUs = self.storyboard?.instantiateViewController(withIdentifier: "FbSessionViewController") as! FbSessionViewController
                 self.navigationController?.pushViewController(AboutUs, animated: true)
-            }
-            else if indexPath.row == 11 {
-//                if self.PerformActionIfLogin() {
-//                    let refer = self.storyboard?.instantiateViewController(withIdentifier: "RefertofriendVC")
-//                    self.navigationController?.pushViewController(refer!, animated: true)
-//                }
-                let text = "Join me on Astroshubh"
-               // let image = UIImage(named: "3")
-                let myWebsite = NSURL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
-                let shareAll = [text , myWebsite ?? "nil"] as [Any]
-                let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
-                activityViewController.popoverPresentationController?.sourceView = self.view
-                self.present(activityViewController, animated: true, completion: nil)
-            }
-        else if indexPath.row == 12{
+            } else if indexPath.row == 11 {
+                if CurrentLocation == "India"
+                {
+                    let text = "Hey I am using Astroshubh to get predictions related to marriage, relationship and career."
+                    let text2 = "Use this Referral Code on Signup: \(ReferellCode)"
+                    let text3 = "Earn Rs.50 and they will get a bonus of Rs.50 on a recharge of Rs.200 and above."
+                   // let image = UIImage(named: "3")Earn Rs.50 and they will get a bonus of Rs.50 on a recharge of Rs.200 and above.
+                    let myWebsite = NSURL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
+                    let shareAll = [text , myWebsite ?? "nil", text2,text3] as [Any]
+                    let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+                    activityViewController.popoverPresentationController?.sourceView = self.view
+                    self.present(activityViewController, animated: true, completion: nil)
+                } else {
+                    let text = "Hey I am using Astroshubh to get predictions related to marriage, relationship and career."
+                    let text2 = "Use this Referral Code on Signup: \(ReferellCode)"
+                    let text3 = "Earn $5 and they will get a bonus of $1 on a recharge of $5 and above."
+                   // let image = UIImage(named: "3")
+                    let myWebsite = NSURL(string:"https://apps.apple.com/in/app/astroshubh/id1509641168")
+                    let shareAll = [text , myWebsite ?? "nil", text2,text3] as [Any]
+                    let activityViewController = UIActivityViewController(activityItems: shareAll, applicationActivities: nil)
+                    activityViewController.popoverPresentationController?.sourceView = self.view
+                    self.present(activityViewController, animated: true, completion: nil)
+                }
+            } else if indexPath.row == 12 {
                 let Terms = self.storyboard?.instantiateViewController(withIdentifier: "TermsandconditionVC")
                 self.navigationController?.pushViewController(Terms!, animated: true)
-            } else if indexPath.row == 13{
+            } else if indexPath.row == 13 {
                 let Privacy = self.storyboard?.instantiateViewController(withIdentifier: "PrivacyVC")
                 self.navigationController?.pushViewController(Privacy!, animated: true)
             } else if indexPath.row == 14 {
                 let FAQ = self.storyboard?.instantiateViewController(withIdentifier: "FrequentlyAskQuestionVC")
                 self.navigationController?.pushViewController(FAQ!, animated: true)
-            } else if indexPath.row == 15{
+            } else if indexPath.row == 15 {
                 let Contact = self.storyboard?.instantiateViewController(withIdentifier: "ContactVC")
                 self.navigationController?.pushViewController(Contact!, animated: true)
 //            } else if indexPath.row == 14 {
@@ -373,8 +381,8 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
                 }
             }
         }
-        
     }
+    
     func share(message: String, link: String) {
         if let link = NSURL(string: link) {
             let objectsToShare = [message,link] as [Any]
@@ -382,6 +390,7 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
             self.present(activityVC, animated: true, completion: nil)
         }
     }
+    
     func open(url: URL)
     {
         if #available(iOS 10, *)
@@ -389,14 +398,11 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
             UIApplication.shared.open(url, options: [:], completionHandler: { (success) in
                 print("Open \(url): \(success)")
             })
-        }
-        else if UIApplication.shared.openURL(url)
-        {
+        } else if UIApplication.shared.openURL(url) {
             print("Open \(url)")
         }
     }
-    func openWhatsapp(){
-        
+    func openWhatsapp() {
         let string1 = whatsappmobile
         let url = string1
         
@@ -406,6 +412,7 @@ class SideMenuController: UIViewController, UITableViewDelegate, UITableViewData
             UIApplication.shared.open(whatsappURL!, options: [:], completionHandler: nil)
         }
     }
+    
     func logoutFun()
     {
         UserDefaults.standard.removeObject(forKey: "isLogin")

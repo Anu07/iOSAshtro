@@ -11,8 +11,10 @@ import UIKit
 class SignupCell: UITableViewCell {
     
     
+    @IBOutlet weak var txtReferalCode: UITextField!
     @IBOutlet weak var img_Header: UIImageView!
     @IBOutlet weak var txt_Name: UITextField!
+    @IBOutlet weak var viewForCode: UIView!
     @IBOutlet weak var txt_MobileNo: UITextField!
     @IBOutlet weak var txt_Email: UITextField!
     @IBOutlet weak var txt_Password: UITextField!

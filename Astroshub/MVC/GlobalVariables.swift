@@ -109,5 +109,5 @@ var QueryReportFormshow = ""
 var PaymentID = ""
 var AMTNY = ""
 
-
+//var bubble: BubbleControl!
 var signUpOffer = ""

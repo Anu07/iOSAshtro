@@ -139,12 +139,6 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         }
     }
     //****************************************************
-    // MARK: - Custom Method
-    //****************************************************
-    
-
-    
-    //****************************************************
     // MARK: - API Methods
     //****************************************************
     func astrotalklistApiCallMethods() {
@@ -377,15 +371,33 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
             cell_Add.imageTag.isHidden = false
 
         }
+            let chat_discounted_price_inr = dict_eventpoll["chat_discounted_price_inr"] as? String ?? ""
+            let chat_discounted_price_dollar = dict_eventpoll["chat_discounted_price_dollar"] as? String ?? ""
         if CurrentLocation == "India"
         {
+            if chat_discounted_price_inr != "0"  && chat_discounted_price_inr != ""
+            {
+                cell_Add.viewForDiscountPrice.isHidden = false
+                cell_Add.labelForDiscountPrice.text = rupee + String(chat_discounted_price_inr) + "/minute"
+            } else {
+                cell_Add.labelForDiscountPrice.text = ""
+                cell_Add.viewForDiscountPrice.isHidden = true
+            }
             cell_Add.lbl_price.text = rupee + String(price1) + "/minute"
         }
         else
         {
             cell_Add.lbl_price.text = "$" + String(price2) + "/minute"
+            if chat_discounted_price_dollar != "0" && chat_discounted_price_dollar != ""
+            {
+                cell_Add.viewForDiscountPrice.isHidden = false
+                cell_Add.labelForDiscountPrice.text =  "$" + String(chat_discounted_price_dollar) + "/minute"
+            } else {
+                cell_Add.labelForDiscountPrice.text = ""
+                cell_Add.viewForDiscountPrice.isHidden = true
+            }
         }
-        
+
         //cell_Add.lbl_price.text = rupee + String(price1) + "/minute"
         //cell_Add.img_varify.isHidden = true
         if varify == "0"
@@ -422,8 +434,9 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         chatStartorEnd = ""
 
         if CurrentLocation == "India" {
-            if walletBalanceNew <= 99 {
-            } else {
+//            if walletBalanceNew <= 99 {
+//
+//            } else {
             if sender.titleLabel?.text == "Chat" {
             let dict_eventpoll = self.arrTalk[sender.tag]
             let chatStatus = dict_eventpoll["astro_chat_status"] as? String ?? ""
@@ -435,6 +448,8 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 }
             }
             if self.PerformActionIfLogin() {
+                let chat_discounted_price_inr = dict_eventpoll["chat_discounted_price_inr"] as? String ?? ""
+                let chat_discounted_price_dollar = dict_eventpoll["chat_discounted_price_dollar"] as? String ?? ""
                 AstrologerUniID = dict_eventpoll["astrologers_uni_id"] as? String ?? ""
                 AstrologerEmailId = dict_eventpoll["email"] as? String ?? ""
                 OnTabfcmUserID = dict_eventpoll["fcm_user_id"] as? String ?? ""
@@ -443,9 +458,19 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 OnTabfcmUserTOKEN = dict_eventpoll["user_fcm_token"] as? String ?? ""
                 OnTabfcmUserTOKEN = dict_eventpoll["user_ios_token"] as? String ?? ""
                 if CurrentLocation == "India" {
-                    AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
+                    if chat_discounted_price_inr != "0"  && chat_discounted_price_inr != ""
+                    {
+                        AstrologerrPrice = chat_discounted_price_inr
+                    } else {
+                        AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
+                    }
                 } else {
-                    AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as! String
+                    if chat_discounted_price_dollar != "0"  && chat_discounted_price_dollar != ""
+                    {
+                        AstrologerrPrice = chat_discounted_price_dollar
+                    } else {
+                        AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as? String ?? ""
+                    }
                 }
 //                if OnTabfcmUserIDD == "" {
 //                    return
@@ -476,10 +501,10 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 self.present(controller, animated: true, completion: nil)
             }
             }
-            }
+//            }
         } else {
-            if walletBalanceNew <= 1 {
-            } else {
+//            if walletBalanceNew <= 1 {
+//            } else {
             if sender.titleLabel?.text == "Chat" {
             let dict_eventpoll = self.arrTalk[sender.tag]
             let chatStatus = dict_eventpoll["astro_chat_status"] as? String ?? ""
@@ -492,6 +517,8 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 }
             }
             if self.PerformActionIfLogin() {
+                let chat_discounted_price_inr = dict_eventpoll["chat_discounted_price_inr"] as? String ?? ""
+                let chat_discounted_price_dollar = dict_eventpoll["chat_discounted_price_dollar"] as? String ?? ""
                 AstrologerUniID = dict_eventpoll["astrologers_uni_id"] as? String ?? ""
                 AstrologerEmailId = dict_eventpoll["email"] as? String ?? ""
                 OnTabfcmUserID = dict_eventpoll["fcm_user_id"] as? String ?? ""
@@ -500,9 +527,19 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 OnTabfcmUserTOKEN = dict_eventpoll["user_fcm_token"] as? String ?? ""
                 OnTabfcmUserTOKEN = dict_eventpoll["user_ios_token"] as? String ?? ""
                 if CurrentLocation == "India" {
-                    AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
+                    if chat_discounted_price_inr != "0"  && chat_discounted_price_inr != ""
+                    {
+                        AstrologerrPrice = chat_discounted_price_inr
+                    } else {
+                        AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
+                    }
                 } else {
-                    AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as! String
+                    if chat_discounted_price_dollar != "0"  && chat_discounted_price_dollar != ""
+                    {
+                        AstrologerrPrice = chat_discounted_price_dollar
+                    } else {
+                        AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as? String ?? ""
+                    }
                 }
 //                if OnTabfcmUserIDD == "" {
 //                    return
@@ -533,7 +570,7 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 self.present(controller, animated: true, completion: nil)
             }
             }
-            }
+//            }
             
         }
        
@@ -671,5 +708,8 @@ class ChatListCell: UITableViewCell {
     @IBOutlet weak var img_varify: UIImageView!
     @IBOutlet weak var btnProfile: UIButton!
     @IBOutlet weak var labelForTag: UILabel!
+    
+    @IBOutlet weak var labelForDiscountPrice: UILabel!
+    @IBOutlet weak var viewForDiscountPrice: UIView!
 }
 

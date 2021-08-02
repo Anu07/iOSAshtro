@@ -14,6 +14,8 @@ import SJSwiftSideMenuController
 
 //@available(iOS 13.0, *)
 class AstroChatVC: UIViewController {
+    var stopTimer: Timer?
+    var typingTimer: Timer?
     
     @IBOutlet weak var lblTimer: UILabel!
     @IBOutlet weak var constraintviewBottom: NSLayoutConstraint!
@@ -79,31 +81,15 @@ class AstroChatVC: UIViewController {
         if anotherUserId == "" {
             anotherUserId = OnTabfcmUserIDD
         }
+
         observeMessage()
-        //        self.sendFirstMessage()
-        //        observeMessage()
-        //        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "SingleThreadUpdation"), object: nil, queue: .main) { (notification) in
-        //            guard let node = notification.userInfo?["id"] as? String,
-        //                node == self.thread?.node else { return }
-        //            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-        //                self.tblView.reloadData()
-        //            }
-        //        }
-        
         Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(callFirstMessage), userInfo: nil, repeats: false)
-        //            Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(callMessageAfter5Min), userInfo: nil, repeats: false)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object:  nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotificationRejected(notification:)), name: Notification.Name("NotificationIdentifierRejected"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotificationEnded(notification:)), name: Notification.Name("NotificationIdentifierEnded"), object: nil)
-//        let refreshAlert = UIAlertController(title: "Astroshubh", message: "This chat session will be deleted for privacy purposes. Please keep the notes of important messages.", preferredStyle: UIAlertController.Style.alert)
-//        refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
-//                                                {
-//                                                    (action: UIAlertAction!) in
-//                                                    refreshAlert .dismiss(animated: true, completion: nil)
-//                                                }))
-//        self.present(refreshAlert, animated: true, completion: nil)
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.methodOfReceivedNotification(notification:)), name: Notification.Name("NotificationIdentifier"), object:  nil)
+        self.timer =  Timer.scheduledTimer(timeInterval: 300, target: self, selector: #selector(self.callMessageAfter5Min), userInfo: nil, repeats: false)
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         //observeTyping()
@@ -111,11 +97,53 @@ class AstroChatVC: UIViewController {
         //self.observeUserMessages()
         
     }
+    
+    // MARK:- Typing Status Methods
+    func sendIsTypingStatus() {
+        
+        if self.typingTimer == nil {
+            //self.viewModel.typingRoom(true)
+        }
+        
+        self.removeTimerFunctionsForTyping()
+        
+        self.typingTimer = Timer.scheduledTimer(timeInterval: 4.0,
+                                                target: self,
+                                                selector: #selector(invalidateTypingTimer),
+                                                userInfo: nil,
+                                                repeats: false)
+        
+        self.stopTimer = Timer.scheduledTimer(timeInterval: 6.0,
+                                              target: self,
+                                              selector: #selector(stopTyping),
+                                              userInfo: nil,
+                                              repeats: false)
+    }
+    
+    @objc func stopTyping() {
+        self.removeTimerFunctionsForTyping()
+        // self.viewModel.typingRoom(false)
+    }
+    
+    @objc private func invalidateTypingTimer() {
+        typingTimer?.invalidate()
+        typingTimer = nil
+    }
+    
+    func removeTimerFunctionsForTyping() {
+        self.typingTimer?.invalidate()
+        self.typingTimer = nil
+        self.stopTimer?.invalidate()
+        self.stopTimer = nil
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         moveToLastComment()
         
         
         if chatStartorEnd == "Astrologer Accepted Chat Request" {
+            self.timer?.invalidate()
+            self.timer = nil
             if self.astroFirstMessage == true {
                 
             } else  {
@@ -148,23 +176,23 @@ class AstroChatVC: UIViewController {
                 }
                 //            self.sendFirstMessage()
                 self.setStartTime()
-//                //           self.initializeTimer()
-                let refreshAlert = UIAlertController(title: "Astroshubh", message: "This chat session will be deleted  for privacy purposes. Please keep the notes of important messages.", preferredStyle: UIAlertController.Style.alert)
-                refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
-                                                        {
-                                                            (action: UIAlertAction!) in
-                                                            refreshAlert .dismiss(animated: true, completion: nil)
-                                                        }))
-                present(refreshAlert, animated: true, completion: nil)
+                //                //           self.initializeTimer()
+                //                let refreshAlert = UIAlertController(title: "Astroshubh", message: "This chat session will be deleted  for privacy purposes. Please keep the notes of important messages.", preferredStyle: UIAlertController.Style.alert)
+                //                refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                //                                                        {
+                //                                                            (action: UIAlertAction!) in
+                //                                                            refreshAlert .dismiss(animated: true, completion: nil)
+                //                                                        }))
+                //                present(refreshAlert, animated: true, completion: nil)
                 //            Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(callFirstMessage), userInfo: nil, repeats: false)
                 //            Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(callMessageAfter5Min), userInfo: nil, repeats: false)
             }
-        } else if chatStartorEnd == "Astrologer Rejected Chat Request" {
+        } else if chatStartorEnd == "Astrologer Rejected Chat Request" || chatStartorEnd == "Chat Request Rejected"{
             //            chatStartorEnd = ""
             callMessageAfter5Min()
         } else if chatStartorEnd == "Chat Ended" {
             //            chatStartorEnd = ""
-            self.func_chatEndForAstroSide()
+//            self.func_chatEndForAstroSide()
         }
         else {
             txtView.isUserInteractionEnabled  = false
@@ -200,6 +228,8 @@ class AstroChatVC: UIViewController {
             if self.astroFirstMessage == true {
                 
             } else  {
+                self.timer?.invalidate()
+                self.timer = nil
                 self.txtView.isUserInteractionEnabled  = true
                 self.btnChat.isUserInteractionEnabled = true
                 self.astroFirstMessage = true
@@ -237,16 +267,18 @@ class AstroChatVC: UIViewController {
                 //            chatStartorEnd = ""
                 
                 //
-                let refreshAlert = UIAlertController(title: "Astroshubh", message: "This chat session will be deleted  for privacy purposes. Please keep the notes of important messages.", preferredStyle: UIAlertController.Style.alert)
-                refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
-                                                        {
-                                                            (action: UIAlertAction!) in
-                                                            refreshAlert .dismiss(animated: true, completion: nil)
-                                                        }))
-                present(refreshAlert, animated: true, completion: nil)
+                //                let refreshAlert = UIAlertController(title: "Astroshubh", message: "This chat session will be deleted  for privacy purposes. Please keep the notes of important messages.", preferredStyle: UIAlertController.Style.alert)
+                //                refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                //                                                        {
+                //                                                            (action: UIAlertAction!) in
+                //                                                            refreshAlert .dismiss(animated: true, completion: nil)
+                //                                                        }))
+                //                present(refreshAlert, animated: true, completion: nil)
             }
-        } else if chatStartorEnd == "Astrologer Rejected Chat Request" {
+        } else if chatStartorEnd == "Astrologer Rejected Chat Request"  || chatStartorEnd == "Chat Request Rejected" {
             setEndTime()
+//            UserDefaults.standard.setValue("", forKey: "ChatResume")
+//            UserDefaults.standard.setValue(false, forKey: "ChatBool")
             //            chatStartorEnd = ""
         } else {
             txtView.isUserInteractionEnabled  = false
@@ -255,8 +287,10 @@ class AstroChatVC: UIViewController {
     }
     
     @objc func methodOfReceivedNotificationRejected(notification: Notification) {
-        if chatStartorEnd == "Astrologer Rejected Chat Request" {
+        if chatStartorEnd == "Astrologer Rejected Chat Request"  || chatStartorEnd == "Chat Request Rejected" {
             //            setEndTime()
+//            UserDefaults.standard.setValue("", forKey: "ChatResume")
+//            UserDefaults.standard.setValue(false, forKey: "ChatBool")
             self.moveToDashBoardVC()
             //            chatStartorEnd = ""
         } else {
@@ -279,6 +313,8 @@ class AstroChatVC: UIViewController {
         }
     }
     @objc func methodOfReceivedNotificationEnded(notification: Notification) {
+//        UserDefaults.standard.setValue("", forKey: "ChatResume")
+//        UserDefaults.standard.setValue(false, forKey: "ChatBool")
         func_chatEndForAstroSide()
     }
     
@@ -294,13 +330,13 @@ class AstroChatVC: UIViewController {
     }
     
     @objc func callMessageAfter5Min() {
-        if self.astroFirstMessage {
+        if self.astroFirstMessage == false {
             let refreshAlert = UIAlertController(title: "Astroshubh", message: "Oops!! we are extremely sorry. Our astrologer is busy. Please try another astrologer", preferredStyle: UIAlertController.Style.alert)
             refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
                                                     {
                                                         (action: UIAlertAction!) in
                                                         self.duration = 0
-                                                        self.func_chatEnd()
+                                                        self.func_chatEndForAstroSide()
                                                     }))
             present(refreshAlert, animated: true, completion: nil)
         }
@@ -358,6 +394,7 @@ class AstroChatVC: UIViewController {
     func runTimer()
     {
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateTimer), userInfo: nil, repeats: true)
+        RunLoop.current.add(timer ?? Timer(), forMode: .common)
     }
     
     @objc func updateTimer()
@@ -470,6 +507,8 @@ class AstroChatVC: UIViewController {
     //MARK: API
     
     func func_chatEnd() {
+//        UserDefaults.standard.setValue("", forKey: "ChatResume")
+//        UserDefaults.standard.setValue(false, forKey: "ChatBool")
         let dateFormatter : DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "hh:mm a"
         let date = Date()
@@ -513,7 +552,7 @@ class AstroChatVC: UIViewController {
                                                 refreshAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler:
                                                                                         {
                                                                                             (action: UIAlertAction!) in
-                                                                                            if let radom = data["random_coupon"] as? String {
+                                                                                            if (data["random_coupon"] as? String) != nil {
                                                                                                 let scratch = self.storyboard?.instantiateViewController(withIdentifier: "ScratchCardViewController") as! ScratchCardViewController
                                                                                                 scratch.modalPresentationStyle = .overCurrentContext
                                                                                                 scratch.randomcoupon = [:]
@@ -600,21 +639,10 @@ class AstroChatVC: UIViewController {
         let date = Date()
         let dateString = dateFormatter.string(from: date)
         
-        let setparameters = ["app_type":"ios",
-                             "app_version":kAppVersion,
-                             "user_id":user_id ,
-                             "user_api_key":user_apikey,
-                             "astrologer_id":AstrologerUniID,
-                             "endtime": self.endTime ,
-                             "starttime":self.startTime ,
-                             "chat_id": data?["uniqeid"] as? String ?? ChatuNIQid,
-                             "duration": self.duration,
-                             "busy_status":0,
-                             "location":CurrentLocation,"end_type": "0"] as [String : Any]
-        
+        let setparameters = ["app_version":MethodName.APPVERSION.rawValue,"app_type":MethodName.APPTYPE.rawValue,"user_id":user_id,"user_api_key":user_apikey,"chat_id":ChatuNIQid,"end_type":"2"]
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
-        AppHelperModel.requestPOSTURL("chatEnd", params: setparameters as [String : AnyObject],headers: nil,
+        AppHelperModel.requestPOSTURL("chatExits", params: setparameters as [String : AnyObject],headers: nil,
                                       success: { (respose) in
                                         AutoBcmLoadingView.dismiss()
                                         let tempDict = respose as! NSDictionary
@@ -717,8 +745,7 @@ class AstroChatVC: UIViewController {
     func sendFirstMessage() {
         let firstmessage =  "Name : " + ((self.data?["user_name"] as? String) ?? firstMessageData.name) + "\n" + "Gender : " + ((self.data?["user_gender"] as? String) ?? firstMessageData.gender ) + "\n" + "Date of Birth : " + ((self.data?["user_dob"] as? String) ?? firstMessageData.dob ) + "\n" + "Date of Time : " +  ((self.data?["user_dob"] as? String) ?? firstMessageData.dot ) + "\n" + "Pob : " +  ((self.data?["user_pob"] as? String) ?? firstMessageData.dot )  + "\n" + "Problem : " +  ((self.data?["problem_area"] as? String) ?? firstMessageData.problem ) + "\n" + "Location : " +  ((self.data?["user_pob"] as? String) ?? firstMessageData.location )
         self.sendOnce = false
-        
-        
+        self.astroFirstMessage = true
         let ref = Database.database().reference().child("messages").child(Auth.auth().currentUser!.uid).child(anotherUserId ?? "")
         let childRef = ref.childByAutoId()
         //            let toId = anotherUserId
@@ -856,6 +883,7 @@ extension AstroChatVC: UITextViewDelegate {
         let count = (textView.text.trimmingCharacters(in: .whitespacesAndNewlines).count -
                         range.length + text.trimmingCharacters(in: .whitespacesAndNewlines).count)
         btnChat.isEnabled = count != 0
+        
         return true
     }
     
@@ -863,6 +891,7 @@ extension AstroChatVC: UITextViewDelegate {
         let newSize = textView.sizeThatFits(CGSize(width: textView.bounds.width,
                                                    height: CGFloat.greatestFiniteMagnitude))
         constraintTxtViewHeight.constant = newSize.height
+        self.sendIsTypingStatus()
     }
 }
 
@@ -926,12 +955,6 @@ extension UIDataSourceTranslating {
         view.endEditing(true)
     }
 }
-
-
-
-
-
-
 class SentTVC: UITableViewCell {
     
     //    @IBOutlet private weak var viewImage: UIView!

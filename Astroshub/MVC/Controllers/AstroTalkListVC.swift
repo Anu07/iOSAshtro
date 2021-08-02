@@ -311,7 +311,8 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         let talkstatus = dict_eventpoll["astro_call_status"] as? String ?? ""
         let chatBusyStatus = dict_eventpoll["call_busy_status"] as? String ?? ""
         let rating1 = Double(rating)
-        
+            let call_discounted_price_inr = dict_eventpoll["call_discounted_price_inr"] as? String ?? ""
+            let call_discounted_price_dollar = dict_eventpoll["call_discounted_price_dollar"] as? String ?? ""
         print(rating1 ?? "nil")
         
         //let avvv = name.uppercased
@@ -351,8 +352,24 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         }
         if CurrentLocation == "India"
         {
+            if call_discounted_price_inr != "0"  && call_discounted_price_inr != ""
+            {
+                cell_Add.viewForDiscount.isHidden = false
+                cell_Add.labelForDiscountPrice.text = rupee + String(call_discounted_price_inr) + "/minute"
+            } else {
+                cell_Add.labelForDiscountPrice.text = ""
+                cell_Add.viewForDiscount.isHidden = true
+            }
             cell_Add.lbl_price.text = rupee + String(price1) + "/minute"
         } else {
+            if call_discounted_price_dollar != "0"  && call_discounted_price_dollar != ""
+            {
+                cell_Add.viewForDiscount.isHidden = false
+                cell_Add.labelForDiscountPrice.text = "$" + String(call_discounted_price_dollar) + "/minute"
+            } else {
+                cell_Add.labelForDiscountPrice.text = ""
+                cell_Add.viewForDiscount.isHidden = true
+            }
             cell_Add.lbl_price.text = "$" + String(price2) + "/minute"
         }
         
@@ -400,17 +417,19 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
         let dict_eventpoll = self.arrTalk[sender.tag]
 
         if CurrentLocation == "India" {
-        if walletBalanceNew <= 99 {
-            CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
-
-        } else if  walletBalanceNew <= Double(dict_eventpoll["chat_price_Inr"] as? String ?? "") ?? 0.0{
-            CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
-
-        }
-        else {
+//        if walletBalanceNew <= 99 {
+            //            CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
+            //
+            //        } else if  walletBalanceNew <= Double(dict_eventpoll["chat_price_Inr"] as? String ?? "") ?? 0.0{
+            //            CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
+            //
+            //        }
+            //        else {
         if sender.titleLabel?.text == "Call" {
 
         let dict_eventpoll = self.arrTalk[sender.tag]
+            let call_discounted_price_inr = dict_eventpoll["call_discounted_price_inr"] as? String ?? ""
+            let call_discounted_price_dollar = dict_eventpoll["call_discounted_price_dollar"] as? String ?? ""
         let chatStatus = dict_eventpoll["astro_call_status"] as? String ?? ""
         let chatBusyStatus = dict_eventpoll["call_busy_status"] as? String ?? ""
         if chatStatus == "2" {
@@ -421,16 +440,30 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
             }
         }
         if self.PerformActionIfLogin() {
+           
             AstrologerUniID = dict_eventpoll["astrologers_uni_id"] as? String ?? ""
             OnTabfcmUserIDD = dict_eventpoll["fcm_user_id"] as? String ?? ""
             let name = dict_eventpoll["astrologers_name"] as? String ?? ""
             if CurrentLocation == "India"
             {
-                AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
+                if call_discounted_price_inr != "0"  && call_discounted_price_inr != ""
+                {
+                    AstrologerrPrice = call_discounted_price_inr
+      
+                } else {
+                    AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
+                }
+               
             }
             else
             {
-                AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as? String ?? ""
+                if call_discounted_price_dollar != "0"  && call_discounted_price_dollar != ""
+                {
+                    AstrologerrPrice = call_discounted_price_dollar
+                } else {
+                    AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as? String ?? ""
+
+                }
             }
             var callDuration = ""
             if let getPrice = Double(AstrologerrPrice) {
@@ -451,20 +484,22 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
             }
             self.present(controller, animated: true, completion: nil)
         } }
-        }
+//        }
         }else {
-            if walletBalanceNew <= 1 {
-                CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
-
-            }else if  walletBalanceNew <= Double(dict_eventpoll["chat_price_dollar"] as? String ?? "") ?? 0.0{
-                CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
-
-            }
-            
-            else {
+//            if walletBalanceNew <= 1 {
+//                CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
+//
+//            }else if  walletBalanceNew <= Double(dict_eventpoll["chat_price_dollar"] as? String ?? "") ?? 0.0{
+//                CommenModel.showDefaltAlret(strMessage:"Insufficient balance", controller: self)
+//
+//            }
+//
+//            else {
                 if sender.titleLabel?.text == "Call" {
 
                 let dict_eventpoll = self.arrTalk[sender.tag]
+                    let call_discounted_price_inr = dict_eventpoll["call_discounted_price_inr"] as? String ?? ""
+                    let call_discounted_price_dollar = dict_eventpoll["call_discounted_price_dollar"] as? String ?? ""
                 let chatStatus = dict_eventpoll["astro_call_status"] as? String ?? ""
                 let chatBusyStatus = dict_eventpoll["call_busy_status"] as? String ?? ""
                 if chatStatus == "2" {
@@ -478,13 +513,20 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                     AstrologerUniID = dict_eventpoll["astrologers_uni_id"] as? String ?? ""
                     OnTabfcmUserIDD = dict_eventpoll["fcm_user_id"] as? String ?? ""
                     let name = dict_eventpoll["astrologers_name"] as? String ?? ""
-                    if CurrentLocation == "India"
-                    {
-                        AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
-                    }
-                    else
-                    {
-                        AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as? String ?? ""
+                    if CurrentLocation == "India" {
+                        if call_discounted_price_inr != "0"  && call_discounted_price_inr != ""
+                        {
+                            AstrologerrPrice = call_discounted_price_inr
+                        } else {
+                            AstrologerrPrice = dict_eventpoll["chat_price_Inr"] as? String ?? ""
+                        }
+                    } else {
+                        if call_discounted_price_dollar != "0"  && call_discounted_price_dollar != ""
+                        {
+                            AstrologerrPrice = call_discounted_price_dollar
+                        } else {
+                            AstrologerrPrice = dict_eventpoll["chat_price_dollar"] as? String ?? ""
+                        }
                     }
                     var callDuration = ""
                     if let getPrice = Double(AstrologerrPrice) {
@@ -505,7 +547,7 @@ class AstroTalkListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                     }
                     self.present(controller, animated: true, completion: nil)
                 } }
-                }
+//                }
         }
     }
     
@@ -605,6 +647,8 @@ class TalkListCell: UITableViewCell {
     @IBOutlet weak var img_varify: UIImageView!
     @IBOutlet weak var btnProfile: UIButton!
     
+    @IBOutlet weak var labelForDiscountPrice: UILabel!
+    @IBOutlet weak var viewForDiscount: UIView!
     @IBOutlet weak var labelLng: UILabel!
     @IBOutlet weak var ratingView: FloatRatingView!
 }

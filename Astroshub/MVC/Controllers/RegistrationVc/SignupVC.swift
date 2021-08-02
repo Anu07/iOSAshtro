@@ -29,6 +29,8 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
     var Password = ""
     var CnfPassword = ""
     var referalcode = ""
+    
+    var referingcode = ""
     var arrstatecity = [[String:Any]]()
     @IBOutlet var tbl_signup: UITableView!
     var visibilityonoff1 = ""
@@ -158,6 +160,10 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         {
             referalcode=textField.text!
         }
+        else if (textField.tag==10)
+        {
+            referingcode = textField.text!
+        }
         
     }
     
@@ -183,6 +189,10 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         {
             referalcode=textField.text!
         }
+        else if (textField.tag==10)
+        {
+            referingcode = textField.text!
+        }
         // return YES;
         return true
     }
@@ -206,7 +216,7 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         print(fcm ?? "")
         let deviceID = UIDevice.current.identifierForVendor!.uuidString
         print(deviceID)
-        let setparameters = ["app_type":"ios","app_version":kAppVersion,"username":Name,"phone_number":MobileNumber,"email":Email,"country":countrycodeID,"fcm_userid":fcmUserID] as [String : Any]
+        let setparameters = ["app_type":"ios","app_version":kAppVersion,"username":Name,"phone_number":MobileNumber,"email":Email,"country":countrycodeID,"fcm_userid":fcmUserID,"referring_code":referingcode] as [String : Any]
         print(setparameters)
         AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL(MethodName.USEREGISTRATION.rawValue, params: setparameters as [String : AnyObject],headers: nil,
@@ -463,8 +473,9 @@ class SignupVC: UIViewController  ,UITableViewDataSource,UITableViewDelegate,UIT
         cell_Add.view_MobileNo.layer.cornerRadius = 10
         cell_Add.view_MobileNo.layer.borderWidth = 1
         cell_Add.view_MobileNo.layer.borderColor = (UIColor .darkGray).cgColor
-        
-
+        cell_Add.viewForCode.layer.cornerRadius = 10
+        cell_Add.viewForCode.layer.borderWidth = 1
+        cell_Add.viewForCode.layer.borderColor = (UIColor .darkGray).cgColor
         cell_Add.view_referalcode.layer.cornerRadius = 10
         cell_Add.view_referalcode.layer.borderWidth = 1
         cell_Add.view_referalcode.layer.borderColor = (UIColor .darkGray).cgColor

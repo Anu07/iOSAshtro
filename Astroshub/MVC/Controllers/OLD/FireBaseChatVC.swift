@@ -120,7 +120,7 @@
 //@available(iOS 13.0, *)
 //extension ChatVC: MessagesDisplayDelegate {
 //  
-//  func backgroundColor(for message: MessageType, at indexPath: IndexPath,
+//  func backgroundColor(for message: MessageType, at indeypexPath: IndexPath,
 //    in messagesCollectionView: MessagesCollectionView) -> UIColor {
 //    
 //    // 1

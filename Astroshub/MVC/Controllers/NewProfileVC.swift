@@ -39,7 +39,7 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
     var AstrologerFullData1 = [String:Any]()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        personaldetailss.removeAll()
         self.func_GetProfiledata()
         // Do any additional setup after loading the view.
     }
@@ -326,6 +326,7 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
     {
         return personaldetailss.count == 0 ? 0 : 7
     }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         switch section {
@@ -339,8 +340,8 @@ class NewProfileVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return UITableView.automaticDimension
-       
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         
