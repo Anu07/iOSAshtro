@@ -417,7 +417,12 @@ PODS:
   - SDWebImage/Core (5.5.2)
   - SJSwiftSideMenuController (1.2)
   - SkyFloatingLabelTextField (3.8.0)
-  - Stripe (19.4.0)
+  - Stripe (21.8.1):
+    - Stripe/Stripe3DS2 (= 21.8.1)
+    - StripeCore (= 21.8.1)
+  - Stripe/Stripe3DS2 (21.8.1):
+    - StripeCore (= 21.8.1)
+  - StripeCore (21.8.1)
   - SVProgressHUD (2.2.5)
   - SwiftyJSON (5.0.0)
   - WOWRibbonView (0.1.1)
@@ -442,6 +447,7 @@ DEPENDENCIES:
   - Firebase/Performance
   - Firebase/Storage
   - FirebaseMessaging
+  - FirebaseStorage
   - GoogleMaps
   - GooglePlacePicker
   - GooglePlaces
@@ -455,7 +461,7 @@ DEPENDENCIES:
   - SDWebImage
   - SJSwiftSideMenuController
   - SkyFloatingLabelTextField
-  - Stripe
+  - Stripe (~> 21.4)
   - SVProgressHUD
   - SwiftyJSON
   - WOWRibbonView
@@ -519,6 +525,7 @@ SPEC REPOS:
     - SJSwiftSideMenuController
     - SkyFloatingLabelTextField
     - Stripe
+    - StripeCore
     - SVProgressHUD
     - SwiftyJSON
     - WOWRibbonView
@@ -591,11 +598,12 @@ SPEC CHECKSUMS:
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   SJSwiftSideMenuController: c28974db07aa6a9ae102df006832f5b8ca2c70e6
   SkyFloatingLabelTextField: 5a338412114808e961fe2d14ea2c5452c8b6e4aa
-  Stripe: 92f1c73a9dbd3c54277ed06a1fea6e08f20414c6
+  Stripe: 57c6997c64042a3f5aedae9b76e331942f8b75d2
+  StripeCore: a6e50d58119a0c7601773b56f274db2d394dcdac
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   WOWRibbonView: 651063fb557d4af568f9fe93cba31bd950463f1c
 
-PODFILE CHECKSUM: d15188fa711ae51ab245a60bf6c70b5294a8ad5e
+PODFILE CHECKSUM: a14af5cf7c773f33d42b3dd19322517272157dd4
 
 COCOAPODS: 1.10.1

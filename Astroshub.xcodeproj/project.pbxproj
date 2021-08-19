@@ -17,7 +17,6 @@
 		931537B8257A3FCA00D491C9 /* new.png in Resources */ = {isa = PBXBuildFile; fileRef = 931537B7257A3FC900D491C9 /* new.png */; };
 		93234D4F252A0C2E00E5BF69 /* PopUPVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93234D4E252A0C2E00E5BF69 /* PopUPVC.swift */; };
 		932380222571D28100980B6E /* OffersCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932380212571D28100980B6E /* OffersCollectionViewCell.swift */; };
-		932748FC25308E260059C902 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 932748FB25308E250059C902 /* GoogleService-Info.plist */; };
 		93276AA82668254200FF65EC /* ChatHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93276AA72668254200FF65EC /* ChatHistoryViewController.swift */; };
 		932ABC472577AED100325556 /* QueryVoIceText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932ABC422577AED000325556 /* QueryVoIceText.swift */; };
 		932ABC482577AED200325556 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932ABC432577AED100325556 /* Audio.swift */; };
@@ -35,6 +34,7 @@
 		937545DB2569CDEE00F7B21C /* ScratchCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 937545DA2569CDEE00F7B21C /* ScratchCardViewController.swift */; };
 		93809A0A25840B2F001DF302 /* FloatRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93809A0925840B2E001DF302 /* FloatRatingView.swift */; };
 		9386B4732571BA8200BA9215 /* MyOffersCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9386B4722571BA8200BA9215 /* MyOffersCollectionViewCell.swift */; };
+		938AB4F426C5B93000135544 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 938AB4F326C5B92F00135544 /* GoogleService-Info.plist */; };
 		93989FA525719F8000E5169D /* ButtonsForQueryRemedyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93989FA325719F8000E5169D /* ButtonsForQueryRemedyCell.swift */; };
 		93989FA625719F8000E5169D /* ButtonsForQueryRemedyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93989FA425719F8000E5169D /* ButtonsForQueryRemedyCell.xib */; };
 		93991AA32573AC410087B186 /* PaymentPopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93991AA22573AC410087B186 /* PaymentPopUpVC.swift */; };
@@ -244,7 +244,6 @@
 		931537B7257A3FC900D491C9 /* new.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = new.png; sourceTree = "<group>"; };
 		93234D4E252A0C2E00E5BF69 /* PopUPVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUPVC.swift; sourceTree = "<group>"; };
 		932380212571D28100980B6E /* OffersCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffersCollectionViewCell.swift; sourceTree = "<group>"; };
-		932748FB25308E250059C902 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		93276AA72668254200FF65EC /* ChatHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHistoryViewController.swift; sourceTree = "<group>"; };
 		932ABC422577AED000325556 /* QueryVoIceText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryVoIceText.swift; sourceTree = "<group>"; };
 		932ABC432577AED100325556 /* Audio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
@@ -262,6 +261,7 @@
 		937545DA2569CDEE00F7B21C /* ScratchCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScratchCardViewController.swift; sourceTree = "<group>"; };
 		93809A0925840B2E001DF302 /* FloatRatingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatRatingView.swift; sourceTree = "<group>"; };
 		9386B4722571BA8200BA9215 /* MyOffersCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyOffersCollectionViewCell.swift; sourceTree = "<group>"; };
+		938AB4F326C5B92F00135544 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		93989FA325719F8000E5169D /* ButtonsForQueryRemedyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsForQueryRemedyCell.swift; sourceTree = "<group>"; };
 		93989FA425719F8000E5169D /* ButtonsForQueryRemedyCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ButtonsForQueryRemedyCell.xib; sourceTree = "<group>"; };
 		93991AA22573AC410087B186 /* PaymentPopUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPopUpVC.swift; sourceTree = "<group>"; };
@@ -685,7 +685,6 @@
 			isa = PBXGroup;
 			children = (
 				93FCC10B25841CA100643963 /* TagListView */,
-				932748FB25308E250059C902 /* GoogleService-Info.plist */,
 				F2EAE2AA23F8040700608E01 /* Astroshub.entitlements */,
 				93521E0B25B6FE220014F6F1 /* RELATIONSHIP-REPORT-FOR-ASTRO-SHUBH.pdf */,
 				93729F0A259539FD000F1E47 /* ContactUs.png */,
@@ -693,6 +692,7 @@
 				93521E0D25B6FE310014F6F1 /* Query.pdf */,
 				D4156600247C00440009C5F3 /* sample_query.pdf */,
 				D41565FF247C00420009C5F3 /* sample_reports.pdf */,
+				938AB4F326C5B92F00135544 /* GoogleService-Info.plist */,
 				71265F8424C5EF3300D9A9E4 /* CFSDK.xcframework */,
 				F263609223C44FFB0088C51F /* MVC */,
 				AAB6ACEA23C43D7500957EC2 /* AppDelegate.swift */,
@@ -1054,7 +1054,7 @@
 				F2E2EED2241B4BF900A72C92 /* WWCalendarTimeSelector.storyboard in Resources */,
 				D4F7A49A24501B0000D01A23 /* DashBoardMainTVC.xib in Resources */,
 				93729F0B259539FD000F1E47 /* ContactUs.png in Resources */,
-				932748FC25308E260059C902 /* GoogleService-Info.plist in Resources */,
+				938AB4F426C5B93000135544 /* GoogleService-Info.plist in Resources */,
 				F2E2EED1241B4BE700A72C92 /* LaunchScreen.storyboard in Resources */,
 				93C74BF0255C29E2004F07B7 /* OffersTableViewCell.xib in Resources */,
 				D4156602247C00450009C5F3 /* sample_query.pdf in Resources */,
@@ -1462,10 +1462,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Astroshub/Astroshub.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.7;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2.2;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7RTV9YBVCV;
 				ENABLE_BITCODE = NO;
@@ -1484,7 +1484,7 @@
 				MARKETING_VERSION = 4.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.kriscent.testinguser.newuser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = DevProfile;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Astroshub/MVC/Bridging_Header.h;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1500,7 +1500,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1.7;
+				CURRENT_PROJECT_VERSION = 2.2;
 				DEVELOPMENT_TEAM = 7RTV9YBVCV;
 				ENABLE_BITCODE = NO;
 				ENABLE_HARDENED_RUNTIME = NO;

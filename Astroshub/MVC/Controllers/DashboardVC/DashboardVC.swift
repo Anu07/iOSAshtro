@@ -494,11 +494,11 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                 }
                 if let placemark = placemarks, placemark.count > 0 {
                     let placemarkObj = placemark[0]
-                    print(placemarkObj.country!)
+////                    print(placemarkObj.country!)
                     if let getCountry = placemarkObj.country {
-                        CurrentLocation = "United States"
-                        print("coutry name is: \(getCountry)")
-                        UserDefaults.standard.set("United States", forKey: "country")
+                        CurrentLocation = getCountry
+//                        print("coutry name is: \(getCountry)")
+                        UserDefaults.standard.set(getCountry, forKey: "country")
                         self.func_CallWelcomeAPI()
                         if let _ = UserDefaults.standard.value(forKey: "isUserData") as? Data {
                             self.walletApiCallMethods()

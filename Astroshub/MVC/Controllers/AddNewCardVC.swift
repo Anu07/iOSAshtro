@@ -182,7 +182,7 @@ class AddNewCardVC: UIViewController {
             cardParams.cvc = cvv
             cardParams.expYear = expiryYear
             cardParams.expMonth = expiryMonth
-            STPAPIClient.shared().createToken(withCard: cardParams) { (stripetoken, error) in
+            STPAPIClient.shared.createToken(withCard: cardParams) { (stripetoken, error) in
                 guard selfVar != nil else { return }
                 guard let token = stripetoken , error == nil else {
                     DispatchQueue.main.async {

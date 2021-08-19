@@ -297,7 +297,7 @@ class ChatFormVC: UIViewController ,UITableViewDataSource,UITableViewDelegate,UI
                                                 ChatForm.totalduration = getUser.totalSecondsForCall
                                                 let defaults = UserDefaults.standard
                                                 defaults.set(getUser.totalSecondsForCall, forKey: "duration")
-                                                ChatForm.thread = ChatHelper.thread(with: getUser, orFrom: [])
+//                                                ChatForm.thread = ChatHelper.thread(with: getUser, orFrom: [])
                                                 ChatForm.firstMessageData = firstMessageObj
 //                                                ChatForm.data = dict_Data1["chatarr"] as! [String : Any]
                                                 self.navigationController?.pushViewController(ChatForm, animated: true)

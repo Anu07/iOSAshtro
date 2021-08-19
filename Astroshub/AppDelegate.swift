@@ -192,6 +192,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate,CLLocati
         return hasPermission
     }//MARK:- Custom Method
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         if let location = locations.first {
             print("Found user's location: \(location)")
             let geocoder = CLGeocoder()
@@ -201,7 +202,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate,CLLocati
                 }
                 if let placemark = placemarks, placemark.count > 0 {
                     let placemarkObj = placemark[0]
-                    print(placemarkObj.country!)
+//                    print(placemarkObj.country!)
                     if let getCountry = placemarkObj.country {
                         CurrentLocation = getCountry
                         print("coutry name is: \(getCountry)")

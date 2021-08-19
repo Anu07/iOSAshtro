@@ -565,7 +565,7 @@ class AstroChatListVC: UIViewController,UITableViewDataSource,UITableViewDelegat
                 controller.screenCome = "chat"
                 controller.estimateModel = estimateModel
                 controller.completionHandler = {
-                    self.moveToNextScreen(userObj:self.user, duration: callDuration)
+                    self.moveToNextScreen(userObj:self.user, duration: "\(self.user.totalSecondsForCall)")
                 }
                 self.present(controller, animated: true, completion: nil)
             }
