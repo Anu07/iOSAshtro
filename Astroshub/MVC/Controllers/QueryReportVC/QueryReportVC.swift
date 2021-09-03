@@ -13,6 +13,8 @@ import FirebaseDatabase
 import Firebase
 import Razorpay
 import CoreLocation
+import Stripe
+
 enum enumForScreen {
     case voice
     case remedy
@@ -1098,7 +1100,7 @@ class QueryReportVC: UIViewController,UITableViewDataSource,UITableViewDelegate,
             amt = "\(FormReportPrice)"
         }
         if allowed{
-            
+           
             
             
             guard let addNewCardVC = self.storyboard?.instantiateViewController(withIdentifier: "PaymentFoerignViewController") as? PaymentFoerignViewController else { return }
@@ -1364,3 +1366,5 @@ extension QueryReportVC: RazorpayPaymentCompletionProtocolWithData {
         //        self.presentAlert(withTitle: "Success", message: "Payment Succeeded")
     }
 }
+
+

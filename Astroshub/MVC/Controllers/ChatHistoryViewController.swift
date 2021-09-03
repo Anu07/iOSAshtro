@@ -77,18 +77,18 @@ extension ChatHistoryViewController: UITableViewDataSource {
         
         if message?["recipient"] as? String != nil{
             let cell = tableView.dequeueReusableCell(withIdentifier: "SentTVC", for: indexPath) as! SentTVC
-            cell.lblTime.text =  message?["receiver_time"] as? String
+            cell.lblTime.text =  ""
 //            cell.labelForMsg.text = message?["recipient"] as? String
-            if  message?["imageUrl"] == nil {
+            if  message?["type"] as? String == "text" {
                 cell.labelForMsg.isHidden = false
                 cell.imgViewUser.isHidden = true
                 cell.labelForMsg.text = message?["recipient"] as? String
                 cell.imageHeight?.constant = 0
 
-            } else if message?["imageUrl"] as! String != "" {
+            } else if message?["type"] as? String == "image" {
                 cell.labelForMsg.isHidden = true
                 cell.imgViewUser.isHidden = false
-                cell.imgViewUser.sd_setImage(with: URL(string: message?["imageUrl"] as! String ), completed: nil)
+                cell.imgViewUser.sd_setImage(with: URL(string: message?["recipient"] as? String ?? "" ), completed: nil)
                 cell.imageHeight?.constant = 170
 //                let imageTapped = UITapGestureRecognizer(target: self, action: #selector(imageTappedHandler(tap:)))
 //                cell.imgViewUser.addGestureRecognizer(imageTapped)
@@ -104,7 +104,7 @@ extension ChatHistoryViewController: UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "RecievedTVC", for: indexPath) as! RecievedTVC
             cell.labelForReceiver.text = message?["sender"] as? String
-            cell.lblTime.text =   message?["sender_time"] as? String
+            cell.lblTime.text =   ""
            
             return cell
         }

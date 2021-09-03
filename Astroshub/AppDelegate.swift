@@ -43,10 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,MessagingDelegate,CLLocati
         GMSServices.provideAPIKey("AIzaSyAnbvBjqcrIfKaniwF0eWY0RPCH7mp_M3s")
         GMSPlacesClient.provideAPIKey("AIzaSyAnbvBjqcrIfKaniwF0eWY0RPCH7mp_M3s")
         FirebaseApp.configure()
-        //BTAppSwitch.setReturnURLScheme("com.kriscent.testinguser.newuser-app.payments")
-        // Stripe.setDefaultPublishableKey("pk_test_51HJFJ1KWWShMkLmumiGX9V9hWrg8kk611ZJ3NkElwiRI7Kq1LTc3ShJbfAeLMO89Dd4s2q8cvONLcYPtCAY8d0lj00FZzrIQvu")
-        
-        Stripe.setDefaultPublishableKey("pk_live_51HJFJ1KWWShMkLmub8SKi28vGy8euQlq9DJLfUW3k241VNOQ0avH3rBaW0zXSdllVJpYYGJU9OWK6rVSoWwpSUDi008HJUo2pi")
+
+        StripeAPI.defaultPublishableKey = "pk_test_51HJFJ1KWWShMkLmumiGX9V9hWrg8kk611ZJ3NkElwiRI7Kq1LTc3ShJbfAeLMO89Dd4s2q8cvONLcYPtCAY8d0lj00FZzrIQvu"
+//        StripeAPI.defaultPublishableKey = "pk_live_51HJFJ1KWWShMkLmub8SKi28vGy8euQlq9DJLfUW3k241VNOQ0avH3rBaW0zXSdllVJpYYGJU9OWK6rVSoWwpSUDi008HJUo2pi"
         self.moveToDashBoardVC()
         manager.delegate = self
         manager.requestLocation()

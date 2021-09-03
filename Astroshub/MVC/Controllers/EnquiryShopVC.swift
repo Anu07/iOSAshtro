@@ -675,7 +675,16 @@ extension EnquiryShopVC {
                                         let message=tempDict["msg"] as!   String
                                         
                                         if success == true{
-                                            CommenModel.showDefaltAlret(strMessage:message, controller: self)
+                                            let refreshAlert = UIAlertController(title: "Astroshubh", message: message, preferredStyle: UIAlertController.Style.alert)
+                                            refreshAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:
+                                                                                    {
+                                                                                        (action: UIAlertAction!) in
+                                                                                        //            self.navigationController?.popToRootViewController(animated: true)
+                                                                                        
+                                                                                        self.backFun()
+                                                                                    }))
+                                            
+                                            self.present(refreshAlert, animated: true, completion: nil)
                                         }else{
                                             CommenModel.showDefaltAlret(strMessage:message, controller: self)
                                         }
@@ -685,6 +694,16 @@ extension EnquiryShopVC {
         }
     }
     
+    func backFun(){
+        for controller in self.navigationController!.viewControllers as Array{
+            if controller.isKind(of: DashboardVC.self){
+                _ =  self.navigationController!.popToViewController(controller, animated: true)
+                break
+            }else{
+                // Fallback on earlier versions
+            }
+        }
+    }
     func func_BookForm( _ totalAmount:String,transactionId:String) {
         let setparameters = ["app_type":"ios","app_version":"1.0","user_api_key":user_apikey,"user_id":user_id,"specialistId":productcatyegoryIDD,"service":self.Subject,"name":self.Personname," problem":self.Message,"amount" :totalAmount,"paymentID":transactionId,"dob":"2020-01-01","time":"5:30","date":"2020-12-13"]
         print(setparameters)
@@ -707,6 +726,7 @@ extension EnquiryShopVC {
             AutoBcmLoadingView.dismiss()
         }
     }
+    
     func onPaymentSuccess(_ payment_id: String)
     {
         PaymentID =  payment_id

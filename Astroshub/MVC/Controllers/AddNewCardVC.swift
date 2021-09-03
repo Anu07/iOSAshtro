@@ -13,21 +13,44 @@ protocol DelegateStripePayment : class{
     func paymentDone(isSuccess : Bool , paymentId : String , msg : String)
 }
 
-class AddNewCardVC: UIViewController {
+class AddNewCardVC: UIViewController, STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
+    }
     
+    @IBOutlet weak var labelForAmount: UILabel!
+    var paymentIntentClientSecret: String?
+    
+    @IBOutlet weak var viewForAddTeextFiled: UIView!
     //MARK:- Outlets
+    lazy var cardTextField: STPPaymentCardTextField = {
+        let cardTextField = STPPaymentCardTextField()
+        return cardTextField
+    }()
     
-    @IBOutlet weak var txtCardNo: UITextField!
-    @IBOutlet weak var txtExpiryDate: UITextField!
-    @IBOutlet weak var txtCVV: UITextField!
+    
     var amount = 0
     
+    @IBOutlet weak var viewForField: UIView!
     //MARK:- View Lifecycle Methods
     weak var delegateStripePay : DelegateStripePayment?
     var stripePaymentParams : [String : Any] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        paymentIntentClientSecret =  UserDefaults.standard.value(forKey: "client_secret") as? String
+        
+        labelForAmount.text = "$ \(amount)"
+        let stackView = UIStackView(arrangedSubviews: [cardTextField])
+        stackView.axis = .vertical
+        stackView.spacing = 20
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        viewForField.addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.leftAnchor.constraint(equalToSystemSpacingAfter: viewForField.leftAnchor, multiplier: 1),
+            viewForField.rightAnchor.constraint(equalToSystemSpacingAfter: stackView.rightAnchor, multiplier: 1),
+            stackView.topAnchor.constraint(equalToSystemSpacingBelow: viewForField.topAnchor, multiplier: 1),
+        ])
     }
     
     override func didReceiveMemoryWarning() {
@@ -36,15 +59,48 @@ class AddNewCardVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        txtCardNo.becomeFirstResponder()
         //setupNavigationBar()
+    }
+    
+    @IBAction func btnForPAy(_ sender: Any) {
+        guard let paymentIntentClientSecret = paymentIntentClientSecret else {
+            return;
+        }
+        // Collect card details
+        AutoBcmLoadingView.show("Loading......")
+        let cardParams = cardTextField.cardParams
+        let paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
+        let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
+        paymentIntentParams.paymentMethodParams = paymentMethodParams
+        
+        // Submit the payment
+        let paymentHandler = STPPaymentHandler.shared()
+        paymentHandler.confirmPayment(paymentIntentParams, with: self) { (status, paymentIntent, error) in
+            AutoBcmLoadingView.dismiss()
+            switch (status) {
+            case .failed:
+                // self.displayAlert(title: "Payment failed", message: error?.localizedDescription ?? "")
+                self.delegateStripePay?.paymentDone(isSuccess: false, paymentId: "", msg : error?.localizedDescription ?? "")
+
+            case .canceled:
+                //   self.displayAlert(title: "Payment canceled", message: error?.localizedDescription ?? "")
+                self.delegateStripePay?.paymentDone(isSuccess: false, paymentId: "", msg : error?.localizedDescription ?? "")
+
+            case .succeeded:
+                //self.displayAlert(title: "Payment succeeded", message: paymentIntent?.description ?? "", restartDemo: true)
+                print(paymentIntent?.description ?? "")
+                self.delegateStripePay?.paymentDone(isSuccess: true, paymentId: paymentIntent?.paymentMethodId ?? "", msg : "")
+            default:
+                break
+            }
+        }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.title = ""
     }
-    
     
     //MARK:- Touches Methods
     
@@ -107,7 +163,7 @@ class AddNewCardVC: UIViewController {
             if dict_IsLogin?["customer_address"] as? String == "" {
                 stripePaymentParams["line1"] = "Test Address"
             } else {
-            stripePaymentParams["line1"] = dict_IsLogin?["customer_address"] as? String ?? "Test Address"
+                stripePaymentParams["line1"] = dict_IsLogin?["customer_address"] as? String ?? "Test Address"
             }
             stripePaymentParams["city"] = dict_IsLogin?["user_city"] as? String ?? CurrentLocation
             let country = dict_IsLogin?["customer_country_name"] as? String ?? CurrentLocation
@@ -120,9 +176,9 @@ class AddNewCardVC: UIViewController {
         stripePaymentParams["amount"] = amount
         stripePaymentParams["currency"] = "USD"
         
-
+        
         print(stripePaymentParams)
-    
+        
         AutoBcmLoadingView.show("Loading......")
         AppHelperModel.requestPOSTURL("stripePayment",
                                       params: stripePaymentParams as [String : AnyObject],
@@ -135,110 +191,68 @@ class AddNewCardVC: UIViewController {
                                         AutoBcmLoadingView.dismiss()
                                         if success == true{
                                             guard let data=tempDict["data"] as? [String : Any],
-                                                let paymentID = data["stripe_charge_id"] as? String else { return }
+                                                  let paymentID = data["stripe_charge_id"] as? String else { return }
                                             self.navigationController?.popViewController(animated: true)
                                             self.delegateStripePay?.paymentDone(isSuccess: true, paymentId: paymentID, msg : "")
                                             
                                         }else{
                                             guard let data=tempDict["data"] as? [String : Any],
-                                                let err = data["value"] as? String else { return }
+                                                  let err = data["value"] as? String else { return }
                                             self.navigationController?.popViewController(animated: true)
                                             self.delegateStripePay?.paymentDone(isSuccess: false, paymentId: "", msg : err)
                                             
                                         }
                                         
                                         
-        }) { (error) in
+                                      }) { (error) in
             print(error)
             AutoBcmLoadingView.dismiss()
         }
         
     }
     
-    
-    //MARK:- Button Actions
-    
-    @IBAction func actionAddCard(_ sender: UIButton) {
-        self.view.endEditing(true)
-        let cardNo = txtCardNo.text!.replacingOccurrences(of: " ", with: "")
-        let cvv = txtCVV.text!
-        let expiryDate = txtExpiryDate.text!
-        let components = expiryDate.components(separatedBy: "/")
-        var expiryYear:UInt!
-        var expiryMonth:UInt!
-        guard components.count > 1 else {
-            showAlert(withTitle: "ERROR",
-                      andMessage: "Expiry Date is Invalid")
-            
-            return }
-        expiryMonth = UInt(components[0])
-        expiryYear = UInt(components[1])
-        weak var selfVar = self
-        let checkValidation = validateCard(withCardNo: cardNo, withCVV: cvv,withMonth:expiryMonth,withYear:expiryYear)
-        if checkValidation == "Valid Card" {
-            AutoBcmLoadingView.show("Loading......")
-            let cardParams = STPCardParams()
-            cardParams.number = cardNo
-            cardParams.cvc = cvv
-            cardParams.expYear = expiryYear
-            cardParams.expMonth = expiryMonth
-            STPAPIClient.shared.createToken(withCard: cardParams) { (stripetoken, error) in
-                guard selfVar != nil else { return }
-                guard let token = stripetoken , error == nil else {
-                    DispatchQueue.main.async {
-                        AutoBcmLoadingView.dismiss()
-                        self.showAlert(withTitle: "ERROR", andMessage: error!.localizedDescription)
-                    }
-                    return
-                }
-                selfVar!.addCard(withStripeToken: "\(token)")
-            }
-        } else {
-            self.showAlert(withTitle: "ERROR", andMessage: checkValidation)
-        }
-    }
+    //
+    //    //MARK:- Button Actions
+    //
+    //    @IBAction func actionAddCard(_ sender: UIButton) {
+    //        self.view.endEditing(true)
+    //        let cardNo = txtCardNo.text!.replacingOccurrences(of: " ", with: "")
+    //        let cvv = txtCVV.text!
+    //        let expiryDate = txtExpiryDate.text!
+    //        let components = expiryDate.components(separatedBy: "/")
+    //        var expiryYear:UInt!
+    //        var expiryMonth:UInt!
+    //        guard components.count > 1 else {
+    //            showAlert(withTitle: "ERROR",
+    //                      andMessage: "Expiry Date is Invalid")
+    //
+    //            return }
+    //        expiryMonth = UInt(components[0])
+    //        expiryYear = UInt(components[1])
+    //        weak var selfVar = self
+    //        let checkValidation = validateCard(withCardNo: cardNo, withCVV: cvv,withMonth:expiryMonth,withYear:expiryYear)
+    //        if checkValidation == "Valid Card" {
+    //            AutoBcmLoadingView.show("Loading......")
+    //            let cardParams = STPCardParams()
+    //            cardParams.number = cardNo
+    //            cardParams.cvc = cvv
+    //            cardParams.expYear = expiryYear
+    //            cardParams.expMonth = expiryMonth
+    //            STPAPIClient.shared.createToken(withCard: cardParams) { (stripetoken, error) in
+    //                guard selfVar != nil else { return }
+    //                guard let token = stripetoken , error == nil else {
+    //                    DispatchQueue.main.async {
+    //                        AutoBcmLoadingView.dismiss()
+    //                        self.showAlert(withTitle: "ERROR", andMessage: error!.localizedDescription)
+    //                    }
+    //                    return
+    //                }
+    //                selfVar!.addCard(withStripeToken: "\(token)")
+    //            }
+    //        } else {
+    //            self.showAlert(withTitle: "ERROR", andMessage: checkValidation)
+    //        }
+    //    }
 }
 
-//MARK:- Textfield Delegate Methods
 
-extension AddNewCardVC:UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-        return true
-    }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if textField == txtCardNo {
-            var newStr = textField.text!.trimmingCharacters(in: .whitespaces)
-            newStr = newStr.replacingOccurrences(of: " ", with: "")
-            if newStr.count != 0 && newStr.count % 4 == 0 && string != "" && txtCardNo.text!.count < 20 {
-                textField.text = textField.text! + " "
-            }
-            if string == "" && textField.text!.hasSuffix(" ") {
-                textField.text!.removeLast()
-            }
-            return (txtCardNo.text!.count < 20) || string == ""
-        } else if textField == txtExpiryDate {
-            if textField.text!.count == 2 && string != "" {
-                textField.text = textField.text! + "/"
-            }
-            if textField.text!.count == 4 && string == "" {
-                textField.text = textField.text!.replacingOccurrences(of: "/", with: "")
-            }
-            return (textField.text!.count < 5) || string == ""
-        } else if textField == txtCVV {
-            return (textField.text!.count < 3) || string == ""
-        }
-        return true
-    }
-    
-    func showAlert(withTitle title: String?, andMessage message: String?) {
-        let refreshAlert = UIAlertController(title: "Astroshubh",
-                                             message: message,
-                                             preferredStyle: UIAlertController.Style.alert)
-        refreshAlert.addAction(UIAlertAction(title: "OK",
-                                             style: .default,
-                                             handler: { (action: UIAlertAction!) in }))
-        self.present(refreshAlert, animated: true, completion: nil)
-    }
-}

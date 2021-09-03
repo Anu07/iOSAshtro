@@ -185,7 +185,7 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
         self.manager.startMonitoringSignificantLocationChanges()
                 if CLLocationManager.locationServicesEnabled() {
                     manager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-                 manager.startUpdatingLocation()
+//                 manager.startUpdatingLocation()
                }
         
 //        if !hasLocationPermission() {
@@ -496,9 +496,9 @@ class DashboardVC: UIViewController , UITextFieldDelegate , MKMapViewDelegate , 
                     let placemarkObj = placemark[0]
 ////                    print(placemarkObj.country!)
                     if let getCountry = placemarkObj.country {
-                        CurrentLocation = getCountry
+                        CurrentLocation = "United States"
 //                        print("coutry name is: \(getCountry)")
-                        UserDefaults.standard.set(getCountry, forKey: "country")
+                        UserDefaults.standard.set("United States", forKey: "country")
                         self.func_CallWelcomeAPI()
                         if let _ = UserDefaults.standard.value(forKey: "isUserData") as? Data {
                             self.walletApiCallMethods()

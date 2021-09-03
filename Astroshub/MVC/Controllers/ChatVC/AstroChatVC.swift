@@ -64,7 +64,7 @@ class AstroChatVC: UIViewController,UIImagePickerControllerDelegate, UINavigatio
         self.lblTitle.text = AstrologerNameee
         self.tblView.delegate = self
         self.tblView.dataSource = self
-        if data == nil{
+        if data == nil {
             anotherUserId = OnTabfcmUserID
         } else {
             anotherUserId = data!["astroFcmId"] as? String
@@ -872,7 +872,7 @@ extension AstroChatVC: UITableViewDataSource {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let message =  messageArray[indexPath.row].from
         let timestamp = messageArray[indexPath.row].time
-        let date = NSDate(timeIntervalSince1970:TimeInterval(Float(timestamp)!))
+        let date = NSDate(timeIntervalSince1970:TimeInterval(Float(timestamp) ?? 0.0))
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM,dd HH:mm"
         dateFormatter.timeZone = NSTimeZone.local
@@ -1083,11 +1083,11 @@ class messageModel:NSObject{
     var storageID:String?
     init(dict: [String: AnyObject]) {
         
-        self.from    = "\(dict["from"]!)"
-        self.message = "\(dict["message"]!)"
-        self.seen    = "\(dict["seen"]!)"
-        self.time    = "\(dict["time"]!)"
-        self.type    = "\(dict["type"]!)"
+        self.from    = dict["from"] as? String ?? ""
+        self.message = dict["message"] as? String ?? ""
+        self.seen    = dict["seen"] as? String ?? ""
+        self.time    = dict["time"] as? String ?? ""
+        self.type    = dict["type"] as? String ?? ""
         self.isTypingAstrologer    = dict["isTypingAstrologer"] as? Bool
         self.isTypingUser    = dict["isTypingUser"] as? Bool
         self.pushID    = dict["pushID"] as? String

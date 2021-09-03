@@ -25,6 +25,7 @@ You selected %@, which is not supported by Razorpay at the moment.\nDo \
 you want to handle it separately?
 """
 private let OK_BUTTON_TITLE = "OK"
+var stripePaymentParams : [String : Any] = [:]
 
 //MARK:- CLASS
 class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSource,UITextFieldDelegate,RazorpayPaymentCompletionProtocol,ExternalWalletSelectionProtocol
@@ -43,6 +44,7 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
     //MARK:- VIEW CYCLE
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.getCard()
         RemainingDiscountAmount = ""
         CouponDiscountAmount = ""
         razorpay = RazorpayCheckout.initWithKey(KEY_ID, andDelegate: self)
@@ -203,14 +205,7 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
         }
         
     }
-    
-    
-    
-    
-    
-    
-    
-    
+
     //MARK:- ACTIONS
     @IBAction func btn_backAction(_ sender: Any){
         self.navigationController?.popViewController(animated: true)
@@ -507,6 +502,71 @@ class PaymentInfoVC: UIViewController ,UITableViewDelegate, UITableViewDataSourc
             AutoBcmLoadingView.dismiss()
         }
     }
+    
+    func getCard() {
+        let allowed = self.checkPaymentGatewayAlert(isStripe:true)
+        let multiplier = CurrentLocation == "India" ? 1.18 : 1
+        let currency = (CurrentLocation == "India" ? "INR" : "USD").lowercased()
+        if allowed{
+            //            if gstPrice == "0" {
+            //                FinalAmount = Double(OnTabWalletAmount) ?? 0.0
+            //
+            //            } else{
+            if CouponDiscountAmount == "" || CouponDiscountAmount == "0"{
+                //FinalAmount = Float(OnTabWalletAmount) ?? 0.0
+                let gstAddedFinalAmount = ((OnTabWalletAmount as NSString).doubleValue * multiplier).round(to: 2)
+                FinalAmount = Double(gstAddedFinalAmount)
+            }else{
+                
+                let formatter = NumberFormatter()
+                formatter.locale = Locale.current // USA: Locale(identifier: "en_US")
+                formatter.numberStyle = .decimal
+                let number = formatter.number(from: RemainingDiscountAmount)
+                let doubleAmount = number?.doubleValue ?? 0.0
+                let gstAddedFinalAmount = doubleAmount * multiplier
+                FinalAmount = Double(gstAddedFinalAmount)
+            }
+        }
+        stripePaymentParams["user_id"] = user_id
+        stripePaymentParams["user_api_key"] = user_apikey
+        stripePaymentParams["amount"] = FinalAmount * 100
+        stripePaymentParams["currency"] = "USD"
+        
+        print(stripePaymentParams)
+        
+        AutoBcmLoadingView.show("Loading......")
+        AppHelperModel.requestPOSTURL("acceptPayment",
+                                      params: stripePaymentParams as [String : AnyObject],
+                                      headers: nil,
+                                      success: { (respose) in
+                                        AutoBcmLoadingView.dismiss()
+                                        let tempDict = respose as! NSDictionary
+                                        print(tempDict)
+                                        let success=tempDict["response"] as!   Bool
+                                        AutoBcmLoadingView.dismiss()
+                                        if success == true {
+                                            guard let data=tempDict["data"] as? [String : Any] else {
+                                                return
+                                            }
+                                            UserDefaults.standard.setValue(data["client_secret"] as? String ?? "", forKey: "client_secret")
+                                            
+                                            //
+                                            
+                                        }else{
+                                            //                                            guard let data=tempDict["data"] as? [String : Any],
+                                            //                                                let err = data["value"] as? String else { return }
+                                            //                                            self.navigationController?.popViewController(animated: true)
+                                            //                                            self.delegateStripePay?.paymentDone(isSuccess: false, paymentId: "", msg : err)
+                                            
+                                        }
+                                        
+                                        
+                                      }) { (error) in
+            print(error)
+            AutoBcmLoadingView.dismiss()
+        }
+        
+    }
 }
 
 //MARK:- STRIPE PAYMENTS
@@ -518,7 +578,7 @@ extension PaymentInfoVC : DelegateStripePayment{
             self.func_rechargeamount()
             //self.showAlert(withTitle: SUCCESS_TITLE, andMessage: SUCCESS_MESSAGE )
             
-        }else{
+        } else {
             let refreshAlert = UIAlertController(title: "Astroshubh",
                                                  message: msg,
                                                  preferredStyle: UIAlertController.Style.alert)
